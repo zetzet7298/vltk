@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcCaveListFullRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public CaveListFullService() : this(null) { }
+
         public CaveListFullService(PcCaveListFullRegistry reg) { _reg = reg ?? new PcCaveListFullRegistry(); }
 
         public static CaveListFullService LoadFromStreamingAssets(string subDir = "Reference/PcMap")

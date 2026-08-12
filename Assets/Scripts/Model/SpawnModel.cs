@@ -27,6 +27,12 @@ namespace VLTK.Model
         /// <summary>Bounding area of the trap in region-local cell coordinates.</summary>
         public RectDef boundsRect;
 
+        /// <summary>Raw PC KSPTrap.uTrapId from Region_S Trap.dat.</summary>
+        public uint trapId;
+
+        /// <summary>Hex display of <see cref="trapId"/> for diagnostics.</summary>
+        public string trapIdHex;
+
         /// <summary>Script id or name from PC source (may be int or string).</summary>
         public string scriptRef;
 
@@ -116,29 +122,12 @@ namespace VLTK.Model
         public ConversionStatus status;
     }
 
-    /// <summary>
-    /// Rare spawn entry (PC rare.txt). The PC source uses this file as a magic
-    /// enhancement rate table; the data fields below are a best-effort mapping
-    /// to the spawn-table model so a registry can index it by template id.
-    /// When the source lacks coordinate/drop-rate columns, those fields stay 0/null.
-    /// </summary>
-    [Serializable]
-    public class RareSpawnEntry
-    {
-        public int entryId;
-        public string nameRaw;
-        public string nameNormalized;
-        public int mapId;
-        public int npcTemplateId;
-        public int positionX;
-        public int positionY;
-        public int respawnSec;
-        public string dropRateFile;
-        public int magicId;
-        public int levelMin;
-        public int levelMax;
-        public List<string> warnings = new();
-    }
+    // NOTE (fix #14, 2026-06-12): The former `RareSpawnEntry` class modeled
+    // PC rare.txt as an NPC spawn table (mapId/positionX/respawnSec/dropRateFile/
+    // levelMin/levelMax). That schema was invented and wrong — PC rare.txt is a
+    // RARE MAGIC-ATTRIBUTE / WEAPON-ENCHANT ROLL TABLE. The correct model lives in
+    // Assets/Scripts/Sandbox/PcRareEnchantParser.cs (PcRareEnchantEntry). This
+    // dead, unreferenced class has been removed to stop the wrong schema leaking.
 
     /// <summary>
     /// Gold boss entry (PC goldboss.txt). The PC source uses this file to describe

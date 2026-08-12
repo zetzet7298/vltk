@@ -1,7 +1,8 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — FactionMapService (Bản Đồ Theo Môn Phái runtime)
-// Wraps PcFactionMapRegistry. PC source: faction_map.txt / PcTong/tong_setting.ini.
-// Mobile runtime phục vụ war portal, faction city, owner bonus lookup.
+// VLTK Mobile — FactionMapService legacy facade for PC Tong map catalog
+// PC source: script/tong/addtongnpc.lua map arrays + tong_mix.lua enter gate under 00.src-tinh-kiem.
+// The service exposes imported rows only; Tong ownership/capture/runtime rules are
+// intentionally not inferred from this data.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -12,8 +13,7 @@ using VLTK.Core;
 namespace VLTK.Sandbox
 {
     /// <summary>
-    /// Service quản lý bản đồ theo môn phái: war portal, faction capital,
-    /// owner bonus (Tống Kim, Tổng Tiêu Cục, đại lý phủ).
+    /// Legacy-named service for the PC bang hội/Tong map catalog.
     /// </summary>
     public class FactionMapService
     {
@@ -33,7 +33,7 @@ namespace VLTK.Sandbox
         public void RegisterRegistry(PcFactionMapRegistry registry)
         {
             _registry = registry;
-            SubsystemLog.Info(LogTag, $"Bản Đồ Môn Phái loaded: {Count} map");
+            SubsystemLog.Info(LogTag, $"PC Tong map catalog loaded: {Count} row");
         }
 
         public PcFactionMapEntry GetMap(int mapId)
@@ -44,10 +44,15 @@ namespace VLTK.Sandbox
                 ? _registry.GetByFaction(factionId)
                 : (IReadOnlyList<PcFactionMapEntry>)System.Array.Empty<PcFactionMapEntry>();
 
+        public IReadOnlyList<PcFactionMapEntry> GetBySourceTable(string sourceTable)
+            => _registry != null
+                ? _registry.GetBySourceTable(sourceTable)
+                : (IReadOnlyList<PcFactionMapEntry>)System.Array.Empty<PcFactionMapEntry>();
+
         public IEnumerable<PcFactionMapEntry> GetAllMaps()
             => _registry != null ? _registry.All : (IEnumerable<PcFactionMapEntry>)System.Array.Empty<PcFactionMapEntry>();
 
-        /// <summary>Load từ StreamingAssets/Reference/PcTong.</summary>
+        /// <summary>Load từ StreamingAssets/Reference/PcTong/faction_map.txt.</summary>
         public static FactionMapService LoadFromStreamingAssets()
         {
             string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcTong");

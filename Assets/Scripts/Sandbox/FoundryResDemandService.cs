@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcFoundryResRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public FoundryResDemandService() : this(null) { }
+
         public FoundryResDemandService(PcFoundryResRegistry reg) { _reg = reg ?? new PcFoundryResRegistry(); }
 
         public static FoundryResDemandService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

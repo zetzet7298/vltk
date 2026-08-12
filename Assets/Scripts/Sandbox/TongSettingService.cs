@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcTongSettingRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public TongSettingService() : this(null) { }
+
         public TongSettingService(PcTongSettingRegistry reg) { _reg = reg ?? new PcTongSettingRegistry(); }
 
         public static TongSettingService LoadFromStreamingAssets(string subDir = "Reference/PcTong")

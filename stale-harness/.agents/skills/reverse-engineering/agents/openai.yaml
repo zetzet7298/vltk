@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reverse Engineering"
+  short_description: "Reverse DHCD Unity and IL2CPP artifacts with bounded evidence"
+  default_prompt: "Use $reverse-engineering to analyze this DHCD Unity/IL2CPP artifact, preserve provenance, and separate proof from reconstruction."

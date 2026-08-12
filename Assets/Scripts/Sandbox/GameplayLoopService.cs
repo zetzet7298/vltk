@@ -58,6 +58,13 @@ namespace VLTK.Sandbox
         public int damage;
         public DamageType type;
         public int skillId;
+        // Vị trí world của target (để layer visual spawn số damage đỏ tại mục tiêu,
+        // giống PC client hiển thị số damage nổi lên đầu NPC khi bị hit).
+        public Vector2 targetPosition;
+        // True nếu chí mạng (PC bIsDS deadly strike) → highlight vàng.
+        public bool isCritical;
+        // True nếu đánh trượt (PC CheckHitTarget miss) → hiện chữ "Trượt".
+        public bool isMiss;
     }
 
     public struct GameplayDeathEvent
@@ -103,6 +110,9 @@ namespace VLTK.Sandbox
     /// </summary>
     public class GameplayLoopService
     {
+        // Sandbox boot contract: a fresh Stop/Play session starts as Cái Bang.
+        // Runtime faction switching can still replace this after boot.
+        public const CombatFaction DefaultPlayerFaction = CombatFaction.CaiBang;
         // ── Sub-services ───────────────────────────────────────────────────
 
         public CombatRuntimeService Combat { get; }
@@ -143,6 +153,9 @@ namespace VLTK.Sandbox
             int initialSilver = 1000)
         {
             Combat = new CombatRuntimeService(catalog);
+            // [CaiBang-DogArray 2026-06-19] PC 打狗阵 stance ally chain: cung cấp AllyFinder cho CombatRuntimeService
+            // để tìm allies trong radius. PC 打狗阵 AttackRadius=180 (PC subworld pixels ~ 1:1 world units).
+            Combat.AllyFinder = FindAlliesInRange;
             LevelService = new PlayerLevelService();
             DeathFlow = new DeathFlowService(LevelService);
             PkRules = new PkCombatService(playerFactionId, playerBangId);
@@ -190,13 +203,13 @@ namespace VLTK.Sandbox
                 worldPos = pos,
             };
             _player.combat.level = level;
-            _player.combat.faction = CombatFaction.CaiBang;
+            _player.combat.faction = DefaultPlayerFaction;
             _player.combat.currentLife = CalculateMaxLife(level);
             _player.combat.maxLife = _player.combat.currentLife;
             // maxMana lay tu PC formula (PcMaxManaFormula) de regen khong bi cap
             // nham qua maxLife va de cap level cao khong bi tran.
-            _player.combat.maxMana = PcMaxManaFormula.Compute(level, 0, CombatFaction.CaiBang);
-            _player.combat.currentMana = 100;
+            _player.combat.maxMana = PcMaxManaFormula.Compute(level, 0, DefaultPlayerFaction);
+            _player.combat.currentMana = _player.combat.maxMana;
             _player.combat.position = pos;
 
             _actors[actorId] = _player;
@@ -230,6 +243,31 @@ namespace VLTK.Sandbox
         {
             _actors.Remove(actorId);
             _enemies.RemoveAll(e => e.actorId == actorId);
+        }
+
+        // [CaiBang-DogArray 2026-06-19] PC 打狗阵 stance ally chain.
+        // Trả về actors có cùng factionId (đồng đội/team) trong radius, ngoại trừ caster.
+        // Mobile MVP: chỉ có _player là đồng đội của player; party members chưa có nên trả empty.
+        // Khi party system thêm vào, filter này sẽ tự match party members cùng faction.
+        public System.Collections.Generic.IEnumerable<CombatActorState> FindAlliesInRange(Vector2 center, float radiusWu)
+        {
+            var result = new System.Collections.Generic.List<CombatActorState>();
+            int casterId = _player?.actorId ?? -1;
+            foreach (var actor in _actors.Values)
+            {
+                if (actor?.combat == null) continue;
+                if (actor.actorId == casterId) continue;
+                if (actor.combat.currentLife <= 0) continue;
+                // PC: ally cùng party hoặc cùng faction (non-hostile). MVP chỉ check faction match.
+                if (_player != null && actor.combat.faction != _player.combat.faction) continue;
+                float dx = actor.combat.position.x - center.x;
+                float dy = actor.combat.position.y - center.y;
+                if (dx * dx + dy * dy <= radiusWu * radiusWu)
+                {
+                    result.Add(actor.combat);
+                }
+            }
+            return result;
         }
 
         // ── Core Gameplay Actions ──────────────────────────────────────────
@@ -276,6 +314,9 @@ namespace VLTK.Sandbox
                 damage = damage,
                 type = DamageType.Physics,
                 skillId = 0,
+                targetPosition = _player.worldPos,
+                isCritical = false,
+                isMiss = false,
             });
 
             if (_player.combat.currentLife <= 0)
@@ -339,7 +380,16 @@ namespace VLTK.Sandbox
             _gameTime += deltaTime;
 
             // Combat tick (PC 18fps)
-            Combat.AdvanceTime(Mathf.FloorToInt(deltaTime * 18f));
+            int ticks = Mathf.FloorToInt(deltaTime * 18f);
+            Combat.AdvanceTime(ticks);
+
+            // Source nodes own timers. Projection only exposes aggregate compatibility state;
+            // expiry must remove one source contribution without deleting siblings of same kind.
+            if (ticks > 0)
+            {
+                foreach (var actor in _actors.Values)
+                    actor.combat?.ExpireStateSources(ticks);
+            }
 
             // Mana regen (PC: 1 mana/tick)
             _manaRegenAccumulator += deltaTime;
@@ -347,8 +397,8 @@ namespace VLTK.Sandbox
             {
                 _manaRegenAccumulator -= 0.5f;
                 if (_player != null && !_player.isDead)
-                    // Mana regen cap dung maxMana (khong phai maxLife - copy-paste bug).
-                    _player.combat.currentMana = Mathf.Min(_player.combat.maxMana, _player.combat.currentMana + 1);
+                    // Sandbox mode: player mana is always full to support continuous visual/cast testing.
+                    _player.combat.currentMana = _player.combat.maxMana;
             }
 
             // Enemy AI: attack player if in range
@@ -397,13 +447,25 @@ namespace VLTK.Sandbox
             foreach (var r in results)
                 totalDamage += r.finalDamage;
 
+            // [DMG-POPUP] Xác định crit/miss từ damage results (PC: bIsDS chí mạng / CheckHitTarget miss).
+            // PC source: KNpc.cpp:2867 CheckHitTarget → miss; bIsDS → deadly strike crit.
+            bool anyCrit = false;
+            bool anyMiss = true;
+            foreach (var r in results)
+            {
+                if (r.hit) anyMiss = false;
+                if (r.isCrit) anyCrit = true;
+            }
             OnDamage?.Invoke(new GameplayDamageEvent
             {
                 attackerId = attacker.actorId,
                 targetId = target.actorId,
                 damage = totalDamage,
-                type = DamageType.Physics,
+                type = results.Count > 0 ? results[0].type : DamageType.Physics,
                 skillId = skillId,
+                targetPosition = target.worldPos,
+                isCritical = anyCrit,
+                isMiss = totalDamage <= 0 || anyMiss,
             });
 
             // Check death
@@ -411,9 +473,28 @@ namespace VLTK.Sandbox
                 ProcessActorDeath(target, attacker);
         }
 
+        /// <summary>Public wrapper để CombatSkillSlotController bridge death event khi damage apply từ visual layer.</summary>
+        public void ProcessActorDeathPublic(GameplayActor victim, GameplayActor killer)
+            => ProcessActorDeath(victim, killer);
+
         private void ProcessActorDeath(GameplayActor victim, GameplayActor killer)
         {
             victim.deathTimestamp = _gameTime;
+
+            // [SECT-ALL] Bug fix (user report 2026-06-15): target die nhưng body vẫn hiện diện.
+            // Root cause: runtime cũ set currentLife=0 + deathTimestamp nhưng KHÔNG disable view GameObject.
+            //   → NPC sprite vẫn render tại death position 5-10s (cho tới khi respawn timer reset HP).
+            // PC gốc (KNpc::OnDeath): play corpse anim rồi despawn body, respawn sau timer.
+            // Mobile MVP fix: SetActive(false) view ngay khi chết, SetActive(true) lúc respawn.
+            //   Phase 5 follow-up: thay bằng death animation SPR (corpseIdx từ PcFullNpcParser.cs line 35) trước khi hide.
+            if (victim.view != null) victim.view.SetActive(false);
+            // Dừng AI tick + auto-target: target die rồi không cho AI tiếp tục chase
+            victim.nextAttackTime = float.MaxValue;
+            if (victim.combat != null)
+            {
+                victim.combat.fightMode = false;
+                victim.combat.knownSkills?.Clear(); // Tránh cast skill ở dead state
+            }
 
             bool isPlayer = victim.isPlayer;
             long expReward = 0;
@@ -477,6 +558,11 @@ namespace VLTK.Sandbox
             actor.deathTimestamp = -1f;
             actor.combat.currentLife = actor.combat.maxLife;
             actor.combat.currentMana = actor.combat.maxMana;
+
+            // [SECT-ALL] Bug fix (companion to ProcessActorDeath): respawn phải show view lại.
+            // Đối xứng với SetActive(false) ở ProcessActorDeath, nếu không respawn sẽ không có sprite.
+            if (actor.view != null) actor.view.SetActive(true);
+            if (actor.combat != null) actor.combat.fightMode = true;
 
             OnRespawn?.Invoke(new GameplayRespawnEvent
             {

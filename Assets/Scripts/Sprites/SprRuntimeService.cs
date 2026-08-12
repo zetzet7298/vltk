@@ -20,6 +20,17 @@ namespace VLTK.Sprites
     /// </summary>
     public class SprRuntimeService
     {
+        static SprRuntimeService()
+        {
+            try
+            {
+                var pt = System.Type.GetType("System.Text.CodePagesEncodingProvider, System.Text.Encoding.CodePages");
+                var prov = pt?.GetProperty("Instance")?.GetValue(null, null) as System.Text.EncodingProvider;
+                if (prov != null) System.Text.Encoding.RegisterProvider(prov);
+            }
+            catch { }
+        }
+
         private readonly string _spritesRoot;
         private readonly Dictionary<string, Sprite> _cache = new();
         private readonly Dictionary<string, Texture2D> _texCache = new();
@@ -30,10 +41,30 @@ namespace VLTK.Sprites
         public int MissCount => _missCache.Count;
         public int DiagnosticCount => _diagnostics.Count;
 
+        /// <summary>
+        /// Default SPR search root. SPRs live outside Assets/ (in /SpritesRuntime)
+        /// to keep Unity's AssetDatabase import time bounded — 67K+ binary SPRs
+        /// make Unity hang for 1+ hours when staged in Assets/StreamingAssets/.
+        ///
+        /// Resolution:
+        ///   Editor: project root /SpritesRuntime
+        ///   Player: also project root /SpritesRuntime (same convention;
+        ///           if a build needs APK packaging, copy /SpritesRuntime
+        ///           into StreamingAssets before build)
+        /// </summary>
+        public const string DefaultSpritesRoot = "SpritesRuntime";
+
         public SprRuntimeService(string streamingAssetsRoot = null)
         {
-            _spritesRoot = streamingAssetsRoot
-                ?? Path.Combine(Application.streamingAssetsPath, "Sprites");
+            if (streamingAssetsRoot != null)
+            {
+                _spritesRoot = streamingAssetsRoot;
+                return;
+            }
+            // Application.dataPath = <project>/Assets
+            // project root = Application.dataPath/..
+            _spritesRoot = Path.GetFullPath(
+                Path.Combine(Application.dataPath, "..", DefaultSpritesRoot));
         }
 
         /// <summary>
@@ -232,39 +263,90 @@ namespace VLTK.Sprites
         private byte[] FindSprData(string sanitizedKey, string originalName)
         {
             originalName = originalName?.TrimEnd('\0') ?? "";
+            foreach (var root in EnumerateSpriteRoots())
+            {
+                var data = FindSprDataInRoot(root, sanitizedKey, originalName);
+                if (data != null)
+                    return data;
+            }
 
-            // Strategy 1: exact UID match (e.g. "00002d56")
-            var directPath = Path.Combine(_spritesRoot, $"{sanitizedKey}.spr");
+            return null;
+        }
+
+private IEnumerable<string> EnumerateSpriteRoots()
+        {
+            if (!string.IsNullOrEmpty(_spritesRoot))
+                yield return _spritesRoot;
+
+            var streamingRoot = Path.GetDirectoryName(_spritesRoot);
+            if (!string.IsNullOrEmpty(streamingRoot))
+            {
+                // Skill icon SPRs are kept isolated from map/NPC/object sprites but
+                // must still be resolvable by their original PC SPR path/UID.
+                var skillIconsRoot = Path.Combine(_spritesRoot, "SkillIcons");
+                if (!string.Equals(skillIconsRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
+                    yield return skillIconsRoot;
+
+                var generatedRoot = Path.Combine(streamingRoot, "Generated", "MapSprites");
+                if (!string.Equals(generatedRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
+                    yield return generatedRoot;
+                var generatedNpcRoot = Path.Combine(streamingRoot, "Generated", "NpcSprites");
+                if (!string.Equals(generatedNpcRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
+                    yield return generatedNpcRoot;
+                var generatedObjectRoot = Path.Combine(streamingRoot, "Generated", "ObjectSprites");
+                if (!string.Equals(generatedObjectRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
+                    yield return generatedObjectRoot;
+            }
+        }
+
+private static byte[] FindSprDataInRoot(string root, string sanitizedKey, string originalName)
+        {
+            if (string.IsNullOrEmpty(root))
+                return null;
+
+            var directPath = Path.Combine(root, $"{sanitizedKey}.spr");
             if (File.Exists(directPath))
                 return File.ReadAllBytes(directPath);
 
-            // Strategy 2: try the original name sanitized (e.g. "image_tree_abc" from "image\tree\abc")
             var nameKey = SanitizeKey(Path.GetFileNameWithoutExtension(originalName));
             if (nameKey != sanitizedKey)
             {
-                var namePath = Path.Combine(_spritesRoot, $"{nameKey}.spr");
+                var namePath = Path.Combine(root, $"{nameKey}.spr");
                 if (File.Exists(namePath))
                     return File.ReadAllBytes(namePath);
             }
 
-            // Strategy 3: try matching by UID portion at end of path
-            // Many sprite names are like "image\effect\00002d56.spr"
             string uidFromPath = ExtractUidFromPath(originalName);
             if (!string.IsNullOrEmpty(uidFromPath) && uidFromPath != sanitizedKey)
             {
-                var uidPath = Path.Combine(_spritesRoot, $"{uidFromPath}.spr");
+                var uidPath = Path.Combine(root, $"{uidFromPath}.spr");
                 if (File.Exists(uidPath))
                     return File.ReadAllBytes(uidPath);
             }
 
-            // Strategy 4: compute the JX/PAK UID from the source path.
-            // vltktool extracts unknown PAK entries as {uid:08x}.spr using this hash.
-            string hashedUid = ComputePathUidHex(originalName);
+            // JX PC PAK FileNameHash uses signed bytes for CJK path bytes.
+            // The old unsigned path hash resolves many ASCII SPRs but misses
+            // skill/Ui paths such as \spr\Ui\技能图标\icon_sk_ty_at.spr
+            // (PC UID c4454165, unsigned bedc5b69). Try the PC-accurate
+            // signed hash first so missile/effect SPRs do not fall back to
+            // procedural dots/rings.
+            string signedUid = ComputePathUidHex(originalName, signedBytes: true);
+            if (!string.IsNullOrEmpty(signedUid) &&
+                signedUid != sanitizedKey &&
+                signedUid != uidFromPath)
+            {
+                var signedPath = Path.Combine(root, $"{signedUid}.spr");
+                if (File.Exists(signedPath))
+                    return File.ReadAllBytes(signedPath);
+            }
+
+            string hashedUid = ComputePathUidHex(originalName, signedBytes: false);
             if (!string.IsNullOrEmpty(hashedUid) &&
                 hashedUid != sanitizedKey &&
-                hashedUid != uidFromPath)
+                hashedUid != uidFromPath &&
+                hashedUid != signedUid)
             {
-                var hashedPath = Path.Combine(_spritesRoot, $"{hashedUid}.spr");
+                var hashedPath = Path.Combine(root, $"{hashedUid}.spr");
                 if (File.Exists(hashedPath))
                     return File.ReadAllBytes(hashedPath);
             }
@@ -384,7 +466,7 @@ namespace VLTK.Sprites
             return normalized;
         }
 
-        public static uint ComputePathUid(string path, string encodingName = "GB2312")
+public static uint ComputePathUid(string path, string encodingName = "GB2312", bool signedBytes = true)
         {
             var normalized = NormalizeResourcePath(path);
             if (string.IsNullOrEmpty(normalized)) return 0;
@@ -402,20 +484,21 @@ namespace VLTK.Sprites
             uint value = 0;
             for (int i = 0; i < bytes.Length; i++)
             {
-                uint b = bytes[i];
-                if (b >= 65 && b <= 90)
-                    b += 32;
+                int signed = bytes[i] >= 128 ? bytes[i] - 256 : bytes[i];
+                int c = signedBytes ? signed : bytes[i];
+                if (c >= 65 && c <= 90)
+                    c += 32;
 
                 uint index = (uint)(i + 1);
-                value = ((value + index * b) % 0x8000000B) * 0xFFFFFFEF;
+                value = unchecked(((uint)(((long)value + (long)index * c) % 0x8000000B)) * 0xFFFFFFEFu);
             }
 
-            return value ^ 0x12345678;
+            return value ^ 0x12345678u;
         }
 
-        public static string ComputePathUidHex(string path, string encodingName = "GB2312")
+public static string ComputePathUidHex(string path, string encodingName = "GB2312", bool signedBytes = true)
         {
-            uint uid = ComputePathUid(path, encodingName);
+            uint uid = ComputePathUid(path, encodingName, signedBytes);
             return uid == 0 ? null : uid.ToString("x8");
         }
     }

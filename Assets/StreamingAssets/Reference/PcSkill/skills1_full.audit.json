@@ -1,0 +1,26 @@
+{
+  "source": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt",
+  "sha256": "9b8dc327e143f62328e01d8941ad411eca40c6d85c4ca60d486172739f9e6932",
+  "byteCount": 778882,
+  "lineCountIncludingTrailingBlank": 1714,
+  "nonEmptyLineCount": 1713,
+  "headerColumnCount": 115,
+  "dataRowCount": 1712,
+  "dataRowColumnCounts": {
+    "115": 1712
+  },
+  "uniqueSkillIdCount": 1711,
+  "duplicateSkillIdCount": 1,
+  "skillIdMin": 1,
+  "skillIdMax": 1874,
+  "specialSkillScriptRows": 576,
+  "npcSkillScriptRows": 145,
+  "bossNameRows": 21,
+  "npcSkillSubsetUnionRows": 158,
+  "skillIdAtLeast1216Rows": 498,
+  "relationNotes": [
+    "PcSkill/specialskills.txt is the skills1_full subset where LvlSetScript starts with \\script\\skill\\special.",
+    "PcSkill/npcskills.txt is the skills1_full subset where LvlSetScript starts with \\script\\skill\\npc plus SkillName contains boss.",
+    "Reference/ModSkills.txt is a separate PC table with a different 114-column/ragged layout; it is not the full skills1 table, though skills1_full also contains rows with SkillId >= 1216."
+  ]
+}

@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
+using VLTK.Sandbox;
 
 namespace VLTK.UI
 {
@@ -61,9 +61,34 @@ namespace VLTK.UI
         };
 
         /// <summary>Dựng snapshot rương cho player.</summary>
-        public static BagPanelSnapshot BuildSnapshot(int playerId)
+        public static BagPanelSnapshot BuildSnapshot(int playerId, InventoryService inventory = null)
         {
             if (playerId <= 0) playerId = 0;
+
+            if (inventory != null)
+            {
+                int used = inventory.Inventory != null ? inventory.Inventory.Count : 0;
+                int slots = InventoryService.MaxInventorySlots;
+                var liveRows = new List<BagPanelRow>
+                {
+                    new BagPanelRow(
+                        bagId: 1,
+                        name: "Hành trang đang mang",
+                        slots: slots,
+                        isFull: used >= slots,
+                        itemCount: used,
+                        lastOpenTimeUnix: 0)
+                };
+                return new BagPanelSnapshot
+                {
+                    playerId = playerId,
+                    totalBags = liveRows.Count,
+                    totalSlots = slots,
+                    usedSlots = used,
+                    rows = liveRows,
+                };
+            }
+
             var rows = new List<BagPanelRow>();
             for (int i = 0; i < MaxBags; i++)
             {

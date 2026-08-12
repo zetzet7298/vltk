@@ -1,0 +1,726 @@
+schema_version: 1
+evidence:
+- id: EVID-0001
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:5df520aa74b2eee925eac58ecf17939d50a6a51ad463568dcc4e755457039784
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini
+  lines: 1-33
+  claim_limit: Manifest client active; khong tu chung minh moi PAK ton tai/mo thanh cong.
+  sha256: 5df520aa74b2eee925eac58ecf17939d50a6a51ad463568dcc4e755457039784
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0002
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:2793cfb71f0bd7c7ee2bba6964c00dc328011fe7adaf901c4d4edae3ad44fbdc
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Engine/Src/KPakList.cpp
+  lines: 53-64,120-160
+  claim_limit: Thu tu open va first-match lookup; can pin source revision.
+  sha256: 2793cfb71f0bd7c7ee2bba6964c00dc328011fe7adaf901c4d4edae3ad44fbdc
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0003
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:f3ebfdc82bd79d3274f8d798da778474417839d93c3b849aec86e8fa9f4526a5
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Sprites/SprRuntimeService.cs
+  lines: 44-67,263-299
+  claim_limit: Static resolver code; khong chung minh runtime root nao dang active.
+  sha256: f3ebfdc82bd79d3274f8d798da778474417839d93c3b849aec86e8fa9f4526a5
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0004
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:dac7b94eee182e6cf2f427e5b7bde8341c32d2d1b21692baa90953eb8326fa8c
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Sandbox/MapRenderer.cs
+  lines: 88
+  claim_limit: Static remap path; can runtime test de chung minh flow active.
+  sha256: dac7b94eee182e6cf2f427e5b7bde8341c32d2d1b21692baa90953eb8326fa8c
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0005
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:edab6fa7676c165144365afe8e3bcd8bb47d1d6527dfd8c5edf1349f2fb13763
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Sandbox/MobileUiPanels.cs
+  lines: 31-35,104-146
+  claim_limit: Static UI construction evidence.
+  sha256: edab6fa7676c165144365afe8e3bcd8bb47d1d6527dfd8c5edf1349f2fb13763
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0006
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:1b4608687b174b654ab5d2edbd13a9595d0aa46127bbc1d47ee723acb8dbc766
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Backend/IGameBackend.cs
+  lines: 1-102
+  claim_limit: Legacy client contract; khong phai production Go contract.
+  sha256: 1b4608687b174b654ab5d2edbd13a9595d0aa46127bbc1d47ee723acb8dbc766
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0007
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P0-P4
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:16ccf0749084f0d743eb4b4071cb14a890f2076d9f29ad65f796043345f64e5a
+  kind: audit
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/S3Client.dsp
+  lines: 45-83
+  claim_limit: Co build target Game.exe nhung khong co trusted binary/runtime capture.
+  sha256: 16ccf0749084f0d743eb4b4071cb14a890f2076d9f29ad65f796043345f64e5a
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0008
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:141f2f1daf5e90ee8885cd265f7291b1d6cdf5d533a719c4a4b21dce5f11613d
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KMissle.cpp
+  lines: 636-669
+  claim_limit: Integer missile offset; khong tu chung minh coordinate scale.
+  sha256: 141f2f1daf5e90ee8885cd265f7291b1d6cdf5d533a719c4a4b21dce5f11613d
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0009
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:defad24d7fd6042e8a2887fa1a5401128c9b35df66f820e9fbef197707e52ad5
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Sandbox/TrainingNpcSpawner.cs
+  lines: 15-18,32-36,52-66
+  claim_limit: Static DevHarness spawn config; không chứng minh quy tắc production hoặc giá trị HP trong tài liệu PC.
+  sha256: defad24d7fd6042e8a2887fa1a5401128c9b35df66f820e9fbef197707e52ad5
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0010
+  dri: evidence-curator
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:e4ff0e61b1fe2e3e69732498bb90b64ec23b204fa7c398491767d58ddaa2d73a
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/UI/Inventory/InventoryContent.cs
+  lines: 1-5,27-35
+  claim_limit: Static stale panel projection ghi N/28; không chứng minh inventory authority hoặc runtime production.
+  sha256: e4ff0e61b1fe2e3e69732498bb90b64ec23b204fa7c398491767d58ddaa2d73a
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0011
+  dri: evidence-curator
+  reviewer: source-audit-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:6459c1b223e66e0200f75c7f311668e046663c6520b016bdb989a8e2d57f9412
+  kind: audit
+  path: /var/www/jx-pc/01_tinh_kiem_source/tai-lieu-game/_evidence/lab1-8-coverage-manifest-2026-07-09.md
+  lines: 210-236
+  claim_limit: Audited secondary inventory chứng minh file được phát hiện; không thay active package.ini, PAK winner hoặc
+    runtime capture.
+  sha256: 6459c1b223e66e0200f75c7f311668e046663c6520b016bdb989a8e2d57f9412
+  revision: jx-pc:7b24ff93702c7eeb272ecb63716baba579975434
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0012
+  dri: evidence-curator
+  reviewer: content-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:a968a6a8414cbe0698e542a6983e1951c2f70aafb1a2f003cca3685352b8903e
+  kind: audit
+  path: /var/www/vltk-mobile/harness/specs/jx-pc-mobile-port/registry/catalogs/skills.jsonl
+  lines: 1-1554
+  claim_limit: Catalog generated chứng minh 1554 record được phát hiện; không chứng minh branch runtime, logic parity hoặc
+    visual parity.
+  sha256: a968a6a8414cbe0698e542a6983e1951c2f70aafb1a2f003cca3685352b8903e
+  revision: spec-worktree:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0013
+  dri: evidence-curator
+  reviewer: combat-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:4eb4783254b33d004ff49e70281bf1f33829d20d68e8f7da88b9e302c179e934
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Sandbox/AutoTargetService.cs
+  lines: 14-66
+  claim_limit: Static policy ưu tiên HP thấp rồi khoảng cách; không chứng minh call path runtime đang active.
+  sha256: 4eb4783254b33d004ff49e70281bf1f33829d20d68e8f7da88b9e302c179e934
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0014
+  dri: evidence-curator
+  reviewer: combat-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:e45c66195c188001972e95f9bd61db0e59e68c7aadad7e560e3b7efa68029781
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Sandbox/CombatAutoTargetService.cs
+  lines: 8-88
+  claim_limit: Static policy ưu tiên mục tiêu gần nhất và auto-approach; không chứng minh call path runtime đang active.
+  sha256: e45c66195c188001972e95f9bd61db0e59e68c7aadad7e560e3b7efa68029781
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0015
+  dri: evidence-curator
+  reviewer: content-platform-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:75e464cab61a0fff11581dcca008ea96639e173796275286007d7d8cea242578
+  kind: source
+  path: /var/www/vltk-mobile/Assets/Scripts/Sandbox/AssetLoadBudgetService.cs
+  lines: 176-203
+  claim_limit: Static load-mode routing; không chứng minh Addressables download, version, cache, rollback hoặc size budget
+    production.
+  sha256: 75e464cab61a0fff11581dcca008ea96639e173796275286007d7d8cea242578
+  revision: vltk-mobile:385c5e0213525357018fea2d1d369cbc7823b324+dirty
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2026-10-14T13:45:52+07:00'
+- id: EVID-0016
+  dri: evidence-curator
+  reviewer: product-parity-review
+  phase: ALL
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:d7c6adaff56bd59a2e0e903c9213a40df6836e2127e22c1f688114813a8e016e
+  kind: user_decision
+  path: /home/zet/.codex/attachments/60f4a53b-009c-4170-993a-6fcd2c10b460/pasted-text-1.txt
+  lines: 49-75,110-130
+  claim_limit: Quyết định sản phẩm và gate nghiệm thu đã chốt; không phải bằng chứng implementation hoặc runtime pass.
+  sha256: d7c6adaff56bd59a2e0e903c9213a40df6836e2127e22c1f688114813a8e016e
+  revision: user-attachment:d7c6adaff56bd59a2e0e903c9213a40df6836e2127e22c1f688114813a8e016e
+  captured_at: '2026-07-16T13:45:52+07:00'
+  fresh_until: '2027-07-16T13:45:52+07:00'
+  
+- id: EVID-0017
+  dri: evidence-curator
+  reviewer: backend-data-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:a36f18c4b203ca134a0812c0c35de28c6d1e32da9c2fe00a7b6fd0c55f6384f1
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayer.cpp
+  lines: 742-934
+  claim_limit: Static save, login-timeout, quit, and sync source; does not prove an active runtime protocol.
+  sha256: a36f18c4b203ca134a0812c0c35de28c6d1e32da9c2fe00a7b6fd0c55f6384f1
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0018
+  dri: evidence-curator
+  reviewer: backend-data-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerDBFuns.cpp
+  lines: 34-39,740-854
+  claim_limit: Static legacy add/load and base-player persistence fields; not a target PostgreSQL schema or runtime persistence proof.
+  sha256: fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0019
+  dri: evidence-curator
+  reviewer: backend-data-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerDBFuns.cpp
+  lines: 858-975
+  claim_limit: Static legacy item, fight/state-skill, and task persistence fields; not a target PostgreSQL schema or runtime persistence proof.
+  sha256: fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0020
+  dri: evidence-curator
+  reviewer: gameplay-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:6f39bf0a099bf9f9db7da60ce730f045f7d50e56a8f4af24eb6c4d1b7a9a5031
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerAI.h
+  lines: 45-120
+  claim_limit: Static auto-play state and configuration members; does not prove active behavior, ordering, or mobile parity.
+  sha256: 6f39bf0a099bf9f9db7da60ce730f045f7d50e56a8f4af24eb6c4d1b7a9a5031
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0021
+  dri: evidence-curator
+  reviewer: gameplay-parity-review
+  phase: P2
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:e3b8b6daa30ca1786bb27eb90845a5d9ffb45152d84862fce5fbafdac2c2f669
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KNpcFindPath.cpp
+  lines: 1-275
+  claim_limit: Static pathfinding seam. Additional anchor KSubWorld.cpp:259-333 implements barrier tests; neither anchor proves mobile UX or path parity.
+  sha256: e3b8b6daa30ca1786bb27eb90845a5d9ffb45152d84862fce5fbafdac2c2f669
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0022
+  dri: evidence-curator
+  reviewer: combat-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:a36f18c4b203ca134a0812c0c35de28c6d1e32da9c2fe00a7b6fd0c55f6384f1
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayer.cpp
+  lines: 668-683
+  claim_limit: Static selected-NPC/object lookup only; does not establish the canonical mobile target policy or active runtime path.
+  sha256: a36f18c4b203ca134a0812c0c35de28c6d1e32da9c2fe00a7b6fd0c55f6384f1
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0023
+  dri: evidence-curator
+  reviewer: combat-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:5e1fe32a10495213d62fbddecfb602161e5fbf3a913dd4fda6c15ab3cd704ff2
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KNpcTemplate.h
+  lines: 31-57
+  claim_limit: Static NPC AI/combat template fields; does not prove server runtime values, combat ordering, or parity.
+  sha256: 5e1fe32a10495213d62fbddecfb602161e5fbf3a913dd4fda6c15ab3cd704ff2
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0024
+  dri: evidence-curator
+  reviewer: combat-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:c0c1b3c289923a305438c1a0d1b002a826fb9fb19127ecf05afb5b7b4644113e
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkills.cpp
+  lines: 1-3368
+  claim_limit: Static combat seam. Additional anchors KNpc.cpp, KMissle.cpp, and KNpcAttribModify.cpp are not hashed by this record; runtime order, rounding, and RNG remain unproven.
+  sha256: c0c1b3c289923a305438c1a0d1b002a826fb9fb19127ecf05afb5b7b4644113e
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0025
+  dri: evidence-curator
+  reviewer: combat-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerDBFuns.cpp
+  lines: 623-680
+  claim_limit: Static fight/state-skill load code; does not prove cast behavior, runtime activation, or parity.
+  sha256: fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0026
+  dri: evidence-curator
+  reviewer: economy-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:7f51e982d04e116b880aba36bdf944f0c8078cecf9daf739f77868bd85f98690
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KInventory.cpp
+  lines: 18-225
+  claim_limit: Static legacy grid inventory operations; does not prove the intentionally different mobile 60-slot, one-item-per-slot design.
+  sha256: 7f51e982d04e116b880aba36bdf944f0c8078cecf9daf739f77868bd85f98690
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0027
+  dri: evidence-curator
+  reviewer: economy-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:354423bfb0a8e9d3621f500c6c4ad4b83a08f9c4777df6ba5c19fd6624c55e69
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KItemList.cpp
+  lines: 207-227,918-1082,1271-1739,1850-2020
+  claim_limit: Static legacy add, equip, use, money, and exchange code; does not prove transaction durability or target behavior.
+  sha256: 354423bfb0a8e9d3621f500c6c4ad4b83a08f9c4777df6ba5c19fd6624c55e69
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0028
+  dri: evidence-curator
+  reviewer: economy-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerDBFuns.cpp
+  lines: 858-930
+  claim_limit: Static legacy item persistence fields and flags; does not prove target schema, ownership rules, or runtime durability.
+  sha256: fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0029
+  dri: evidence-curator
+  reviewer: economy-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:3b274fd693e44914e1eb228419f4f0667f16e408fb4ebbe4fa3839ffb49672fd
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KBuySell.cpp
+  lines: 222-430
+  claim_limit: Static legacy buy/sell checks and operations; does not prove transaction atomicity, crash recovery, or runtime parity.
+  sha256: 3b274fd693e44914e1eb228419f4f0667f16e408fb4ebbe4fa3839ffb49672fd
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0030
+  dri: evidence-curator
+  reviewer: companion-parity-review
+  phase: P2
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:5e1fe32a10495213d62fbddecfb602161e5fbf3a913dd4fda6c15ab3cd704ff2
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KNpcTemplate.h
+  lines: 61-66
+  claim_limit: Static client-template equipment and ride-horse fields; does not prove mount lifecycle, modifiers, or server authority.
+  sha256: 5e1fe32a10495213d62fbddecfb602161e5fbf3a913dd4fda6c15ab3cd704ff2
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0031
+  dri: evidence-curator
+  reviewer: companion-parity-review
+  phase: P3
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:855ff216390003dc01d2125b4f4fcf77712a59817d72f1b6ced8a51b0d814114
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerPartner.cpp
+  lines: 1-92
+  claim_limit: Static but fully commented-out partner seam. Additional KPlayerPartner.h, KPartnerSkill.cpp, and KPartnerSkill.h anchors are also insufficient to establish an active pet lifecycle.
+  sha256: 855ff216390003dc01d2125b4f4fcf77712a59817d72f1b6ced8a51b0d814114
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0032
+  dri: evidence-curator
+  reviewer: companion-parity-review
+  phase: P3
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:0ba4aa02c04d76f3c0c58ce14633d86d2046cd64b750e75e233e88e4380575b1
+  kind: audit
+  path: /var/www/jx-pc/test_horse_detail.py
+  lines: 1-23
+  claim_limit: Survey assertion script over extracted item JSON; it is not a trusted PC runtime capture or golden result.
+  sha256: 0ba4aa02c04d76f3c0c58ce14633d86d2046cd64b750e75e233e88e4380575b1
+  revision: jx-pc:7b24ff93702c7eeb272ecb63716baba579975434
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0033
+  dri: evidence-curator
+  reviewer: content-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:5e1fe32a10495213d62fbddecfb602161e5fbf3a913dd4fda6c15ab3cd704ff2
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KNpcTemplate.h
+  lines: 12-73
+  claim_limit: Static NPC template identity, animation, AI, and combat fields; does not prove loaded content values or runtime behavior.
+  sha256: 5e1fe32a10495213d62fbddecfb602161e5fbf3a913dd4fda6c15ab3cd704ff2
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0034
+  dri: evidence-curator
+  reviewer: content-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerDBFuns.cpp
+  lines: 688-737,975-1028
+  claim_limit: Static legacy task-value, station, and waypoint persistence; does not prove quest semantics, ordering, or runtime durability.
+  sha256: fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0035
+  dri: evidence-curator
+  reviewer: content-parity-review
+  phase: P2
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:b55766c976e81c145c656e044752953c2f2596f2efa7491867171520b0627a68
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KMission.cpp
+  lines: 93-122
+  claim_limit: Static mission-to-world-script execution seam. Client and server script corpora are additional unpinned anchors; package order, locale, hashes, and runtime execution remain unproven.
+  sha256: b55766c976e81c145c656e044752953c2f2596f2efa7491867171520b0627a68
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0036
+  dri: evidence-curator
+  reviewer: progression-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerDBFuns.cpp
+  lines: 758-785
+  claim_limit: Static legacy progression persistence fields; does not prove progression formulas, validation, or runtime durability.
+  sha256: fd956f08aa9160edec3f03cee293ae8cda2dcac4118a9b14a4c81b105ba8a330
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0037
+  dri: evidence-curator
+  reviewer: progression-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:7a40db0afe530f046c03c9dc7fc848206ba39e425cb1b71edd04098366ae9ba0
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerFaction.cpp
+  lines: 40-158
+  claim_limit: Static series and faction add/leave/name/ID code; does not establish canonical join/leave rules or runtime parity.
+  sha256: 7a40db0afe530f046c03c9dc7fc848206ba39e425cb1b71edd04098366ae9ba0
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0038
+  dri: evidence-curator
+  reviewer: progression-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:79f360d9919e07964a5e840d7286efc22ca072633b0a67b44346fd4b7c362702
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KNpcDeathCalcExp.cpp
+  lines: 1-152
+  claim_limit: Static death-EXP calculation seam; does not prove the active build, exact canonical formula, or party-split parity.
+  sha256: 79f360d9919e07964a5e840d7286efc22ca072633b0a67b44346fd4b7c362702
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0039
+  dri: evidence-curator
+  reviewer: skill-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:a83c12c4e37be600e33dbed9e130845cdafe870e30379e2a8d6efa692a9acad5
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkillList.cpp
+  lines: 34-132
+  claim_limit: Static skill-list find/add/remove/count code. KPlayerDBFuns.cpp:623-680,933-972 is an additional persistence anchor; runtime skill behavior remains unproven.
+  sha256: a83c12c4e37be600e33dbed9e130845cdafe870e30379e2a8d6efa692a9acad5
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0040
+  dri: evidence-curator
+  reviewer: skill-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:c0c1b3c289923a305438c1a0d1b002a826fb9fb19127ecf05afb5b7b4644113e
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkills.cpp
+  lines: 1-3368
+  claim_limit: Static skill logic seam. KSkillManager.cpp, SkillDef.h, and KMagicAttrib.h are additional anchors not hashed here; no individual skill or runtime branch is proven.
+  sha256: c0c1b3c289923a305438c1a0d1b002a826fb9fb19127ecf05afb5b7b4644113e
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0041
+  dri: evidence-curator
+  reviewer: skill-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:b4b901973c40d8a92a08046aba84f3bc67967016265bf3861aa93136250d1c20
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/tagnewplayer/skillid.lua
+  lines: 3-101
+  claim_limit: Static literal faction skill IDs. Server faction-skill scripts are additional unpinned anchors; this is not a reconciled catalog or runtime proof.
+  sha256: b4b901973c40d8a92a08046aba84f3bc67967016265bf3861aa93136250d1c20
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0042
+  dri: evidence-curator
+  reviewer: social-parity-review
+  phase: P2
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:2175b9cf9eb19d6da72edfd6505ae4d4f3119ee0546f5c1550e6344e6f160ebb
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerTeam.cpp
+  lines: 63-196,304-622
+  claim_limit: Static legacy team create/invite/reply and captain-follow flags; does not prove runtime state transitions or parity.
+  sha256: 2175b9cf9eb19d6da72edfd6505ae4d4f3119ee0546f5c1550e6344e6f160ebb
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0043
+  dri: evidence-curator
+  reviewer: social-parity-review
+  phase: P3
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:3a040db2c22c107a42f6eb3842fa4d64e6e58150394f2bc39d4366952e70e6cc
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerTong.cpp
+  lines: 1-2140
+  claim_limit: Static guild seam. KTongData.cpp, KPlayerTrade.cpp, and KItemList.cpp:3308-3354 are additional anchors not hashed here; runtime guild/trade rules remain unproven.
+  sha256: 3a040db2c22c107a42f6eb3842fa4d64e6e58150394f2bc39d4366952e70e6cc
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0044
+  dri: evidence-curator
+  reviewer: social-parity-review
+  phase: P4
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:c58c38f90bc59aa0c81df0d6dd45a5476a62776af47cb0cd181905ad5cc6c7ab
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayerPK.cpp
+  lines: 59-220
+  claim_limit: Static legacy PK lock/value, mode, team-follow, guild-war, and cooldown code; does not prove runtime policy or parity.
+  sha256: c58c38f90bc59aa0c81df0d6dd45a5476a62776af47cb0cd181905ad5cc6c7ab
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0045
+  dri: evidence-curator
+  reviewer: social-parity-review
+  phase: P4
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:cbdc01ae52eb1670a79d6c1083df9197ad1b89ad90bd164d4a135caf88396da8
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KLadder.cpp
+  lines: 1-183
+  claim_limit: Static ladder data access seam; does not prove ranking rules, rewards, event schedules, active data, or runtime parity.
+  sha256: cbdc01ae52eb1670a79d6c1083df9197ad1b89ad90bd164d4a135caf88396da8
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0046
+  dri: evidence-curator
+  reviewer: world-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:4eb5fab0fb649f3bce3268d2c0678682d8e82b18244c0125fd4fef777ad7bb17
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSubWorld.cpp
+  lines: 168-333,495-588
+  claim_limit: Static map/MPS conversion, distance, barrier, and map-load code; does not prove loaded map data, coordinate parity, or runtime behavior.
+  sha256: 4eb5fab0fb649f3bce3268d2c0678682d8e82b18244c0125fd4fef777ad7bb17
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0047
+  dri: evidence-curator
+  reviewer: world-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:4eb5fab0fb649f3bce3268d2c0678682d8e82b18244c0125fd4fef777ad7bb17
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSubWorld.cpp
+  lines: 856-990,1057
+  claim_limit: Static region transitions for world entities and sync-data seam; does not prove AOI ordering, network delivery, or runtime parity.
+  sha256: 4eb5fab0fb649f3bce3268d2c0678682d8e82b18244c0125fd4fef777ad7bb17
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'
+- id: EVID-0048
+  dri: evidence-curator
+  reviewer: world-parity-review
+  phase: P1-P2
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - sha256:a36f18c4b203ca134a0812c0c35de28c6d1e32da9c2fe00a7b6fd0c55f6384f1
+  kind: source
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayer.cpp
+  lines: 602-668
+  claim_limit: Static walk, turn, and selection source. KNpcFindPath.cpp is an additional anchor; neither proves the mobile coordinate system or runtime path parity.
+  sha256: a36f18c4b203ca134a0812c0c35de28c6d1e32da9c2fe00a7b6fd0c55f6384f1
+  revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  captured_at: '2026-07-16T15:09:22+07:00'
+  fresh_until: '2026-10-14T15:09:22+07:00'

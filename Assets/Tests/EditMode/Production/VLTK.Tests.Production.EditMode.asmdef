@@ -1,0 +1,30 @@
+{
+    "name": "VLTK.Tests.Production.EditMode",
+    "rootNamespace": "VLTK.Tests.Production.EditMode",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "VLTK.Backend",
+        "VLTK.Production.App",
+        "VLTK.Production.Networking",
+        "VLTK.Production.UI.Runtime",
+        "VLTK.Production.World.Unity",
+        "VLTK.SkillPort",
+        "VLTK.Generated.GameV1"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Google.Protobuf.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

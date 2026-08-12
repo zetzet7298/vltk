@@ -20,8 +20,11 @@ namespace VLTK.Sandbox
         Map = 2,        // Khu vực / bản đồ hiện tại
         Team = 3,       // Đội / group
         Faction = 4,    // Môn phái
-        Private = 5,    // Riêng tư (whisper)
+        Private = 5,    // Mật / whisper
         System = 6,     // Thông báo hệ thống
+        Room = 7,       // Phòng chat PC
+        Guild = 8,      // Bang hội
+        Other = 9,      // Khác
     }
 
     /// <summary>A single chat message.</summary>
@@ -43,17 +46,27 @@ namespace VLTK.Sandbox
     {
         private readonly List<ChatMessage> _history = new();
         private readonly int _maxHistory = 200;
-        private ChatChannel _activeChannel = ChatChannel.All;
+        // PC default channel: CH_SYSTEM (default send label "Nhắc nhở" in ChatRoomPanelService).
+        private ChatChannel _activeChannel = ChatChannel.System;
+        private IChatServiceHost _host;
 
         public event Action<ChatMessage> OnMessageReceived;
         public event Action<ChatChannel> OnChannelChanged;
         public IReadOnlyList<ChatMessage> History => _history;
         public ChatChannel ActiveChannel => _activeChannel;
 
+        public ChatService() { }
+        public ChatService(IChatServiceHost host) { _host = host; }
+        public void AttachHost(IChatServiceHost host) { _host = host; }
+
         /// <summary>Send a player message to a channel.</summary>
         public void SendPlayerMessage(ChatChannel channel, string senderName, string text)
         {
-            if (string.IsNullOrWhiteSpace(text)) return;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                _host?.OnEmptyMessageRejected((int)channel, senderName);
+                return;
+            }
 
             var msg = new ChatMessage
             {
@@ -67,6 +80,13 @@ namespace VLTK.Sandbox
             _history.Add(msg);
             TrimHistory();
             OnMessageReceived?.Invoke(msg);
+            if (_host != null)
+            {
+                _host.OnPlayerMessageSent((int)channel, senderName, text);
+                _host.LogChatEvent("player_send", (int)channel, $"{senderName}: {text}");
+                _host.PlayChatSFX("send", (int)channel);
+                _host.SaveChatLog((int)channel, text, msg.timestamp);
+            }
         }
 
         /// <summary>Post a system message.</summary>
@@ -83,6 +103,13 @@ namespace VLTK.Sandbox
             _history.Add(msg);
             TrimHistory();
             OnMessageReceived?.Invoke(msg);
+            if (_host != null)
+            {
+                _host.OnSystemMessagePosted(text);
+                _host.LogChatEvent("system_post", (int)ChatChannel.System, text);
+                _host.PlayChatSFX("system", (int)ChatChannel.System);
+                _host.SaveChatLog((int)ChatChannel.System, text, msg.timestamp);
+            }
         }
 
         /// <summary>Post a combat log message.</summary>
@@ -99,12 +126,26 @@ namespace VLTK.Sandbox
             _history.Add(msg);
             TrimHistory();
             OnMessageReceived?.Invoke(msg);
+            if (_host != null)
+            {
+                _host.OnCombatLogPosted(text);
+                _host.LogChatEvent("combat_log", (int)ChatChannel.System, text);
+                _host.PlayChatSFX("combat", (int)ChatChannel.System);
+                _host.SaveChatLog((int)ChatChannel.System, text, msg.timestamp);
+            }
         }
 
         public void SetChannel(ChatChannel channel)
         {
             _activeChannel = channel;
             OnChannelChanged?.Invoke(channel);
+            if (_host != null)
+            {
+                _host.OnChannelChanged((int)channel, ChannelNameVi(channel));
+                _host.LogChatEvent("channel_changed", (int)channel, ChannelNameVi(channel));
+                _host.PlayChatSFX("channel", (int)channel);
+                _host.ShowChatUI((int)channel);
+            }
         }
 
         /// <summary>Get messages for the active channel (or all if All).</summary>
@@ -117,6 +158,8 @@ namespace VLTK.Sandbox
                 if (_activeChannel == ChatChannel.All || msg.channel == _activeChannel || msg.channel == ChatChannel.System)
                     result.Insert(0, msg);
             }
+            if (_host != null)
+                _host.OnFilteredMessagesQueried(result.Count, (int)_activeChannel, maxCount);
             return result;
         }
 
@@ -127,19 +170,37 @@ namespace VLTK.Sandbox
             ChatChannel.Map => "Khu Vực",
             ChatChannel.Team => "Đội",
             ChatChannel.Faction => "Môn Phái",
-            ChatChannel.Private => "Riêng",
+            ChatChannel.Private => "Mật",
             ChatChannel.System => "Hệ Thống",
+            ChatChannel.Room => "Phòng",
+            ChatChannel.Guild => "Bang Hội",
+            ChatChannel.Other => "Khác",
             _ => "???",
         };
 
+        /// <summary>PC-authentic chat channel text colors from uiconfig.ini SetChannelTextColor.</summary>
         public static Color ChannelColor(ChatChannel channel) => channel switch
         {
-            ChatChannel.World => new Color(1f, 0.9f, 0.5f),
-            ChatChannel.Map => new Color(0.7f, 1f, 0.7f),
-            ChatChannel.Team => new Color(0.5f, 0.8f, 1f),
-            ChatChannel.Faction => new Color(0.9f, 0.6f, 1f),
-            ChatChannel.Private => new Color(1f, 0.7f, 0.7f),
-            ChatChannel.System => new Color(1f, 0.85f, 0.3f),
+            // PC: CH_NEARBY "255,255,255"
+            ChatChannel.All => new Color(1f, 1f, 1f),
+            // PC: CH_WORLD "146,255,143"
+            ChatChannel.World => new Color(0.573f, 1f, 0.561f),
+            // PC: CH_TEAM "64,190,255"
+            ChatChannel.Team => new Color(0.251f, 0.745f, 1f),
+            // PC: CH_FACTION "225,210,165"
+            ChatChannel.Faction => new Color(0.882f, 0.824f, 0.647f),
+            // PC: CH_CITY "169,255,224"
+            ChatChannel.Room => new Color(0.663f, 1f, 0.878f),
+            // PC: CH_TONG "255,244,0"
+            ChatChannel.Guild => new Color(1f, 0.957f, 0f),
+            // PC: CH_CHATROOM "255,255,255" (private/whisper)
+            ChatChannel.Private => new Color(1f, 1f, 1f),
+            // PC: CH_SYSTEM "255,0,0"
+            ChatChannel.System => new Color(1f, 0f, 0f),
+            // Map channel uses CH_JABBER "193,193,193"
+            ChatChannel.Map => new Color(0.757f, 0.757f, 0.757f),
+            // Other
+            ChatChannel.Other => new Color(0.757f, 0.757f, 0.757f),
             _ => Color.white,
         };
 
@@ -150,6 +211,9 @@ namespace VLTK.Sandbox
         }
     }
 
+    // DEPRECATED by port-pc-chat-bar-parity: legacy uGUI chat panel retained only for
+    // optional debugging behind VLTK_LEGACY_CHAT_PANEL. The UI Toolkit HUD ChatBar is the
+    // single user-facing PC-parity chat surface.
     /// <summary>
     /// Chat UI panel — rendered at bottom of screen.
     /// Shows message history, channel tabs, and input field.
@@ -162,7 +226,7 @@ namespace VLTK.Sandbox
         private InputField _inputField;
         private Transform _tabRoot;
         private Font _font;
-        private bool _isOpen = true;
+        private bool _isOpen = false;
         private float _lastRefresh;
 
         public bool IsOpen => _isOpen;
@@ -223,6 +287,8 @@ namespace VLTK.Sandbox
             try
             {
                 BuildUIInternal();
+                if (_panelRoot != null)
+                    _panelRoot.SetActive(_isOpen);
             }
             catch (Exception ex)
             {
@@ -232,18 +298,31 @@ namespace VLTK.Sandbox
 
         private void BuildUIInternal()
         {
+            // Host RectTransform phải full-stretch, nếu không _panelRoot (neo 0–0.45×0–0.35)
+            // sẽ resolve theo host 0-size ở tâm canvas → mọi panel sụp về giữa màn (ngay trên player).
+            var hostRt = GetComponent<RectTransform>();
+            if (hostRt == null)
+                hostRt = gameObject.AddComponent<RectTransform>();
+            hostRt.anchorMin = Vector2.zero;
+            hostRt.anchorMax = Vector2.one;
+            hostRt.offsetMin = Vector2.zero;
+            hostRt.offsetMax = Vector2.zero;
+
             _panelRoot = new GameObject("ChatPanel");
             _panelRoot.transform.SetParent(transform, false);
 
             var mainRt = _panelRoot.AddComponent<RectTransform>();
-            mainRt.anchorMin = new Vector2(0f, 0f);
-            mainRt.anchorMax = new Vector2(0.45f, 0.35f);
+            mainRt.anchorMin = new Vector2(0.27f, 0.05f);
+            mainRt.anchorMax = new Vector2(0.73f, 0.40f);
             mainRt.offsetMin = new Vector2(8f, 8f);
             mainRt.offsetMax = new Vector2(-8f, -8f);
 
-            // Semi-transparent background
+            // Semi-transparent background. raycastTarget=false để touch xuyên qua xuống
+            // joystick (chat panel ở góc dưới-trái trùng chỗ joystick). Tab/input vẫn
+            // có raycast riêng nên vẫn bấm được.
             var bg = _panelRoot.AddComponent<Image>();
-            bg.color = new Color(0.02f, 0.02f, 0.05f, 0.65f);
+            bg.color = new Color(0f, 0f, 0f, 0f);
+            bg.raycastTarget = false;
 
             // Tab bar
             var tabBar = new GameObject("TabBar");
@@ -260,22 +339,32 @@ namespace VLTK.Sandbox
             hLayout.childControlHeight = true;
 
             // Channel tabs
-            foreach (ChatChannel ch in new[] { ChatChannel.All, ChatChannel.World, ChatChannel.Map, ChatChannel.Team, ChatChannel.Faction, ChatChannel.System })
+            foreach (ChatChannel ch in new[] { ChatChannel.All, ChatChannel.Private, ChatChannel.Room, ChatChannel.Guild, ChatChannel.Faction, ChatChannel.Other })
             {
                 var tabGo = new GameObject($"Tab_{ch}");
                 tabGo.transform.SetParent(_tabRoot, false);
                 var tabImg = tabGo.AddComponent<Image>();
-                tabImg.color = new Color(0.1f, 0.1f, 0.15f, 0.8f);
+                tabImg.color = new Color(0f, 0f, 0f, 0f);
                 var tabBtn = tabGo.AddComponent<Button>();
                 tabBtn.targetGraphic = tabImg;
                 var channel = ch;
                 tabBtn.onClick.AddListener(() => { _service.SetChannel(channel); Refresh(); });
-                var tabTxt = tabGo.AddComponent<Text>();
+
+                var txtGo = new GameObject("Label");
+                txtGo.transform.SetParent(tabGo.transform, false);
+                var txtRt = txtGo.AddComponent<RectTransform>();
+                txtRt.anchorMin = Vector2.zero;
+                txtRt.anchorMax = Vector2.one;
+                txtRt.offsetMin = Vector2.zero;
+                txtRt.offsetMax = Vector2.zero;
+
+                var tabTxt = txtGo.AddComponent<Text>();
                 tabTxt.text = ChatService.ChannelNameVi(ch);
                 tabTxt.font = _font;
                 tabTxt.fontSize = 16;
                 tabTxt.color = ChatService.ChannelColor(ch);
                 tabTxt.alignment = TextAnchor.MiddleCenter;
+
                 var le = tabGo.AddComponent<LayoutElement>();
                 le.minWidth = 55f;
                 le.minHeight = 22f;
@@ -302,7 +391,7 @@ namespace VLTK.Sandbox
             inputRt.anchorMin = new Vector2(0f, 0f);
             inputRt.anchorMax = new Vector2(1f, 0.12f);
             var inputBg = inputBar.AddComponent<Image>();
-            inputBg.color = new Color(0.05f, 0.05f, 0.08f, 0.9f);
+            inputBg.color = new Color(0f, 0f, 0f, 0f);
 
             var inputField = new GameObject("InputField");
             inputField.transform.SetParent(inputBar.transform, false);
@@ -330,7 +419,16 @@ namespace VLTK.Sandbox
             var sbBtn = sendBtn.AddComponent<Button>();
             sbBtn.targetGraphic = sbImg;
             sbBtn.onClick.AddListener(SendInput);
-            var sbTxt = sendBtn.AddComponent<Text>();
+
+            var sbTxtGo = new GameObject("Label");
+            sbTxtGo.transform.SetParent(sendBtn.transform, false);
+            var sbTxtRt = sbTxtGo.AddComponent<RectTransform>();
+            sbTxtRt.anchorMin = Vector2.zero;
+            sbTxtRt.anchorMax = Vector2.one;
+            sbTxtRt.offsetMin = Vector2.zero;
+            sbTxtRt.offsetMax = Vector2.zero;
+
+            var sbTxt = sbTxtGo.AddComponent<Text>();
             sbTxt.text = "Gửi";
             sbTxt.font = _font;
             sbTxt.fontSize = 20;

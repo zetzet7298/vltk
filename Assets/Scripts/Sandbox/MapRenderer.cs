@@ -63,11 +63,34 @@ namespace VLTK.Sandbox
             _spriteCache.Clear();
             _builtinSortCounter = 0;
             _loadedMapId = -1;
+            ContentBounds = new Bounds();
+            HasContent = false;
         }
 
         // JX region scene constants (KScenePlaceRegionC): scene 512x1024, ground cell 32.
         private const int RegionSceneWidth = 512;
         private const int GroundCell = 32;
+
+        // Local TestData/Regions/Map_NN_C/ folder mapId remap. The pipeline that
+        // generated the local BLH / vượt ải / Phong Kỳ / Lâm Du Quan region folders
+        // used different mapIds than the canonical PC maplist.ini (which is what
+        // MapPortManifest and the rest of the mobile code follow). Without this
+        // remap, MapRenderer looks for TestData/Regions/Map_53_C/ for Ba Lăng
+        // huyện (which doesn't exist on disk) and falls through to
+        // "No test region data available" — leaving the map unrendered.
+        //
+        // The local pipeline source for 巴陵县 is documented in
+        // Assets/StreamingAssets/TestData/Regions/Map_79_coverage.json
+        // (mapId 79, displayName 巴陵县, source jxwin-kinnox/.../两湖区/巴陵县).
+        //
+        // When the local catalog is regenerated to match PC maplist.ini, this
+        // remap can be deleted.
+        private static readonly Dictionary<int, int> LocalDataMapIdOverrides = new Dictionary<int, int>
+            {
+                // 巴陵县 (Ba Lăng huyện / BLH): PC maplist.ini says 53, local
+                // data folder is Map_79_C/ (621 region files).
+                [53] = 79,
+            };
 
         // sortingOrder is a 16-bit field (-32768..32767). The map spans screen-Y up to
         // ~100000, so the old "screenY*2 clamped to ±32000" scheme overflowed AND
@@ -78,21 +101,37 @@ namespace VLTK.Sandbox
         public const int GroundSortingOrder = -1000;  // terrain, always beneath objects
         public const int CoverSortingOrder = 0;       // flat ground decals (grass/road), Y-sorted
         public const int BuiltinSortingOrder = 1000;  // base for structures/trees (above cover)
-        public const int PlayerSortingOrder = 5000;   // actors above static map art
+        public const int PlayerSortingOrder = 32200;   // actors above static map art
+
+        private static string ResolveRegionFolder(string regionFolder)
+        {
+            if (string.IsNullOrEmpty(regionFolder)) return null;
+            if (Path.IsPathRooted(regionFolder)) return regionFolder;
+            return Path.Combine(Application.streamingAssetsPath, regionFolder);
+        }
 
         private void LoadSampleRegions(MapDefinition mapDef)
         {
-            // Prefer client-projected regions (COL_ROW_Region_C.dat) exported for this map.
-            var clientDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}_C");
-            bool client = Directory.Exists(clientDir);
-            var regionsDir = client
-                ? clientDir
-                : Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}");
+            // Prefer generated bulk-port regions, then legacy client-projected test regions.
+            // The data-folder mapId may differ from the catalog mapId (see
+            // LocalDataMapIdOverrides above); resolve the actual on-disk folder id
+            // before building the path so map visuals don't silently fall through
+            // to "No test region data available" for known mismatches.
+            int dataMapId = mapDef.catalogEntry.mapId;
+            if (LocalDataMapIdOverrides.TryGetValue(dataMapId, out var overrideId))
+                dataMapId = overrideId;
+            var generatedDir = ResolveRegionFolder(mapDef.catalogEntry?.regionFolder);
+            var clientDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{dataMapId}_C");
+            var legacyDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{dataMapId}");
+            var regionsDir = Directory.Exists(generatedDir) ? generatedDir : clientDir;
+            if (!Directory.Exists(regionsDir))
+                regionsDir = legacyDir;
             if (!Directory.Exists(regionsDir))
                 regionsDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions");
             if (!Directory.Exists(regionsDir))
             {
                 SubsystemLog.Warn("MapRenderer", "No test region data available");
+                ApplyFullMapBounds(mapDef);
                 return;
             }
 
@@ -111,6 +150,7 @@ namespace VLTK.Sandbox
             if (entries.Count == 0)
             {
                 SubsystemLog.Warn("MapRenderer", "No coordinate-named region files found");
+                ApplyFullMapBounds(mapDef);
                 return;
             }
 
@@ -221,6 +261,19 @@ namespace VLTK.Sandbox
 
             SubsystemLog.Info("MapRenderer",
                 $"Rendered {rendered} regions; focus center={ContentBounds.center} size={ContentBounds.size}");
+        }
+
+        /// <summary>
+        /// Apply bounds from map definition without rendering region visuals.
+        /// Used by FastEditor boot to skip 5+ second map render.
+        /// </summary>
+        public void ApplyBoundsFromDefinition(MapDefinition mapDef)
+        {
+            if (mapDef == null) return;
+            _loadedMapId = mapDef.catalogEntry.mapId;
+            ApplyFullMapBounds(mapDef);
+            SubsystemLog.Info("MapRenderer",
+                $"Bounds applied without visuals: map={_loadedMapId}, bounds={ContentBounds.size}");
         }
 
         private void ApplyFullMapBounds(MapDefinition mapDef)

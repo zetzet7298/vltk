@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcDropRateConfigRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public DropRateConfigService() : this(null) { }
+
         public DropRateConfigService(PcDropRateConfigRegistry reg) { _reg = reg ?? new PcDropRateConfigRegistry(); }
 
         public static DropRateConfigService LoadFromStreamingAssets(string subDir = "Reference/PcDropRate")

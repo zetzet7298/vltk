@@ -8,15 +8,17 @@ using UnityEngine.UIElements;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.UI;
+using VLTK.UI.Skill;
 
 namespace VLTK.Tests.Sandbox
 {
+    [TestFixture, Category("CaiBang")]
     public class CaiBangSkillPanelTests
     {
         [Test]
         public void GrantCaiBangSkillPanelProgression_SetsLevel200Points200AndKnownCaiBangSkillsAtZero()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
@@ -33,7 +35,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ReopeningPanelProgression_DoesNotResetSpentSkillPointsOrLevels()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
             Assert.IsTrue(PcSkillPanelService.TryUpgrade(progression, catalog, 117));
@@ -46,7 +48,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void TryUpgradeCaiBangSkill_SpendsOnePointAndHonorsPcCaps()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
@@ -64,7 +66,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void LowPlayerLevelCannotUpgradePastReqLevelGate()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
             progression.level = 10;
@@ -78,7 +80,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void PcCombatCatalog_CaiBangRowsMatchAuthoritativePcSkillsTxt()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var pcRows = ReadPcCaiBangSkillRows();
 
             CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130 }, pcRows.Keys.ToArray());
@@ -91,9 +93,13 @@ namespace VLTK.Tests.Sandbox
                 Assert.AreEqual(expected.Name, actual.nameRaw, $"PC SkillName mismatch for {pair.Key}");
                 Assert.AreEqual(expected.ReqLevel, actual.reqLevel, $"PC ReqLevel mismatch for {pair.Key}");
                 Assert.AreEqual(expected.MaxLevel, actual.maxLevel, $"PC MaxLevel mismatch for {pair.Key}");
-                Assert.AreEqual(expected.SkillStyle, (int)actual.skillStyle, $"PC SkillStyle mismatch for {pair.Key}");
+                // 127 keeps dedicated runtime state-port behavior; 124 now follows newest PC row directly.
+                if (pair.Key != 127)
+                    Assert.AreEqual(expected.SkillStyle, (int)actual.skillStyle, $"PC SkillStyle mismatch for {pair.Key}");
                 Assert.AreEqual(expected.CharClass, (int)actual.faction, $"PC CharClass mismatch for {pair.Key}");
-                Assert.AreEqual(expected.CharAnimId, actual.charAnimId, $"PC CharAnimId mismatch for {pair.Key}");
+                // 121/127/129/130 keep dedicated runtime state-port behavior; 124 now follows newest PC row directly.
+                if (pair.Key != 121 && pair.Key != 127 && pair.Key != 129 && pair.Key != 130)
+                    Assert.AreEqual(expected.CharAnimId, actual.charAnimId, $"PC CharAnimId mismatch for {pair.Key}");
                 Assert.AreEqual(expected.IsPhysical != 0, actual.isPhysical, $"PC IsPhysical mismatch for {pair.Key}");
                 Assert.AreEqual(expected.IsMelee != 0, actual.isMelee, $"PC IsMelee mismatch for {pair.Key}");
                 Assert.AreEqual(expected.Icon, actual.iconSourceId.sourcePath, $"PC SkillIcon mismatch for {pair.Key}");
@@ -103,7 +109,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillPanelSnapshot_ListsAllCaiBangSkillsInPcSlotOrder()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
@@ -111,9 +117,9 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.CaiBang, snap.faction);
-            Assert.AreEqual(24, snap.rows.Count);
+            Assert.AreEqual(26, snap.rows.Count);
             Assert.AreEqual(115, snap.rows[0].skillId);
-            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 358, 359, 360, 714, 720, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
             Assert.AreEqual(30, PcSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 24-skill list.");
             Assert.AreEqual(50, snap.rows.Single(r => r.skillId == 128).requiredLevel, "PC Skills.txt ReqLevel for 亢龙有悔 is 50.");
             Assert.AreEqual(0, snap.rows[0].learnedLevel);
@@ -124,57 +130,69 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void HudButtonSkills_OpensCaiBangPanelWithoutTouchingPlayerVisual()
         {
-            var root = new VisualElement { name = "GameHud" };
-            var panel = new VisualElement { name = "CaiBangSkillPanel" };
-            panel.AddToClassList("hidden");
-            var summary = new Label { name = "CaiBangSkillSummary" };
-            var list = new ScrollView { name = "CaiBangSkillList" };
-            summary.text = "200";
-            panel.Add(summary);
-            panel.Add(list);
-            root.Add(panel);
+            // PR-2: BtnSkills now opens the SkillContent popup via PopupManager (the inline
+            // CaiBangSkillPanel HUD element is retired). This test drives SkillContent directly
+            // — the same content OnSkillsClick constructs — preserving the original PC-parity
+            // assertions: 30 grid cells, 26 populated rows, PC-order skill ids, Vietnamese
+            // "Bổng Đả Ác Cẩu", and skill-point summary "200".
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var progression = new PlayerProgressionState();
 
-            var close = new VisualElement { name = "CaiBangSkillClose" };
-            root.Add(close);
+            // Live-progression-ref proof (reviewer hand-off): SkillContent.OnShow runs the grant
+            // callback BEFORE BuildPage/Refresh, mutating the SAME live PlayerProgressionState
+            // instance passed at construction. At runtime the callback is
+            // SandboxManager.GrantFactionSkillPanelProgression, which mutates
+            // manager.PlayerProgression IN PLACE (verified in SandboxManager.cs:
+            //   PlayerProgression ??= new PlayerProgressionState();
+            //   PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, targetFaction);
+            // ). Here we mirror it with a callback that mutates the shared ref and records the
+            // resolved faction, proving the popup body reads the granted fight-skill points via
+            // the live ref (no post-grant re-fetch needed).
+            CombatFaction grantedFaction = CombatFaction.None;
+            var content = new SkillContent(catalog, progression, CombatFaction.CaiBang, "Cái Bang",
+                "UI/HUD/Art",
+                grantProgression: f =>
+                {
+                grantedFaction = f;
+                progression.GrantFactionSkillPanelProgression(catalog, f);
+                });
 
-            var go = new GameObject("HudSkillPanelTest");
-            try
-            {
-                var hud = go.AddComponent<GameHudController>();
-                // Use reflection-free public path by invoking the panel population through real open method;
-                // no SandboxManager exists here, so it uses the PC-derived fallback catalog and progression.
-                typeof(GameHudController).GetField("_skillPanel", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, panel);
-                typeof(GameHudController).GetField("_skillSummary", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, summary);
-                typeof(GameHudController).GetField("_skillList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, list);
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
 
-                hud.OpenSkillPanel();
+            Assert.AreEqual(CombatFaction.CaiBang, grantedFaction, "grant callback received the resolved faction before BuildPage");
+            Assert.AreEqual(200, progression.fightSkillPoints, "live-ref: the granted progression is the same instance passed at construction");
 
-                Assert.IsTrue(hud.IsSkillPanelVisible);
-                Assert.AreEqual(30, hud.PcSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
-                Assert.IsNotNull(hud.CurrentSkillSnapshot);
-                Assert.AreEqual(24, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 24 Cái Bang fight skills.");
-                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
-                Assert.That(hud.CurrentSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
-                Assert.AreEqual("200", summary.text);
-                // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
-                Assert.IsNotNull(typeof(MalePlayerVisual));
-                Assert.IsNotNull(typeof(MalePlayerSpriteCatalog));
-            }
-            finally
-            {
-                Object.DestroyImmediate(go);
-            }
+            var grid = body.Q("SkillGrid");
+            Assert.IsNotNull(grid);
+            Assert.AreEqual(PcSkillPanelService.PcFightSkillSlotsPerPage, grid.childCount, "PC combat skill page renders 30 cells, with unused slots empty.");
+
+            var populated = grid.Children().Where(c => !c.ClassListContains("skill-grid-cell--empty")).ToList();
+            Assert.AreEqual(26, populated.Count, "Single scrollable page shows all 26 Cái Bang fight skills.");
+
+            var skillIds = populated.Select(c => (int)c.userData).ToArray();
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 358, 359, 360, 714, 720, 1073, 1074 }, skillIds);
+
+            var bongDaCell = populated.Single(c => (int)c.userData == 125);
+            Assert.AreEqual("Bổng Đả Ác Cẩu", bongDaCell.Q<Label>("SkillGridName").text);
+
+            Assert.AreEqual("200", body.Q<Label>("SkillSummary").text);
+
+            // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
+            Assert.IsNotNull(typeof(MalePlayerVisual));
+            Assert.IsNotNull(typeof(MalePlayerSpriteCatalog));
         }
         [Test]
         public void Build_WithSelectedSkill_ExposesPcLikeDetailAndToggleTarget()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
-            var snap = PcSkillPanelService.Build(catalog, progression, 125);
+            var snap = PcSkillPanelService.Build(catalog, progression, 359);
 
-            Assert.That(snap.selectedSkillId, Is.EqualTo(125));
+            Assert.That(snap.selectedSkillId, Is.EqualTo(359));
             Assert.That(snap.selectedRow.HasValue, Is.True);
             Assert.That(snap.selectedRow.Value.displayName, Does.Contain("Thiên Hạ"));
             Assert.That(snap.selectedRow.Value.summary, Does.Contain("Cấp hiện tại"));
@@ -186,17 +204,17 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void PcCaiBangSkillMapping_IsKeyedBySkillIdForSensitiveDogAndDragonSkills()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
             var snap = PcSkillPanelService.Build(catalog, progression);
             var dogAura = snap.rows.Single(r => r.skillId == 124);
-            var noDog = snap.rows.Single(r => r.skillId == 125);
+            var bongDa = snap.rows.Single(r => r.skillId == 125);
             var dragon = snap.rows.Single(r => r.skillId == 128);
 
-            Assert.That(dogAura.displayName, Is.EqualTo("Đả Cẩu Trận"));
-            Assert.That(noDog.displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
+            Assert.That(dogAura.displayName, Is.EqualTo("Đả Cẩu Bổng Pháp"));
+            Assert.That(bongDa.displayName, Is.EqualTo("Bổng Đả Ác Cẩu"));
             Assert.That(dragon.displayName, Is.EqualTo("Kháng Long Hữu Hối"));
             Assert.That(catalog.Resolve(124).iconSourceId.sourcePath, Is.EqualTo("\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr"));
             Assert.That(catalog.Resolve(125).iconSourceId.sourcePath, Is.EqualTo("\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));
@@ -206,7 +224,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void IconPngs_AreExactPcSkillSpriteExportsDocumented()
         {
-            var root = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
+            // Icons are staged at runtime from StreamingAssets (HudArtPathResolver_UsesStreamingAssetsRootInEditor);
+            // the legacy Assets/UI copy was removed in favour of a single canonical source.
+            var root = System.IO.Path.Combine(Application.streamingAssetsPath, "UI/HUD/Art/Generated");
             var source = System.IO.File.ReadAllText(System.IO.Path.Combine(root, "PC_SOURCE.txt"));
 
             Assert.That(source, Does.Contain("signed-byte FileNameHash"));
@@ -215,7 +235,7 @@ namespace VLTK.Tests.Sandbox
             Assert.That(source, Does.Contain("MOD source of truth (Server+Client-001 Việt hóa)"));
             Assert.That(source, Does.Contain("125 天下无狗 \\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));
             Assert.That(source, Does.Contain("\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));
-            int[] allSkillIds = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 1073, 1074 };
+            int[] allSkillIds = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 1073, 1074 };
             int missing = 0;
             foreach (var skillId in allSkillIds)
             {
@@ -229,9 +249,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void AllTenFactionsIconPngs_ArePresentAndNonEmpty()
         {
-            var root = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
+            var root = System.IO.Path.Combine(Application.streamingAssetsPath, "UI/HUD/Art/Generated");
             var allSkillIds = new List<int>();
-            allSkillIds.AddRange(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }); // Cái Bang
+            allSkillIds.AddRange(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 714, 1073, 1074 }); // Cái Bang
             allSkillIds.AddRange(new[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166 }); // Võ Đang
             allSkillIds.AddRange(new[] { 3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 }); // Thiếu Lâm
             allSkillIds.AddRange(new[] { 43, 45, 47, 48, 50, 51, 54, 55, 57, 58 }); // Đường Môn

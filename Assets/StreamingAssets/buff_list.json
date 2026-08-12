@@ -280,7 +280,7 @@
       "id": 313,
       "name": "Long Châu",
       "image": "\\spr\\item\\script\\zhongqiu_jieri\\longzhu2.spr",
-      "desc": "Tăng Kháng T?nh"
+      "desc": "Tăng Kháng Tính"
     },
     {
       "id": 333,
@@ -344,27 +344,27 @@
     },
     {
       "id": 440,
-      "name": "Tiên Thảo Lộ",
+      "name": "Tiên Thảo Lộ Đặc Biệt",
       "image": "\\spr\\item\\medecine\\xiancaolu_sp.spr",
-      "desc": "Tăng kinh nghiệm khi đánh quái luyện cấp"
+      "desc": "Kinh nghiệm tăng gấp đôi khi đánh quái"
     },
     {
       "id": 441,
-      "name": "Thiên sơn bảo lộ",
+      "name": "Thiên sơn  Bảo Lộ",
       "image": "\\spr\\item\\medecine\\tianshanyulu.spr",
-      "desc": "Tăng may mắn"
+      "desc": "Nội 1 giờ, May mắn tăng 10 điểm"
     },
     {
       "id": 442,
-      "name": "Bách quả lộ",
+      "name": "Bách Quả Lộ",
       "image": "\\spr\\item\\medecine\\baiguolu.spr",
-      "desc": "Tăng phòng thủ"
+      "desc": "Nội 1 giờ, Phòng thủ tăng 15 điểm"
     },
     {
       "id": 450,
-      "name": "Quế hoa tửu",
+      "name": "Quế Hoa Tửu",
       "image": "\\spr\\item\\medecine\\zq_icon_004.spr",
-      "desc": "Tăng may mắn"
+      "desc": "Nội 30 phút, cùng đồng đội tăng 20 điểm May Mắn"
     },
     {
       "id": 477,
@@ -506,9 +506,9 @@
     },
     {
       "id": 966,
-      "name": "Nhất Kỹ",
+      "name": "Nhất Kỷ Càn Khôn Phù",
       "image": "\\spr\\item\\script\\zhongqiu_jieri\\gongxuanlingpai.spr",
-      "desc": "+ Kỹ Năng"
+      "desc": "+ 1 điểm Kỹ Năng"
     },
     {
       "id": 977,
@@ -518,9 +518,9 @@
     },
     {
       "id": 980,
-      "name": "+ Kỹ Năng",
+      "name": "Càn Khôn Song Tuyệt Bội",
       "image": "\\spr\\item\\leaguematch\\qiankunshuangjuepei.spr",
-      "desc": "+ Kỹ Năng"
+      "desc": "+ 2 điểm Kỹ Năng"
     },
     {
       "id": 981,
@@ -551,12 +551,6 @@
       "name": "Hợp thành kĩ năng công kích",
       "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắÅẵÊºẽềằ.spr",
       "desc": "Nhận được hiệu quả tăng kỹ năng công kích"
-    },
-    {
-      "id": 1214,
-      "name": "Túi Y Tế Tân Thủ",
-      "image": "\\spr\\item\\medecine\\tuiyte.spr",
-      "desc": "Nhận trạng thái hồi phục sinh lực và nội lực liên tục."
     },
     {
       "id": 1215,

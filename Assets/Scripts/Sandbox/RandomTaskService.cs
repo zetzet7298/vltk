@@ -22,6 +22,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public RandomTaskService() : this(null) { }
+
         public RandomTaskService(PcRandomTaskRegistry registry)
         {
             _registry = registry ?? new PcRandomTaskRegistry();

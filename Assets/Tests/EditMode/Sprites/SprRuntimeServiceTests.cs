@@ -264,9 +264,17 @@ namespace VLTK.Tests.EditMode.Sprites
         [Test]
         public void ComputePathUidHex_MatchesVltktoolHasher()
         {
+            // ASCII paths: signed == unsigned (no high bytes), so the default overload matches.
             Assert.AreEqual("50d1a3a0", SprRuntimeService.ComputePathUidHex("\\image\\effect\\abc12345.spr"));
             Assert.AreEqual("50d1a3a0", SprRuntimeService.ComputePathUidHex("\\Image\\Effect\\ABC12345.SPR"));
-            Assert.AreEqual("bccbbad2", SprRuntimeService.ComputePathUidHex("\\游戏资源\\美术图素\\野外\\st_01.spr"));
+
+            // CJK path with high bytes: signed and unsigned diverge.
+            // The canonical vltktool hasher (unpak_tool.file_id_from_bytes) and engine.dll
+            // g_FileName2Id both use SIGNED bytes, so the default overload yields bc9bc73d.
+            Assert.AreEqual("bc9bc73d", SprRuntimeService.ComputePathUidHex("\\游戏资源\\美术图素\\野外\\st_01.spr"));
+            // The unsigned variant (bccbbad2) is the name some staged map sprites carry on
+            // disk (StreamingAssets/Generated/MapSprites/bccbbad2.spr); test it explicitly.
+            Assert.AreEqual("bccbbad2", SprRuntimeService.ComputePathUidHex("\\游戏资源\\美术图素\\野外\\st_01.spr", "GB2312", signedBytes: false));
         }
 
         [Test]

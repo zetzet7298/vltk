@@ -109,7 +109,9 @@ namespace VLTK.Tests.PlayMode
             var mgr = SandboxManager.Instance;
             Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.defaultMapId);
             Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.MapManager.ActiveMapId);
-            Assert.AreEqual("巴陵县", mgr.MapManager.ActiveMap.catalogEntry.displayNameRaw);
+            Assert.AreEqual("Ba Lăng huyện", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
+            Assert.AreEqual(new Vector2(41984f, -55808f), mgr.PlayerController.mapBoundsMin);
+            Assert.AreEqual(new Vector2(58880f, -45568f), mgr.PlayerController.mapBoundsMax);
         }
 
         // --- Map load / switch / unload lifecycle through the live runtime ---

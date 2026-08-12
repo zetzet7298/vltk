@@ -35,6 +35,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public DailyTaskService() : this(null) { }
+
         public DailyTaskService(PcDailyTaskRegistry registry)
         {
             _registry = registry ?? new PcDailyTaskRegistry();

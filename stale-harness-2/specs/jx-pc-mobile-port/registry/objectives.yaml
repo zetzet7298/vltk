@@ -1,0 +1,140 @@
+schema_version: 1
+objectives:
+- id: OBJ-001
+  dri: product-parity
+  reviewer: architecture-review
+  phase: ALL
+  status: ACTIVE
+  acceptance_evidence:
+  - PAR-0001
+  - PAR-0002
+  - PAR-0005
+  - PAR-0007
+  title: Port day du gameplay VLTK PC sang mobile khong bia behavior.
+  owner: product-parity
+- id: OBJ-002
+  dri: combat-parity
+  reviewer: qa-parity-review
+  phase: P0
+  status: ACTIVE
+  acceptance_evidence:
+  - FR-SKL-003
+  - TEST-SKL-001
+  - TEST-SKL-003
+  title: Dat parity skill novice va 10 phai ve logic 100 phan tram va visual toi thieu 0.99.
+  owner: combat-parity
+- id: OBJ-003
+  dri: gameplay-platform
+  reviewer: qa-parity-review
+  phase: P1
+  status: ACTIVE
+  acceptance_evidence:
+  - FR-WORLD-001
+  - FR-SESS-001
+  - TEST-ACS-001
+  title: Hoan thanh vertical slice Ba Lang 53 client-Go-PostgreSQL.
+  owner: gameplay-platform
+- id: OBJ-004
+  dri: mobile-ux
+  reviewer: qa-parity-review
+  phase: P0-P3
+  status: ACTIVE
+  acceptance_evidence:
+  - FR-MOVE-001
+  - FR-TGT-001
+  - FR-UI-PANEL-001
+  - TEST-IIEL-003
+  title: Chuyen thao tac chuot PC thanh UX mobile khong drag drop va khong tap muc tieu nho.
+  owner: mobile-ux
+- id: OBJ-005
+  dri: content-parity
+  reviewer: qa-parity-review
+  phase: ALL
+  status: ACTIVE
+  acceptance_evidence:
+  - TEST-UI-007
+  - TEST-AVATAR-001
+  - TEST-AUDIO-001
+  title: Tai su dung toi da SPR, avatar, map va audio PC tieng Viet canonical.
+  owner: content-parity
+- id: OBJ-006
+  dri: server-data
+  reviewer: qa-parity-review
+  phase: P1-P4
+  status: ACTIVE
+  acceptance_evidence:
+  - TEST-ECON-001
+  - TEST-RESTORE-001
+  title: Duy tri server authoritative, economy atomic va persistence phuc hoi duoc.
+  owner: server-data
+- id: OBJ-007
+  dri: spec-governance
+  reviewer: product-parity-review
+  phase: ALL
+  status: ACTIVE
+  acceptance_evidence:
+  - TEST-SOURCE-001
+  - TEST-COVERAGE-001
+  title: Moi entity PC co provenance, disposition, priority va acceptance gate.
+  owner: spec-governance
+- id: OBJ-008
+  dri: sre
+  reviewer: qa-parity-review
+  phase: P1-P4
+  status: ACTIVE
+  acceptance_evidence:
+  - TEST-LOAD-001
+  title: Van hanh realm 1000 CCU trong SLO da chot.
+  owner: sre
+- id: OBJ-P0-001
+  dri: combat-parity
+  reviewer: qa-parity-review
+  phase: P0
+  status: ACTIVE
+  acceptance_evidence:
+  - GATE-G3
+  - TEST-CBT-001
+  - TEST-SKL-003
+  title: Combat Parity Lab
+  owner: combat-parity
+- id: OBJ-P1-001
+  dri: gameplay-platform
+  reviewer: qa-parity-review
+  phase: P1
+  status: ACTIVE
+  acceptance_evidence:
+  - GATE-G4
+  - TEST-ACS-001
+  - TEST-MAP-053
+  title: Vertical slice Ba Lang 53
+  owner: gameplay-platform
+- id: OBJ-P2-001
+  dri: gameplay-world
+  reviewer: qa-parity-review
+  phase: P2
+  status: ACTIVE
+  acceptance_evidence:
+  - TEST-NQ-001
+  - TEST-WMM-003
+  title: PvE world
+  owner: gameplay-world
+- id: OBJ-P3-001
+  dri: social-economy
+  reviewer: qa-parity-review
+  phase: P3
+  status: ACTIVE
+  acceptance_evidence:
+  - TEST-STGPE-001
+  - TEST-STGPE-002
+  title: Social va economy
+  owner: social-economy
+- id: OBJ-P4-001
+  dri: pvp-endgame
+  reviewer: qa-parity-review
+  phase: P4
+  status: ACTIVE
+  acceptance_evidence:
+  - TEST-STGPE-003
+  - TEST-STGPE-004
+  title: PvP va endgame
+  owner: pvp-endgame

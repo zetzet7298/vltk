@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using NUnit.Framework;
 using VLTK.Sandbox;
@@ -96,9 +97,12 @@ namespace VLTK.Tests.Sandbox
         public void IsExpired_TrueForPastTimestamp()
         {
             var svc = BuildService();
-            // duration 1s; chờ sleep không cần — inject thẳng listing đã expired
-            var l = svc.ListItem(9005, 500, 1, "Seller E", 100, 500, -10);
-            Assert.IsTrue(svc.IsExpired(9005), "Duration âm → expire ngay");
+            // Tạo listing hợp lệ rồi đẩy expireTime về quá khứ (production từ chối
+            // duration <= 0, nên không inject duration âm nữa — set timestamp trực tiếp).
+            var l = svc.ListItem(9005, 500, 1, "Seller E", 100, 500, 60);
+            Assert.IsNotNull(l, "Listing hợp lệ phải tạo được");
+            l.expireTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - 1000;
+            Assert.IsTrue(svc.IsExpired(9005), "Listing quá hạn → IsExpired true");
         }
 
         [Test]
@@ -150,7 +154,7 @@ namespace VLTK.Tests.Sandbox
         }
     }
 
-    public class ShopConfigServiceTests
+    public class PcShopRegistryTests
     {
         private static string ShopDir => Path.Combine(
             Directory.GetCurrentDirectory(), "Assets/StreamingAssets/Reference/PcShop");
@@ -159,33 +163,32 @@ namespace VLTK.Tests.Sandbox
         public void LoadFromStreamingAssets_LoadsShops()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
-            Assert.GreaterOrEqual(svc.Count, 100, "PC buysell.txt có 1,521 cửa hàng");
+            // PC ground truth: settings/buysell.txt = 166 lines (header + 165 data),
+            // parser registers ~159 shops. The old "1,521 cửa hàng" comment reused a
+            // fabricated count (see PcShopParserTests) — buysell is 166 lines everywhere.
+            Assert.GreaterOrEqual(reg.Count, 100, "PC buysell.txt registers ~159 cửa hàng");
         }
 
         [Test]
         public void Count_Positive()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
-            Assert.Greater(svc.Count, 0);
+            Assert.Greater(reg.Count, 0);
         }
 
         [Test]
         public void GetShop_ReturnsById()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
-            Assert.IsNotNull(svc.GetShop(1));
+            Assert.IsNotNull(reg.Get(1));
         }
 
         [Test]
         public void GetAllShops_NotEmpty()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
             int n = 0;
-            foreach (var s in svc.GetAllShops()) { if (s != null) n++; }
+            foreach (var s in reg.All) { if (s != null) n++; }
             Assert.Greater(n, 0);
         }
     }

@@ -23,6 +23,7 @@ namespace VLTK.Sandbox
     public class ItemContractImporter
     {
         private readonly Dictionary<int, ItemDefinition> _db = new();
+        private readonly Dictionary<string, ItemDefinition> _byPcTuple = new();
 
         /// <summary>AC#3 — when true, stubbed contract rules fail the import.</summary>
         public bool StrictMode { get; set; }
@@ -35,6 +36,15 @@ namespace VLTK.Sandbox
             _db.TryGetValue(itemId, out var i);
             return i;
         }
+
+        public ItemDefinition ResolvePcItem(int itemGenre, int detailType, int particularType)
+        {
+            _byPcTuple.TryGetValue(PcTupleKey(itemGenre, detailType, particularType), out var item);
+            return item;
+        }
+
+        private static string PcTupleKey(int itemGenre, int detailType, int particularType)
+            => itemGenre + ":" + detailType + ":" + particularType;
 
         /// <summary>
         /// Import a bundle: upsert items (AC#1) and compute the quality-gate report
@@ -66,6 +76,9 @@ namespace VLTK.Sandbox
                     _db[item.itemId] = item;
                     report.created++;
                 }
+
+                if (item.itemGenre != 0 || item.detailType != 0 || item.particularType != 0)
+                    _byPcTuple[PcTupleKey(item.itemGenre, item.detailType, item.particularType)] = item;
             }
             report.totalItems = _db.Count;
 

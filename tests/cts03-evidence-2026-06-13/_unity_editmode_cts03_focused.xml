@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:28:02Z" duration="66.9612115">
+  <test-suite type="TestSuite" id="1000" name="vltk-mobile" fullname="vltk-mobile" runstate="Runnable" testcasecount="2319" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:28:02Z" duration="66.961212" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="3718" name="VLTK.Tests.EditMode.dll" fullname="/home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Library/ScriptAssemblies/VLTK.Tests.EditMode.dll" runstate="Runnable" testcasecount="2318" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:28:02Z" duration="66.916724" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1572711" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="3719" name="VLTK" fullname="VLTK" runstate="Runnable" testcasecount="2318" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:28:02Z" duration="66.880327" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="3720" name="Tests" fullname="VLTK.Tests" runstate="Runnable" testcasecount="2318" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:28:02Z" duration="66.846155" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="3727" name="Sandbox" fullname="VLTK.Tests.Sandbox" runstate="Runnable" testcasecount="2135" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:28:02Z" duration="66.816177" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1970" name="GameHudControllerTests" fullname="VLTK.Tests.Sandbox.GameHudControllerTests" classname="VLTK.Tests.Sandbox.GameHudControllerTests" runstate="Runnable" testcasecount="33" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:26:55Z" duration="0.202346" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="2003" name="OnIconBarClick_NullBoundRoot_DoesNotThrow" fullname="VLTK.Tests.Sandbox.GameHudControllerTests.OnIconBarClick_NullBoundRoot_DoesNotThrow" methodname="OnIconBarClick_NullBoundRoot_DoesNotThrow" classname="VLTK.Tests.Sandbox.GameHudControllerTests" runstate="Runnable" seed="1915834788" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:26:55Z" duration="0.122990" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[HUD] Open PC icon bar 0: Icon_0
+]]></output>
+              </test-case>
+              <test-case id="2002" name="OnIconBarClick_NullSandboxManager_AllIndices_RenderServicePlaceholder" fullname="VLTK.Tests.Sandbox.GameHudControllerTests.OnIconBarClick_NullSandboxManager_AllIndices_RenderServicePlaceholder" methodname="OnIconBarClick_NullSandboxManager_AllIndices_RenderServicePlaceholder" classname="VLTK.Tests.Sandbox.GameHudControllerTests" runstate="Runnable" seed="1225044578" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:26:55Z" duration="0.027007" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[HUD] Open PC icon bar 0: Icon_0
+[HUD] Open PC icon bar 1: Icon_1
+[HUD] Open PC icon bar 2: Icon_2
+[HUD] Open PC icon bar 3: Icon_3
+[HUD] Open PC icon bar 4: Icon_4
+[HUD] Open PC icon bar 5: Icon_5
+[HUD] Open PC icon bar 6: Icon_6
+]]></output>
+              </test-case>
+              <test-case id="2001" name="OnIconBarClick_NullSandboxManager_DoesNotThrow_AndOpensPanelWithServiceProbeLines" fullname="VLTK.Tests.Sandbox.GameHudControllerTests.OnIconBarClick_NullSandboxManager_DoesNotThrow_AndOpensPanelWithServiceProbeLines" methodname="OnIconBarClick_NullSandboxManager_DoesNotThrow_AndOpensPanelWithServiceProbeLines" classname="VLTK.Tests.Sandbox.GameHudControllerTests" runstate="Runnable" seed="403434673" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:26:55Z" duration="0.008729" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[HUD] Open PC icon bar 0: Icon_0
+]]></output>
+              </test-case>
+              <test-case id="1990" name="PcIconBarButtons_OpenRuntimeBackedPanels" fullname="VLTK.Tests.Sandbox.GameHudControllerTests.PcIconBarButtons_OpenRuntimeBackedPanels" methodname="PcIconBarButtons_OpenRuntimeBackedPanels" classname="VLTK.Tests.Sandbox.GameHudControllerTests" runstate="Runnable" seed="219879131" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:26:55Z" duration="0.014550" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[HUD] Open PC icon bar 0: Icon_0
+[HUD] Open PC icon bar 1: Icon_1
+[HUD] Open PC icon bar 2: Icon_2
+[HUD] Open PC icon bar 3: Icon_3
+[HUD] Open PC icon bar 4: Icon_4
+[HUD] Open PC icon bar 5: Icon_5
+[HUD] Open PC icon bar 6: Icon_6
+[HUD] Open PC icon bar 0: Icon_0
+[HUD] Open PC icon bar 6: Icon_6
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="3128" name="SandboxManagerFastBootTests" fullname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests" classname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:28:02Z" duration="66.540392" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="3129" name="Awake_DefaultEditorFastBoot_SkipsOptionalServicesAndDefaultMap" fullname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests.Awake_DefaultEditorFastBoot_SkipsOptionalServicesAndDefaultMap" methodname="Awake_DefaultEditorFastBoot_SkipsOptionalServicesAndDefaultMap" classname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests" runstate="Runnable" seed="1038576102" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:26:55Z" duration="0.003418" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="3131" name="InitializeSubsystems_MinimalSetup_AssetRegistryIsAlwaysConstructed" fullname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests.InitializeSubsystems_MinimalSetup_AssetRegistryIsAlwaysConstructed" methodname="InitializeSubsystems_MinimalSetup_AssetRegistryIsAlwaysConstructed" classname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests" runstate="Runnable" seed="1108189005" result="Passed" start-time="2026-06-13 13:26:55Z" end-time="2026-06-13 13:27:28Z" duration="32.928634" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Sandbox] Game root ready
+[Sandbox] Camera root ready
+[Sandbox] UI root ready
+[Sandbox] World root ready
+[Sandbox] Debug root ready
+[Sandbox] Services root ready
+[Skill] Duplicate skill id 1539 overwritten
+[Gameplay] Player 'Cái Bang Đệ Tử' Lv1 đã đăng ký
+[SandboxBoot] BootstrapCombatRuntime: 222ms
+[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 158 maps
+[MapManager] Generated visual map catalogs merged: +847 maps, updated=158, geometries=332, serverRegions=330
+[PcMapList] Parsed 1005 map rows
+[PcCaveList] Parsed 369 cave rows
+[PcTongList] Parsed 33 tong map rows
+[PcMapBatch] Total 4484 entries: maps=1005 caves=369 tongs=33 waypoints=225 scrolls=2600 wharves=11 revive=241
+[MapManager] PC map data merged: +0 maps, caves=369, tongs=33, waypoints=225, scrolls=2600, wharves=11, revive=241
+[MapManager] Catalog ready: 1005 maps
+[SandboxBoot] MapManager.LoadCatalog: 115ms
+[RegionCatalog] Loaded 64031 regions (57807 with obstacle)
+[SandboxBoot] RegionCatalog.Load: 301ms
+[Sandbox] Regions: 64031 loaded
+[MalePlayer] Loaded spr\npcres\man\MA_YY_999_ST05.spr: 88 frames, 8 dirs
+[MalePlayer] Loaded spr\npcres\man\MA_BD_019_ST05.spr: 88 frames, 8 dirs
+[MalePlayer] Loaded spr\npcres\man\MA_HD_019_ST05.spr: 88 frames, 8 dirs
+[MalePlayer] Loaded spr\npcres\man\MA_HR_019_ST05.spr: 88 frames, 8 dirs
+[MalePlayer] Loaded spr\npcres\man\MA_LH_019_ST05.spr: 88 frames, 8 dirs
+[MalePlayer] Loaded spr\npcres\man\MA_RH_019_ST05.spr: 88 frames, 8 dirs
+[MalePlayer] SPR file not staged in StreamingAssets/Sprites: spr\npcres\man\MA_LW_000_ST05.spr
+[MalePlayer] Loaded spr\npcres\man\MA_RW_010_ST05.spr: 88 frames, 8 dirs
+[Sandbox] Male player controller ready (8-way SPR parts + joystick)
+[ItemImport] Gate PASS: 11627 items, 0 stubs
+[SandboxBoot] PcItemBatchLoader.ImportInto: 1516ms
+[ItemImport] Gate PASS: 16710 items, 0 stubs
+[QuestItem] Đã tải 2045 vật phẩm nhiệm vụ từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Adventure] Đã tải 1037 mục mạo hiểm từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAdventure
+[Guild] Đã tải 5 cấp bang (tối đa 5) từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcTong
+[Attrib] AttribConstService loaded 31 section(s) từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAttrib
+[Missle] MissleCatalogService loaded 466 đạn phép từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAttrib
+[Event] EventBonusService loaded 3305 phần thưởng từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcEvent
+[CityWar] CityWarService loaded 24 khu vực thành chiến từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcEvent
+[GoodsCatalog] Vật Phẩm Bán loaded: 1521 Hàng Hóa, 45 Cửa Hàng
+[ShopConfig] ShopConfig loaded: 123 entries
+[Battlefield] BattlefieldService loaded 0 chiến trường từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMap
+[InstanceMap] InstanceMapService loaded 0 phó bản từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMap
+[Hongbao] Hồng Bao loaded: 0 món quà
+[Hongbao] Hồng Bao loaded: 69 món quà
+[ItemExchange] Đổi Vật Phẩm loaded: 0 công thức
+[ItemExchange] Đổi Vật Phẩm loaded: 0 công thức
+[SpecialSkill] Kỹ Năng Đặc Biệt loaded: 0 tuyệt kỹ
+[SpecialSkill] Kỹ Năng Đặc Biệt loaded: 576 tuyệt kỹ
+[NpcSkill] Kỹ Năng Quái loaded: 0 skill quái
+[NpcSkill] Kỹ Năng Quái loaded: 158 skill quái
+[TranslifeSkill] Skill Chuyển Sinh loaded: 0 skill theo cảnh giới
+[TranslifeSkill] Skill Chuyển Sinh loaded: 0 skill theo cảnh giới
+[SkillTemplate] Template Skill loaded: 0 template
+[SkillTemplate] Template Skill loaded: 466 template
+[ServerEvent] ServerEventService loaded 455 sự kiện từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcServerEvent
+[VngEvent] VngEventService loaded 195 sự kiện VNG từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcVngEvent
+[BattleScript] BattleScriptService loaded 0 kịch bản từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcBattleScript
+[Weather] Đã tải 8 mục thời tiết
+[Music] Đã tải 249 bản nhạc nền
+[GuildWorkshop] Đã tải 0 mục công trình bang
+[GuildWorkshop] Đã tải 0 mục công trình bang
+[HuoYueDu] Đã tải 0 hoạt động điểm
+[CityDefence] Đã tải 251 wave thủ thành
+[Activity] Đã tải 0 hoạt động
+[PartnerTask] Đã tải 60 nhiệm vụ pet từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcPartner
+[Arena] Đã tải 0 đấu trường võ đài từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMission/arena
+[GuildRank] Đã tải 0 cấp bậc bang
+[GuildRank] Đã tải 0 cấp bậc bang
+[GuildStunt] Đã tải 0 kỹ năng bang
+[GuildStunt] Đã tải 6 kỹ năng bang
+[GuildTask] Đã tải 0 nhiệm vụ bang
+[GuildTask] Đã tải 0 nhiệm vụ bang
+[Honor] Đã tải 0 vinh danh
+[Honor] Đã tải 0 vinh danh
+[Honor] Honor: không tìm thấy honor.txt trong StreamingAssets
+[Shitu] Đã tải 0 quan hệ sư đồ
+[Shitu] Đã tải 0 quan hệ sư đồ
+[Shitu] Shitu: không tìm thấy shitu.txt trong StreamingAssets
+[Foundry] Đã tải 0 công thức luyện đồ
+[Foundry] Đã tải 0 công thức luyện đồ
+[WorldRank] Đã tải 0 bảng xếp hạng
+[WorldRank] Đã tải 0 bảng xếp hạng
+[WorldRank] WorldRank: không tìm thấy toplist.txt trong StreamingAssets
+[FlipCard] FlipCardService loaded 0 thẻ lật
+[BaoRuongThanBi] BaoRuongThanBiService loaded 990 rương thần bí
+[Compensation] CompensationService loaded 0 gói bồi thường
+[TongJinBattle] Đã tải 0 trận Tống Kim
+[ShopConfig] ShopConfig loaded: 123 entries
+[MissileEffect] MissileEffect loaded: 0 effect
+[HudArtCatalog] HudArtCatalog loaded: 0 art (root=/home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/UI/HUD/Art)
+[TaskFlagRegistry] TaskFlagRegistry loaded: 359 cờ
+[SkillLevelData] Đã tải 38 cấp chi tiết kỹ năng
+[SkillUpgrade] Đã tải 38 quy tắc nâng cấp kỹ năng
+[SkillBook] Đã tải 38 sách kỹ năng
+[SkillCombo] Đã tải 38 chuỗi kỹ năng
+[SkillState] Đã tải 38 trạng thái kỹ năng
+[SkillMastery] Đã tải 6 quy tắc tinh thông
+[GuildScript] Đã tải 19 kịch bản bang
+[BattleMapConfig] Cấu hình chiến trường rỗng
+[BattleMapConfig] Đã tải 0 cấu hình chiến trường
+[BattleRewardConfig] Phần thưởng chiến trường rỗng
+[BattleRewardConfig] Đã tải 0 mục phần thưởng
+[BattleHonor] Vinh danh chiến trường rỗng
+[BattleHonor] Đã tải 0 mục vinh danh
+[SjBattle] Cấu hình Tống Kim rỗng
+[SjBattle] Đã tải 0 cấu hình Tống Kim
+[HuaShan] Đã tải 0 vòng Hoa Sơn Luận Kiếm
+[MapConn] Đã tải 225 kết nối bản đồ
+[NpcShop] Đã tải 882 vật phẩm shop
+[TitleEffect] Đã tải 81 hiệu ứng danh hiệu
+[GoldEquip] Loaded 37 trang bị Hoàng Kim từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[PlatinaEquip] Loaded 28 trang bị Bạch Kim từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Horse] Loaded 28 ngựa từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Potion] Loaded 8 thuốc từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[MagicScript] Loaded 2 script phép từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[MagicAttrib] Loaded 40 thuộc tính ma pháp từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Scroll] Loaded 2600 cuộn dịch chuyển từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMap
+[GoldBoss] Loaded 32 boss Hoàng Kim từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcNpc
+[ChangeFeatureData] Loaded 0 mục đổi ngoại hình từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[GlobalConfig] Loaded 0 mục cấu hình chung từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAttrib
+[NormalSpawn] Loaded 0 điểm spawn quái thường từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcNpc
+[RareEnchant] Đã nạp 485 dòng cường hóa thuộc tính hiếm (49 MAGIC_ID) từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcNpc
+[Station] Đã tải 16 trạm xe
+[StationPrice] Đã tải 256 bảng giá trạm xe
+[WaypointPrice] Đã tải 3104 bảng giá dịch chuyển
+[GuildWorkshopLevel] Đã tải 7 loại công trình bang
+[GuildTaskDef] Đã tải 9 định nghĩa nhiệm vụ bang
+[AutoUpdateCfg] Đã tải 1 section auto-update
+[TiredWarning] Đã tải 1 section cảnh báo mệt
+[PlayerLimit] Đã tải 2 section giới hạn thời gian
+[PermitDialogNpc] Đã tải 145 NPC cho phép đối thoại
+[ProductConfig] Đã tải 1 section product config
+[Utilities] Đã tải 1 section utilities
+[ForbitHeart] Đã tải 9 map cấm tâm pháp
+[StringResource] Đã tải 5643 chuỗi tài nguyên
+[Sandbox] Thiếu data port cho 35 service auto-load; không auto-wire: NpcLevelScriptService<Reference/PcNpcScript>, NpcDeathScriptService<Reference/PcNpcScript>, DailyTaskService<Reference/PcDailyTask>, BossMissionService<Reference/PcBossMission>, RandomTaskService<Reference/PcMission/random>, MetempsychosisTaskService<Reference/PcMission/metempsychosis>, TripService<Reference/PcTrip>, BonusOnlineService<Reference/PcBonusOnline>, NewPlayerGuideService<Reference/PcNewPlayerGuide>, ChangeFeatureService<Reference/PcChangeFeature>, StallService<Reference/PcStall>, SeasonalEventService<Reference/PcSeasonalEvent>, BangChienService<Reference/PcCity>, BossHoangKimService<Reference/PcBoss>, WorldBossService<Reference/PcBoss>, AchievementService<Reference/PcAchievement>, FashionService<Reference/PcFashion>, TreasureHuntService<Reference/PcActivity>, EncounterService<Reference/PcEncounter>, FriendGiftService<Reference/PcFriend>, TextResourceService<Reference/PcText>, AnimationBankService<Reference/PcAnimation>, FactionSkillTreeService<Reference/PcFaction>, FactionBonusService<Reference/PcFaction>, FactionRelationService<Reference/PcFaction>, SpriteAssetService<Reference/PcSprite>, SoundEffectService<Reference/PcSound>, ReputationService<Reference/PcReputation>, VipLevelService<Reference/PcVip>, GlobalScriptService<Reference/PcGlobal>, LibraryScriptService<Reference/PcGlobal>, AreaScriptService<Reference/PcArea>, GbkMapScriptService<Reference/PcGbk>, TownScriptService<Reference/PcTown>, GbkTriggerService<Reference/PcGbk>
+[Sandbox] 54 service auto-load chưa sẵn sàng: BattlefieldService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., InstanceMapService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ItemExchangeService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TranslifeSkillService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleScriptService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GuildWorkshopService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HuoYueDuService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ActivityService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ArenaService<Reference/PcMission/arena>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GuildRankService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GuildTaskService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HonorService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ShituService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FoundryService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., WorldRankService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FlipCardService<Reference/PcFlipCard>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., CompensationService<Reference/PcCompensation>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleAwardService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., DoubleExpService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SimCityPluginService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ClientSkillScriptService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TongJinBattleService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SaveSlotService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MailService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MountService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., RankingService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FriendService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., PetService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MissileEffectService<Reference/PcAttrib>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HudArtCatalogService<UI/HUD/Art>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapBlockService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapNpcRespawnService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., DailyRewardService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MallService<Reference/PcShop>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SignInService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleMapConfigService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleRewardConfigService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleHonorService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SjBattleService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HuaShanLuanJianService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TaskScriptService<Reference/PcTask>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., CaveListFullService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ChangeFeatureDataService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GlobalConfigService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., NormalSpawnService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., AutoPathRouteService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FactionConfigService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., NpcResService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., NpcSFullService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TongSettingService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapListService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapDescService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BossSpawnService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., DropRateConfigService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng.
+[TaskFlag] Task 1122 status changed: 0 → 5000
+[Title] Mở Khóa danh hiệu nhân vật #5000
+[Title] Kích Hoạt danh hiệu nhân vật #5000
+[Sandbox] Player pre-placed at (53246.00, -52041.00) for map 53
+[MapManager] Registered map id=53 in asset registry (status=Pending)
+[MapManager] Loaded map: Ba Lăng huyện (id=53)
+[Sandbox] MapManager.LoadMap(53) failed: Object reference not set to an instance of an object
+[SandboxBoot] profile=Full, total=32904ms, slowest=PcItemBatchLoader.ImportInto=1516ms, RegionCatalog.Load=301ms, BootstrapCombatRuntime=222ms, MapManager.LoadCatalog=115ms, PcMagicScriptItemParser.ImportInto=38ms
+[Sandbox] Initialized v0.1.0-m0 (Foundation) profile=Full in 32904ms at 2026-06-13 20:27:28
+]]></output>
+              </test-case>
+              <test-case id="3130" name="InitializeSubsystems_MinimalSetup_DoesNotThrow_AndSetsIsInitializedTrue" fullname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests.InitializeSubsystems_MinimalSetup_DoesNotThrow_AndSetsIsInitializedTrue" methodname="InitializeSubsystems_MinimalSetup_DoesNotThrow_AndSetsIsInitializedTrue" classname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests" runstate="Runnable" seed="1838977368" result="Passed" start-time="2026-06-13 13:27:28Z" end-time="2026-06-13 13:27:59Z" duration="31.057127" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Sandbox] Game root ready
+[Sandbox] Camera root ready
+[Sandbox] UI root ready
+[Sandbox] World root ready
+[Sandbox] Debug root ready
+[Sandbox] Services root ready
+[Skill] Duplicate skill id 1539 overwritten
+[Gameplay] Player 'Cái Bang Đệ Tử' Lv1 đã đăng ký
+[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 158 maps
+[MapManager] Generated visual map catalogs merged: +847 maps, updated=158, geometries=332, serverRegions=330
+[PcMapList] Parsed 1005 map rows
+[PcCaveList] Parsed 369 cave rows
+[PcTongList] Parsed 33 tong map rows
+[PcMapBatch] Total 4484 entries: maps=1005 caves=369 tongs=33 waypoints=225 scrolls=2600 wharves=11 revive=241
+[MapManager] PC map data merged: +0 maps, caves=369, tongs=33, waypoints=225, scrolls=2600, wharves=11, revive=241
+[MapManager] Catalog ready: 1005 maps
+[RegionCatalog] Loaded 64031 regions (57807 with obstacle)
+[SandboxBoot] RegionCatalog.Load: 271ms
+[Sandbox] Regions: 64031 loaded
+[Sandbox] Male player controller ready (8-way SPR parts + joystick)
+[ItemImport] Gate PASS: 11627 items, 0 stubs
+[SandboxBoot] PcItemBatchLoader.ImportInto: 1508ms
+[ItemImport] Gate PASS: 16710 items, 0 stubs
+[QuestItem] Đã tải 2045 vật phẩm nhiệm vụ từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Adventure] Đã tải 1037 mục mạo hiểm từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAdventure
+[Guild] Đã tải 5 cấp bang (tối đa 5) từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcTong
+[Attrib] AttribConstService loaded 31 section(s) từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAttrib
+[Missle] MissleCatalogService loaded 466 đạn phép từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAttrib
+[Event] EventBonusService loaded 3305 phần thưởng từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcEvent
+[CityWar] CityWarService loaded 24 khu vực thành chiến từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcEvent
+[GoodsCatalog] Vật Phẩm Bán loaded: 1521 Hàng Hóa, 45 Cửa Hàng
+[ShopConfig] ShopConfig loaded: 123 entries
+[Battlefield] BattlefieldService loaded 0 chiến trường từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMap
+[InstanceMap] InstanceMapService loaded 0 phó bản từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMap
+[Hongbao] Hồng Bao loaded: 0 món quà
+[Hongbao] Hồng Bao loaded: 69 món quà
+[ItemExchange] Đổi Vật Phẩm loaded: 0 công thức
+[ItemExchange] Đổi Vật Phẩm loaded: 0 công thức
+[SpecialSkill] Kỹ Năng Đặc Biệt loaded: 0 tuyệt kỹ
+[SpecialSkill] Kỹ Năng Đặc Biệt loaded: 576 tuyệt kỹ
+[NpcSkill] Kỹ Năng Quái loaded: 0 skill quái
+[NpcSkill] Kỹ Năng Quái loaded: 158 skill quái
+[TranslifeSkill] Skill Chuyển Sinh loaded: 0 skill theo cảnh giới
+[TranslifeSkill] Skill Chuyển Sinh loaded: 0 skill theo cảnh giới
+[SkillTemplate] Template Skill loaded: 0 template
+[SkillTemplate] Template Skill loaded: 466 template
+[ServerEvent] ServerEventService loaded 455 sự kiện từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcServerEvent
+[VngEvent] VngEventService loaded 195 sự kiện VNG từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcVngEvent
+[BattleScript] BattleScriptService loaded 0 kịch bản từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcBattleScript
+[Weather] Đã tải 8 mục thời tiết
+[Music] Đã tải 249 bản nhạc nền
+[GuildWorkshop] Đã tải 0 mục công trình bang
+[GuildWorkshop] Đã tải 0 mục công trình bang
+[HuoYueDu] Đã tải 0 hoạt động điểm
+[CityDefence] Đã tải 251 wave thủ thành
+[Activity] Đã tải 0 hoạt động
+[PartnerTask] Đã tải 60 nhiệm vụ pet từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcPartner
+[Arena] Đã tải 0 đấu trường võ đài từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMission/arena
+[GuildRank] Đã tải 0 cấp bậc bang
+[GuildRank] Đã tải 0 cấp bậc bang
+[GuildStunt] Đã tải 0 kỹ năng bang
+[GuildStunt] Đã tải 6 kỹ năng bang
+[GuildTask] Đã tải 0 nhiệm vụ bang
+[GuildTask] Đã tải 0 nhiệm vụ bang
+[Honor] Đã tải 0 vinh danh
+[Honor] Đã tải 0 vinh danh
+[Honor] Honor: không tìm thấy honor.txt trong StreamingAssets
+[Shitu] Đã tải 0 quan hệ sư đồ
+[Shitu] Đã tải 0 quan hệ sư đồ
+[Shitu] Shitu: không tìm thấy shitu.txt trong StreamingAssets
+[Foundry] Đã tải 0 công thức luyện đồ
+[Foundry] Đã tải 0 công thức luyện đồ
+[WorldRank] Đã tải 0 bảng xếp hạng
+[WorldRank] Đã tải 0 bảng xếp hạng
+[WorldRank] WorldRank: không tìm thấy toplist.txt trong StreamingAssets
+[FlipCard] FlipCardService loaded 0 thẻ lật
+[BaoRuongThanBi] BaoRuongThanBiService loaded 990 rương thần bí
+[Compensation] CompensationService loaded 0 gói bồi thường
+[TongJinBattle] Đã tải 0 trận Tống Kim
+[ShopConfig] ShopConfig loaded: 123 entries
+[MissileEffect] MissileEffect loaded: 0 effect
+[HudArtCatalog] HudArtCatalog loaded: 0 art (root=/home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/UI/HUD/Art)
+[TaskFlagRegistry] TaskFlagRegistry loaded: 359 cờ
+[SkillLevelData] Đã tải 38 cấp chi tiết kỹ năng
+[SkillUpgrade] Đã tải 38 quy tắc nâng cấp kỹ năng
+[SkillBook] Đã tải 38 sách kỹ năng
+[SkillCombo] Đã tải 38 chuỗi kỹ năng
+[SkillState] Đã tải 38 trạng thái kỹ năng
+[SkillMastery] Đã tải 6 quy tắc tinh thông
+[GuildScript] Đã tải 19 kịch bản bang
+[BattleMapConfig] Cấu hình chiến trường rỗng
+[BattleMapConfig] Đã tải 0 cấu hình chiến trường
+[BattleRewardConfig] Phần thưởng chiến trường rỗng
+[BattleRewardConfig] Đã tải 0 mục phần thưởng
+[BattleHonor] Vinh danh chiến trường rỗng
+[BattleHonor] Đã tải 0 mục vinh danh
+[SjBattle] Cấu hình Tống Kim rỗng
+[SjBattle] Đã tải 0 cấu hình Tống Kim
+[HuaShan] Đã tải 0 vòng Hoa Sơn Luận Kiếm
+[MapConn] Đã tải 225 kết nối bản đồ
+[NpcShop] Đã tải 882 vật phẩm shop
+[TitleEffect] Đã tải 81 hiệu ứng danh hiệu
+[GoldEquip] Loaded 37 trang bị Hoàng Kim từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[PlatinaEquip] Loaded 28 trang bị Bạch Kim từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Horse] Loaded 28 ngựa từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Potion] Loaded 8 thuốc từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[MagicScript] Loaded 2 script phép từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[MagicAttrib] Loaded 40 thuộc tính ma pháp từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[Scroll] Loaded 2600 cuộn dịch chuyển từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcMap
+[GoldBoss] Loaded 32 boss Hoàng Kim từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcNpc
+[ChangeFeatureData] Loaded 0 mục đổi ngoại hình từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcItemFull
+[GlobalConfig] Loaded 0 mục cấu hình chung từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcAttrib
+[NormalSpawn] Loaded 0 điểm spawn quái thường từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcNpc
+[RareEnchant] Đã nạp 485 dòng cường hóa thuộc tính hiếm (49 MAGIC_ID) từ /home/zet/.hermes/kanban/boards/vltk-client-test-stabilization/workspaces/t_9bc179e5/Assets/StreamingAssets/Reference/PcNpc
+[Station] Đã tải 16 trạm xe
+[StationPrice] Đã tải 256 bảng giá trạm xe
+[WaypointPrice] Đã tải 3104 bảng giá dịch chuyển
+[GuildWorkshopLevel] Đã tải 7 loại công trình bang
+[GuildTaskDef] Đã tải 9 định nghĩa nhiệm vụ bang
+[AutoUpdateCfg] Đã tải 1 section auto-update
+[TiredWarning] Đã tải 1 section cảnh báo mệt
+[PlayerLimit] Đã tải 2 section giới hạn thời gian
+[PermitDialogNpc] Đã tải 145 NPC cho phép đối thoại
+[ProductConfig] Đã tải 1 section product config
+[Utilities] Đã tải 1 section utilities
+[ForbitHeart] Đã tải 9 map cấm tâm pháp
+[StringResource] Đã tải 5643 chuỗi tài nguyên
+[Sandbox] Thiếu data port cho 35 service auto-load; không auto-wire: NpcLevelScriptService<Reference/PcNpcScript>, NpcDeathScriptService<Reference/PcNpcScript>, DailyTaskService<Reference/PcDailyTask>, BossMissionService<Reference/PcBossMission>, RandomTaskService<Reference/PcMission/random>, MetempsychosisTaskService<Reference/PcMission/metempsychosis>, TripService<Reference/PcTrip>, BonusOnlineService<Reference/PcBonusOnline>, NewPlayerGuideService<Reference/PcNewPlayerGuide>, ChangeFeatureService<Reference/PcChangeFeature>, StallService<Reference/PcStall>, SeasonalEventService<Reference/PcSeasonalEvent>, BangChienService<Reference/PcCity>, BossHoangKimService<Reference/PcBoss>, WorldBossService<Reference/PcBoss>, AchievementService<Reference/PcAchievement>, FashionService<Reference/PcFashion>, TreasureHuntService<Reference/PcActivity>, EncounterService<Reference/PcEncounter>, FriendGiftService<Reference/PcFriend>, TextResourceService<Reference/PcText>, AnimationBankService<Reference/PcAnimation>, FactionSkillTreeService<Reference/PcFaction>, FactionBonusService<Reference/PcFaction>, FactionRelationService<Reference/PcFaction>, SpriteAssetService<Reference/PcSprite>, SoundEffectService<Reference/PcSound>, ReputationService<Reference/PcReputation>, VipLevelService<Reference/PcVip>, GlobalScriptService<Reference/PcGlobal>, LibraryScriptService<Reference/PcGlobal>, AreaScriptService<Reference/PcArea>, GbkMapScriptService<Reference/PcGbk>, TownScriptService<Reference/PcTown>, GbkTriggerService<Reference/PcGbk>
+[Sandbox] 54 service auto-load chưa sẵn sàng: BattlefieldService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., InstanceMapService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ItemExchangeService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TranslifeSkillService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleScriptService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GuildWorkshopService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HuoYueDuService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ActivityService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ArenaService<Reference/PcMission/arena>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GuildRankService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GuildTaskService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HonorService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ShituService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FoundryService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., WorldRankService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FlipCardService<Reference/PcFlipCard>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., CompensationService<Reference/PcCompensation>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleAwardService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., DoubleExpService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SimCityPluginService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ClientSkillScriptService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TongJinBattleService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SaveSlotService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MailService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MountService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., RankingService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FriendService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., PetService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MissileEffectService<Reference/PcAttrib>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HudArtCatalogService<UI/HUD/Art>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapBlockService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapNpcRespawnService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., DailyRewardService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MallService<Reference/PcShop>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SignInService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleMapConfigService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleRewardConfigService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BattleHonorService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., SjBattleService<Reference/PcBattlefield>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., HuaShanLuanJianService<Reference/PcEvent>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TaskScriptService<Reference/PcTask>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., CaveListFullService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., ChangeFeatureDataService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., GlobalConfigService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., NormalSpawnService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., AutoPathRouteService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., FactionConfigService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., NpcResService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., NpcSFullService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., TongSettingService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapListService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., MapDescService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., BossSpawnService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng., DropRateConfigService<(không khai báo DefaultStreamingDir)>: Parser không nạp được record nào; service không được auto-wire như feature sẵn sàng.
+[TaskFlag] Task 1122 status changed: 0 → 5000
+[Title] Mở Khóa danh hiệu nhân vật #5000
+[Title] Kích Hoạt danh hiệu nhân vật #5000
+[Sandbox] Player pre-placed at (53246.00, -52041.00) for map 53
+[MapManager] Registered map id=53 in asset registry (status=Pending)
+[MapManager] Loaded map: Ba Lăng huyện (id=53)
+[Sandbox] MapManager.LoadMap(53) failed: Object reference not set to an instance of an object
+[SandboxBoot] profile=Full, total=31054ms, slowest=PcItemBatchLoader.ImportInto=1508ms, RegionCatalog.Load=271ms, MapManager.LoadCatalog=47ms, PcMagicScriptItemParser.ImportInto=39ms, BootstrapCombatRuntime=32ms
+[Sandbox] Initialized v0.1.0-m0 (Foundation) profile=Full in 31054ms at 2026-06-13 20:27:59
+]]></output>
+              </test-case>
+              <test-case id="3132" name="InitializeSubsystems_MinimalSetup_FastEditorBoot_ResolvesFastEditor" fullname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests.InitializeSubsystems_MinimalSetup_FastEditorBoot_ResolvesFastEditor" methodname="InitializeSubsystems_MinimalSetup_FastEditorBoot_ResolvesFastEditor" classname="VLTK.Tests.Sandbox.SandboxManagerFastBootTests" runstate="Runnable" seed="852010114" result="Passed" start-time="2026-06-13 13:27:59Z" end-time="2026-06-13 13:28:02Z" duration="2.544581" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Sandbox] Game root ready
+[Sandbox] Camera root ready
+[Sandbox] UI root ready
+[Sandbox] World root ready
+[Sandbox] Debug root ready
+[Sandbox] Services root ready
+[Skill] Duplicate skill id 1539 overwritten
+[Gameplay] Player 'Cái Bang Đệ Tử' Lv1 đã đăng ký
+[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 158 maps
+[MapManager] Generated visual map catalogs merged: +847 maps, updated=158, geometries=332, serverRegions=330
+[PcMapList] Parsed 1005 map rows
+[PcCaveList] Parsed 369 cave rows
+[PcTongList] Parsed 33 tong map rows
+[PcMapBatch] Total 4484 entries: maps=1005 caves=369 tongs=33 waypoints=225 scrolls=2600 wharves=11 revive=241
+[MapManager] PC map data merged: +0 maps, caves=369, tongs=33, waypoints=225, scrolls=2600, wharves=11, revive=241
+[MapManager] Catalog ready: 1005 maps
+[SandboxBoot] MapManager.LoadCatalog: 54ms
+[RegionCatalog] Loaded 64031 regions (57807 with obstacle)
+[SandboxBoot] RegionCatalog.Load: 285ms
+[Sandbox] Regions: 64031 loaded
+[Sandbox] Male player controller ready (8-way SPR parts + joystick)
+[ItemImport] Gate PASS: 11627 items, 0 stubs
+[SandboxBoot] PcItemBatchLoader.ImportInto: 1683ms
+[ItemImport] Gate PASS: 16710 items, 0 stubs
+[SandboxBoot] FastEditor boot: skipped optional StreamingAssets service batches.
+[TaskFlag] Task 1122 status changed: 0 → 5000
+[Sandbox] Player pre-placed at (53246.00, -52041.00) for map 53
+[MapManager] Registered map id=53 in asset registry (status=Pending)
+[MapManager] Loaded map: Ba Lăng huyện (id=53)
+[MapRenderer] Bounds applied without visuals: map=53, bounds=(16896.00, 10240.00, 1.00)
+[SandboxBoot] FastEditor: skipped map visual rendering.
+[Sandbox] Player map bounds set to x=41984..58880, y=-55808..-45568
+[Sandbox] Player map bounds set to x=41984..58880, y=-55808..-45568
+[Sandbox] Player spawn set to (53246.00, -52041.00) on map 53
+[MapEnemy] Map 53: generated server Region_S missing on disk, falling back to legacy TestData
+[MapEnemy] Map 53: no static PC Region_S files found
+[NpcTemplate] Duplicate template id 31 overwritten
+[NpcTemplate] Duplicate template id 42 overwritten
+[NpcTemplate] Duplicate template id 43 overwritten
+[MapEnemy] Map 53: no PC Region_S entries to spawn; leaving enemy layer empty
+[MapEnemy] Map 53: spawned 0 enemies from 0 PC Region_S entries
+[MapEnemy] GameplayLoop: bridged 0 enemies từ EnemyRuntime.
+[PcMapObjectVisual] object SPR missing: \spr\obj\box\box001.spr
+[PcMapObjectVisual] object SPR missing: \spr\obj\signpost\signpost004.spr
+[PcMapObjectVisual] object SPR missing: \spr\obj\signpost\signpost002.spr
+[PcMapObjectVisual] object SPR missing: \spr\obj\signpost\worldobj01-3.spr
+[PcMapObjectVisual] object SPR missing: \spr\obj\prop\obj_rw_036.spr
+[PcMapObjectVisual] object SPR missing: \spr\obj\signpost\worldobj01-2.spr
+[MapObject] Map 53: rendered=0, skipped=0, missingVisual=11
+[MapTrap] Map 53: active=140, disabled=0, missingScript=0
+[PcNpcVisual] Loaded spr\npcres\enemy\enemy180\enemy180_st.spr: 1 frames, 1 dirs
+[PcNpcVisual] Loaded spr\npcres\man\MA_YY_999_ST01.spr: 120 frames, 8 dirs
+[PcNpcVisual] Loaded spr\npcres\man\MA_YY_999_RN01.spr: 88 frames, 8 dirs
+[PcNpcVisual] Loaded spr\npcres\enemy\enemy178\enemy178_st.spr: 1 frames, 1 dirs
+[PcNpcVisual] Loaded spr\npcres\enemy\enemy179\enemy179_st.spr: 1 frames, 1 dirs
+[TrainingNpcSpawner] Spawned 5 training NPCs in pentagon at center=(53246.00, -52041.00), radius=300
+[Sandbox] Camera configured for player-follow map view
+[SandboxBoot] MapManager.LoadMap: 372ms
+[SandboxBoot] profile=FastEditor, total=2541ms, slowest=PcItemBatchLoader.ImportInto=1683ms, MapManager.LoadMap=372ms, RegionCatalog.Load=285ms, MapManager.LoadCatalog=54ms, PcMagicScriptItemParser.ImportInto=47ms
+[Sandbox] Initialized v0.1.0-m0 (Foundation) profile=FastEditor in 2541ms at 2026-06-13 20:28:02
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /home/zet/.hermes/profiles/vltk-fixer/home/.config/unity3d/vltk/vltk-mobile/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,5 @@
+tests/integration/modules/social/test_social.py ......                   [ 89%]
+tests/integration/modules/social/test_union_zhaomu.py .......            [ 96%]
+tests/integration/modules/task/test_task.py ....                         [100%]
+
+============================= 103 passed in 45.13s =============================

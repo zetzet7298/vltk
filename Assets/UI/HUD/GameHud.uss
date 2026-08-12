@@ -6,7 +6,9 @@
     overflow: hidden;
 }
 
-/* TOP FRAME BG: dùng main_hud_bg.png cropped+scaled làm background frame PC ornate */
+/* TOP FRAME BG: BỎ — top_frame_bg.png là dải composite full-width 1280×88
+   (gỗ+hotkey+minimap) KHÔNG có trong PC gốc, gây tràn/tràn vỡ trên mobile.
+   PC thật chỉ có panel 新血条面板 552×17 (xem PcBarPanelBg dưới). */
 .hud-top-frame-bg {
     position: absolute;
     left: 0px;
@@ -15,6 +17,7 @@
     height: 88px;
     background-image: url('project://database/Assets/UI/HUD/Art/top_frame_bg.png');
     -unity-background-scale-mode: stretch-to-fill;
+    display: none;
 }
 
 /* TOP STATUS STRIP — full-width container, bars dùng absolute coords trong 1280-space */
@@ -27,22 +30,24 @@
     background-color: transparent;
 }
 
+/* PC 新血条面板 (bar_panel_bg.png = 552×17, đúng art PC gốc). PC origin Main.Left×1.25=150.
+   MOBILE shift -112 (margin trái giảm 1/2 hai lần: 150→75→38). W=552×1.25=690; H=17×1.25≈21 */
 .hud-pc-bar-panel-bg {
     position: absolute;
-    left: 0px;
+    left: 38px;
     top: 0px;
-    width: 883px; /* PC 552 ×1.6, scaled from bar art */
-    height: 27px; /* PC 17px × 1.6 */
+    width: 690px;
+    height: 21px;
     background-image: url('project://database/Assets/UI/HUD/Art/bar_panel_bg.png');
     -unity-background-scale-mode: stretch-to-fill;
-    display: none; /* top_frame_bg.png đã bao gồm bars art — ẩn cái này */
+    display: flex;
 }
 
 .hud-level-box {
     position: absolute;
-    left: 433px; /* PC Level.Left=53, container=348 → 348+85=433 absolute */
+    left: 82px; /* PC 194 - 112 mobile-shift (margin trái giảm 1/2 hai lần) */
     top: 8px;
-    width: 32px;
+    width: 25px; /* PC 20 × 1.25 */
     height: 14px;
     font-size: 11px;
     color: rgb(55,231,63);
@@ -51,40 +56,64 @@
     border-width: 0px;
 }
 
+/* WorldSort box (Hạng) — vẽ qua IMGUI overlay, ẩn element để tránh vẽ đè */
+.hud-worldsort-box {
+    position: absolute;
+    left: 691px; /* PC 803 - 112 mobile-shift (margin trái giảm 1/2 hai lần) */
+    top: 8px;
+    width: 35px; /* PC 28 × 1.25 */
+    height: 14px;
+    font-size: 10px;
+    color: rgb(55,231,63);
+    -unity-text-align: middle-center;
+    background-color: transparent;
+    border-width: 0px;
+    display: none;
+}
+
 .hud-top-bar {
     position: absolute;
-    top: 3px; /* PC bars Top=2, scaled */
-    width: 166px; /* PC 104px × 1.6 */
-    height: 14px; /* PC 9px × 1.6 */
+    top: 3px; /* PC bars Top=3 */
+    width: 130px; /* PC 104px × 1.25 */
+    height: 14px;
     background-color: transparent;
     border-width: 0px;
     overflow: hidden;
 }
 
-/* Bars dùng absolute coords trong 1280-space:
-   Container (PC Main.Left=218): 218×1.6=348
-   Stamina: 348+87×1.6=487, Life:639, Mana:791, Exp:943 */
-.hud-stamina-track { left: 487px; }
-.hud-hp-track { left: 639px; }
-.hud-mp-track { left: 791px; }
-.hud-exp-track { left: 943px; }
+/* Bars absolute coords 1280-space. PC base=150; MOBILE shift -112 → base=38.
+   Stamina=111, HP=248, MP=386, EXP=523 (= PC value - 112). */
+.hud-stamina-track { left: 111px; }
+.hud-hp-track { left: 248px; }
+.hud-mp-track { left: 386px; }
+.hud-exp-track { left: 523px; }
 
 .hud-top-fill {
+    position: relative;
     width: 100%;
     height: 14px; /* PC 9px ×1.6 */
+    overflow: hidden; /* PC parity: clip fixed fill image left→right; do not scale texture width */
+}
+
+.hud-top-fill-image {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 130px;
+    height: 14px;
     -unity-background-scale-mode: stretch-to-fill;
 }
 
-.hud-exp-track .hud-top-fill {
+.hud-exp-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png');
 }
-.hud-hp-track .hud-top-fill {
+.hud-hp-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_hp_fill.png');
 }
-.hud-mp-track .hud-top-fill {
+.hud-mp-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_mp_fill.png');
 }
-.hud-stamina-track .hud-top-fill {
+.hud-stamina-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_stamina_fill.png');
 }
 
@@ -97,12 +126,12 @@
     -unity-text-align: middle-center;
     -unity-font-style: bold;
 }
-/* Captions ẩn - IMGUI overlay sẽ vẽ. Positions absolute trong 1280-space. */
-.hud-vn-level-caption { left: 433px; width: 40px; display: none; } /* 348+85 */
-.hud-vn-stamina-caption { left: 487px; width: 166px; display: none; } /* 348+139 */
-.hud-vn-hp-caption { left: 639px; width: 166px; display: none; } /* 348+291 */
-.hud-vn-mp-caption { left: 791px; width: 166px; display: none; } /* 348+443 */
-.hud-vn-exp-caption { left: 943px; width: 166px; display: none; } /* 348+595 */
+/* Captions ẩn - IMGUI overlay sẽ vẽ. Positions absolute trong 1280-space (base 150). */
+.hud-vn-level-caption { left: 82px; width: 25px; display: none; }
+.hud-vn-stamina-caption { left: 111px; width: 130px; display: none; }
+.hud-vn-hp-caption { left: 248px; width: 130px; display: none; }
+.hud-vn-mp-caption { left: 386px; width: 130px; display: none; }
+.hud-vn-exp-caption { left: 523px; width: 130px; display: none; }
 
 
 .hud-top-small-text {
@@ -115,11 +144,11 @@
     -unity-text-align: middle-center;
     background-color: transparent;
 }
-/* Values dưới bar tracks — ẩn UIToolkit labels, IMGUI overlay sẽ vẽ. Absolute 1280-space. */
-.hud-stamina-text { left: 487px; display: none; }
-.hud-hp-text { left: 639px; display: none; }
-.hud-mp-text { left: 791px; display: none; }
-.hud-exp-text { left: 943px; display: none; }
+/* Values dưới bar tracks — ẩn UIToolkit labels, IMGUI overlay sẽ vẽ. Absolute 1280-space (base 150). */
+.hud-stamina-text { left: 111px; display: none; }
+.hud-hp-text { left: 248px; display: none; }
+.hud-mp-text { left: 386px; display: none; }
+.hud-exp-text { left: 523px; display: none; }
 
 
 
@@ -131,14 +160,15 @@
     width: 136px;
     height: 166px;
     align-items: center;
+    z-index: 20;
 }
 
 .hud-minimap-frame {
     width: 130px;
     height: 130px;
     border-width: 2px;
-    border-color: rgb(180,150,80);
-    border-radius: 2px;
+    border-color: rgb(58,138,92);
+    border-radius: 0px;
     background-color: rgba(5,10,5,0.92);
     overflow: hidden;
 }
@@ -187,16 +217,16 @@
 
 .hud-minimap-btns {
     position: absolute;
-    left: 80px;
+    left: 58px;
     top: 136px;
-    width: 50px;
-    height: 14px;
+    width: 72px;
+    height: 16px;
     flex-direction: row;
     justify-content: flex-end;
 }
 .hud-minimap-btn {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     margin-left: 1px;
     margin-right: 1px;
     -unity-background-scale-mode: scale-to-fit;
@@ -286,167 +316,190 @@
     -unity-text-align: middle-center;
 }
 
-/* CÁI BANG SKILL PANEL — PC refs: UiSkillsSheet.ini 205x376, UiSkillsFightSub.ini 5x5 grid 36px slots. */
-.hud-cb-skill-panel {
-    position: absolute;
-    left: 338px;
-    top: 110px;
-    width: 205px;
-    height: 376px;
-    background-color: rgba(0,0,0,0);
-    padding-left: 7px;
-    padding-right: 7px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
 
-.hud-cb-header {
-    height: 56px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
+    /* CHAT AREA — PC 聊天条 (7e20a7ac.ini), rebuilt per port-pc-chat-bar-parity design §3.
+       Bottom-anchored, center-lane, between joystick (x<155) and combat cluster (right).
+       column-reverse: input at bottom, history at top (PC TextBottom=1).
+       Frame SPR art loads at runtime via C# LoadIconStatic, not USS background-image. */
+    .hud-chat-panel {
+        position: absolute;
+        left: 465px;          /* mobile: centered bottom / 6 o'clock anchor at 1280 design width */
+        bottom: 16px;
+        width: 350px;        /* PC [ChatRoom_List].Width=280 scaled 1024→1280 */
+        height: 143px;        /* history room + input; old SysRoom icon strip removed */
+        flex-direction: column;
+        overflow: visible;
+        background-color: transparent;
+        picking-mode: Ignore;  /* root passthrough; controller re-enables Position on children */
+    }
 
-.hud-cb-title {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-    flex-grow: 1;
-}
+    .hud-chat-frame-top {
+        position: absolute;
+        left: 0px;
+        top: 104px;
+        width: 15px;
+        height: 17px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
+    .hud-chat-frame-bottom {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 15px;
+        height: 16px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
+    .hud-chat-shadow-toggle {
+        position: absolute;
+        left: 0px;
+        top: 96px;
+        width: 15px;
+        height: 17px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
 
-.hud-cb-close {
-    position: absolute;
-    left: 53px;
-    top: 342px;
-    width: 97px;
-    height: 29px;
-    background-image: url('project://database/Assets/StreamingAssets/UI/HUD/Art/vi/btn_close_skill_02_vi.png');
-    -unity-background-scale-mode: stretch-to-fill;
-}
+    /* Collapsed: channel toggle off → hide history + system, show input only */
+    .hud-chat-panel.collapsed .hud-chat-room-area,
+    .hud-chat-panel.collapsed .hud-chat-sys-area {
+        display: none;
+    }
 
-.hud-cb-close-text {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-}
+    /* Channel selector row: PC [ChannelBtn] + 6 tabs (ChatTabNum=6) */
+    .hud-chat-channel-row {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        flex-direction: row;
+        align-items: center;
+        height: 12px;
+        padding-left: 28px;   /* mobile: keep first tab text clear of the left scroll strip */
+        width: 570px;         /* mobile-safe tabs overlay the room top, not the input controls */
+        margin-bottom: 0px;
+    }
+    .hud-chat-channel-toggle {
+        display: none;        /* PC evidence shows the channel identity icon, not the size-up text button */
+    }
+    .hud-chat-toggle-icon {
+        width: 100%;
+        height: 100%;
+        -unity-background-scale-mode: scale-to-fit;
+    }
+    .hud-chat-tab {
+        width: 86px;          /* PC TabButtons XOffset=50 scaled, compact like reference */
+        height: 12px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    .hud-chat-tab.selected .hud-chat-tab-label {
+        color: rgb(230,220,53);  /* PC SpecialColor */
+    }
+    .hud-chat-tab-label {
+        font-size: 12px;       /* PC [TabButton] Font=12 */
+        color: rgb(50,220,173);  /* PC TabButton Color */
+        -unity-text-align: middle-center;
+    }
+    .hud-chat-channel-identity {
+        width: 23px;
+        height: 20px;
+        flex-shrink: 0;
+        margin-left: 2px;
+        margin-right: 2px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
 
-.hud-cb-summary {
-    position: absolute;
-    left: 156px;
-    top: 317px;
-    width: 34px;
-    height: 14px;
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-}
+    /* ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148) */
+    .hud-chat-room-area {
+        height: 118px;
+        flex-shrink: 0;
+        flex-direction: row;
+        align-items: stretch;
+        background-color: rgba(0,0,0,0.08);  /* keep the chat history room; only SysRoom controls are removed */
+    }
+    .hud-chat-room-list {
+        flex-grow: 1;
+        overflow: hidden;
+        margin-left: 15px;     /* reserve the overlaid left scroll strip */
+        background-color: transparent;
+    }
+    .hud-chat-room-content {
+        font-size: 12px;
+        color: rgb(255,249,148);  /* PC MsgColor */
+        /* enableRichText is set in C# for UI Toolkit rich text support */
+        white-space: normal;
+        flex-grow: 1;
+        flex-shrink: 0;
+        min-height: 114px;
+        -unity-text-align: lower-left;
+        padding: 2px 4px;
+    }
+    .hud-chat-scroll-track {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 15px;
+        height: 118px;
+        flex-shrink: 0;
+        margin-left: 0px;
+        margin-top: 0px;       /* mobile: no gap between tab row and vertical scroll */
+        margin-bottom: 0px;
+        -unity-background-scale-mode: scale-to-fill;
+    }
+    .hud-chat-scroll-thumb {
+        width: 16px;
+        height: 25px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
 
-.hud-cb-list {
-    position: absolute;
-    left: 7px;
-    top: 57px;
-    width: 191px;
-    height: 278px;
-    background-color: rgba(0,0,0,0);
-    border-width: 0px;
-}
+    /* SysRoom: system/combat strip (PC [SysRoom_List] 235×42, collapsible) */
+    .hud-chat-sys-area {
+        display: none;        /* mobile omits PC SysRoom controls/blank strip; chat scroll sits directly above input */
+        height: 0px;
+        flex-shrink: 0;
+    }
+    .hud-chat-sys-toggle {
+        width: 19px;
+        height: 13px;
+        flex-shrink: 0;
+        margin-right: 2px;
+    }
+    .hud-chat-sys-content {
+        font-size: 11px;
+        color: rgb(255,249,148);  /* PC MsgColor */
+        flex-grow: 1;
+        flex-shrink: 0;
+        height: 34px;
+        min-height: 34px;
+        white-space: normal;
+        -unity-text-align: lower-left;
+    }
+    .hud-chat-sys-btn {
+        width: 19px;
+        height: 13px;
+        flex-shrink: 0;
+        -unity-background-scale-mode: scale-to-fit;
+    }
 
-.hud-cb-grid-cell {
-    width: 38px;
-    height: 51px;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
+    /* Input row (preserved styles for ChatInput/FaceBtn/SendBtnIcon) */
+    .hud-chat-input-row {
+        flex-direction: row;
+        align-items: center;
+        width: 350px;
+        height: 25px;
+        flex-shrink: 0;
+        background-color: rgba(5,10,8,0.72);
+        border-width: 1px;
+        border-color: rgb(70,70,70);
+    }
 
-.hud-cb-grid-cell-upgradable {
-    background-color: rgba(0,0,0,0);
-}
-
-.hud-cb-grid-slot {
-    width: 36px;
-    height: 36px;
-    background-color: rgba(0,0,0,0);
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.hud-cb-grid-level {
-    position: absolute;
-    left: 0px;
-    top: 36px;
-    width: 36px;
-    height: 12px;
-    color: rgb(218,255,165);
-    font-size: 12px;
-    -unity-font-style: bold;
+.hud-chat-send-name {
+    display: none; /* PC evidence keeps default send name as state, not prominent text in input row */
+    width: 0px;
+    height: 24px;
+    flex-shrink: 0;
+    color: rgb(255,249,148);  /* PC DefaultChannelSendNameVi = Nhắc nhở */
+    font-size: 11px;
     -unity-text-align: middle-center;
-}
-
-.hud-cb-add-point {
-    position: absolute;
-    left: 22px;
-    top: 35px;
-    width: 14px;
-    height: 14px;
-    background-image: url('project://database/Assets/UI/HUD/Art/状态加点按钮改_01.png');
-    -unity-background-scale-mode: stretch-to-fill;
-}
-
-.hud-cb-grid-name {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-}
-
-.hud-cb-page-tab {
-    position: absolute;
-    top: 314px;
-    height: 20px;
-    background-color: rgba(0,0,0,0);
-}
-
-.hud-cb-page-one {
-    left: 0px;
-    width: 36px;
-}
-
-.hud-cb-page-two {
-    left: 37px;
-    width: 31px;
-}
-
-.hud-cb-page-tab-label {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-}
-
-.hud-cb-page-tab-active {
-    background-color: rgba(255,220,90,0.10);
-}
-
-/* CHAT AREA */
-.hud-chat-panel {
-    position: absolute;
-    left: 155px;
-    bottom: 78px;
-    width: 430px;
-    height: 70px;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-
-.hud-chat-warning {
-    width: 430px;
-    height: 18px;
-    font-size: 15px;
-    color: rgb(255,40,30);
-    -unity-font-style: bold;
-    -unity-text-align: middle-left;
-}
-
-.hud-chat-input-row {
-    flex-direction: row;
-    align-items: center;
-    width: 430px;
-    height: 28px;
-    background-color: rgba(5,10,8,0.85);
-    border-width: 1px;
-    border-color: rgb(70,70,70);
 }
 
 .hud-chat-input {
@@ -459,67 +512,324 @@
 }
 
 .hud-face-btn {
-    width: 30px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
     background-color: transparent;
     border-width: 0px;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .hud-send-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     margin-right: 3px;
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* BOTTOM ORNATE STRIP */
+/* BOTTOM TOOLBAR — PC 快捷栏.spr (hash ebb69f9b, recovered via jx-pc-resource-resolver).
+   Strip is a transparent container; the real PC filigree frame lives in a child
+   .hud-bottom-frame layer (natural aspect 863x91 = 9.48:1), bottom-left anchored.
+   Button containers overlay the frame's slot wells. */
 .hud-bottom-strip {
     position: absolute;
-    left: 155px;
+    left: 39px;
     right: 0px;
     bottom: 0px;
-    height: 82px;
+    height: 131px;
     flex-direction: row;
     align-items: flex-end;
-    background-color: rgba(0,0,0,0.78);
-    border-top-width: 2px;
-    border-top-color: rgb(35,115,95);
+    background-color: transparent;
+    border-top-width: 0px;
     padding-left: 0px;
-    padding-right: 8px;
-    padding-bottom: 6px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    overflow: visible;
 }
 
-.hud-left-tools {
+/* Frame overlay: 863x91 art scaled ×1.438 -> 1241x131 (fills the strip width exactly:
+   strip is left:39..right:0 = 1241px on the 1280x720 PanelSettings design space).
+   Natural aspect. pickingMode ignore so taps fall through to buttons on top. */
+.hud-bottom-frame {
     position: absolute;
-    right: 8px;
-    bottom: 84px;
+    left: 0px;
+    bottom: 0px;
+    width: 1241px;
+    height: 131px;
+    background-image: url('project://database/Assets/UI/HUD/Art/bottom_frame_pc.png');
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-position: left bottom;
+    -unity-background-position-x: 0px;
+    -unity-background-position-y: 0px;
+    background-color: transparent;
+    picking-mode: Ignore;
+    }
+
+    /* ===================================================================
+       HUD-004 (mobile-native-hud-layout) — Slice S1 anchor shells.
+       Anchor-based, region-anchored containers. NO raw pixel-multiply of art
+       (per project 4:3->16:9 rule). These are empty passthrough containers;
+       picking-mode Ignore so touches fall through. S2/S3 populate them.
+       Design space: 1280x720 (16:9).
+       =================================================================== */
+
+    /* PendingRelocation: hidden parking for the stripped PC 快捷栏 replica elements.
+       display:none so they are invisible but root.Q(name) still resolves them
+       for click-wiring + icon loading until S2/S3 repopulate. */
+    .hud-pending-relocation {
+        position: absolute;
+        display: none;
+        left: 0px;
+        top: 0px;
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+    }
+
+    /* CombatCluster: right-thumb combat zone (1 main + 5 sub assignable slots
+       + run/horse/sit action buttons). Anchored bottom-right.
+       S2 (HUD-004): populated with PC sprite frames (btn_skill_empty_pc.png).
+       Fan layout: main slot center, 2 sub upper arc, 3 sub lower arc, actions below.
+       Design space 1280×720; fan radius ~110px (27-41mm comfort arc at ~5.5").
+       NOTE: exact px need parent vision screenshot to fine-tune (S2.6). */
+    .hud-combat-cluster {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        width: 320px;
+        height: 360px;
+        background-color: transparent;
+        picking-mode: Ignore;
+        overflow: visible;
+    }
+
+    /* Main combat slot (player-chosen priority, visually larger for thumb rest).
+       Frame: btn_skill_empty_pc.png (PC 42×42 SPR, scale-to-fit, upscaled 2.3× —
+       pixel art upscales cleanly). Centered in the cluster's upper-middle area. */
+    .hud-combat-main-slot {
+        position: absolute;
+        left: 147px;
+        top: 117px;
+        width: 96px;
+        height: 96px;
+        border-width: 0px;
+        border-radius: 6px;
+        background-color: rgba(20,40,30,0.35);
+        background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+        -unity-background-scale-mode: scale-to-fit;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Sub combat slot (64×64). Frame: btn_skill_empty_pc.png (PC SPR, scale-to-fit). */
+    .hud-combat-sub-slot {
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        border-width: 0px;
+        border-radius: 4px;
+        background-color: rgba(20,40,30,0.3);
+        background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+        -unity-background-scale-mode: scale-to-fit;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Fan positions (absolute within 340×340 container). Main center = (170, 138).
+       Sub slots at radius ~110px from main center. Action buttons in a row below.
+       Lower arc: sub1(left) sub2(center) sub3(right). Upper arc: sub4(left) sub5(right). */
+    /* Circular fan (~120px radius) around main center (195,165). The 5 sub slots
+       sweep from lower-left (225°) up to upper-right (45°) — the natural right-thumb
+       arc. No slot sits directly below main (action buttons go there). Radius 120 keeps
+       adjacent slots ~21px apart so the ornate PC skill-slot frames (btn_skill_empty_pc)
+       do NOT visually overlap, while the innermost slot (sub2, 180°) stays reachable. */
+    .hud-combat-pos-sub1 { left: 78px;  top: 218px; }   /* lower-left arc (225°) */
+    .hud-combat-pos-sub2 { left: 43px;  top: 133px; }   /* left arc (180°, innermost) */
+    .hud-combat-pos-sub3 { left: 78px;  top: 48px;  }   /* upper-left arc (135°) */
+    .hud-combat-pos-sub4 { left: 163px; top: 13px;  }   /* upper arc (90°) */
+    .hud-combat-pos-sub5 { left: 248px; top: 48px;  }   /* upper-right arc (45°) */
+
+    /* Action buttons (48×48) in a row below the lower arc. Transparent hit area;
+       icon drawn by child .hud-btn-icon. Icons: PcButtons/btn_run/horse/sit (PC 31px). */
+    .hud-action-btn {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        border-width: 0px;
+        border-radius: 4px;
+        background-color: rgba(20,40,30,0.3);
+        overflow: visible;
+    }
+
+    .hud-action-toggle-ring {
+        position: absolute;
+        left: -3px;
+        top: -3px;
+        width: 54px;
+        height: 54px;
+        border-width: 0px;
+        border-radius: 27px;
+        border-color: transparent;
+        background-color: transparent;
+        display: none;
+        picking-mode: Ignore;
+    }
+
+    .hud-action-btn.toggle-on > .hud-action-toggle-ring {
+        display: flex;
+        border-width: 2px;
+        border-color: rgba(255, 239, 150, 0.92);
+        background-color: transparent;
+    }
+    .hud-combat-pos-run   { left: 120px; top: 300px; }
+    .hud-combat-pos-horse { left: 178px; top: 300px; }
+    .hud-combat-pos-sit   { left: 236px; top: 300px; }
+
+    /* QuickSlots: usable-item quick slots (3) ascending the right side toward
+       the minimap. Anchored right side, above the combat cluster. Empty in S1. */
+    .hud-quick-slots {
+        position: absolute;
+        right: 28px;
+        bottom: 410px;
+        width: 146px;
+        height: 55px;
+        flex-direction: row;
+        background-color: transparent;
+        background-image: url('project://database/Assets/UI/HUD/Art/quick_slots_1_2_3_mobile_gap_pc.png');
+        -unity-background-scale-mode: stretch-to-fill;
+        picking-mode: Ignore;
+        overflow: visible;
+    }
+
+    /* TopGapCluster: relocated overflow PC UI (8 menu buttons + buff + Bảo Vật)
+       into the minimap<->topbar gap. Anchored top, between status bar and minimap.
+       Empty in S1. */
+    .hud-top-gap-cluster {
+        position: absolute;
+        left: 690px;
+        top: 4px;
+        width: 470px;
+        height: 60px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background-color: transparent;
+        picking-mode: Ignore;
+        overflow: visible;
+    }
+
+        /* S3 (HUD-004): compact horizontal row of PC menu buttons + BtnTreasure in the
+           minimap<->topbar gap. Each button = transparent hit area; icon drawn by child. */
+        .hud-top-gap-menu-row {
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+        }
+
+        /* Menu button relocated from PC bottom strip to the top gap (S3). 36×36 hit area
+           with invisible padding to exceed the visual icon (≥44pt tap target, ADR-5).
+           Icon loaded by LoadArt via ButtonIcons dict (root-level PC sprites). */
+        .hud-top-gap-menu-btn {
+            width: 36px;
+            height: 36px;
+            margin-left: 2px;
+            margin-right: 2px;
+            border-width: 0px;
+            border-radius: 0px;
+            background-color: transparent;
+            overflow: hidden;
+        }
+
+        /* S3 (HUD-004): usable-item quick slots. PC chrome is split from the
+           evidence strip with a short mobile gap, so users do not tap adjacent
+           slots by mistake. Children are transparent click/icon regions. */
+        .hud-quick-slot {
+            width: 45px;
+            height: 55px;
+            margin-left: 0px;
+            margin-right: 5px;
+            background-color: transparent;
+            border-width: 0px;
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        .hud-quick-slot-1,
+        .hud-quick-slot-2,
+        .hud-quick-slot-3 {
+            background-image: none;
+        }
+
+        .hud-quick-slot-2 {
+            width: 46px;
+        }
+
+        .hud-quick-slot-3 {
+            margin-right: 0px;
+        }
+
+        /* Quick-slot item icon child (centered, shown when an item is assigned).
+           Empty state must remain transparent so the PC 1/2/3 chrome stays visible. */
+        .hud-quick-slot-icon {
+            position: absolute;
+            left: 8px;
+            top: 12px;
+            width: 29px;
+            height: 29px;
+            background-size: contain;
+            -unity-background-scale-mode: scale-to-fit;
+        }
+        .hud-quick-slot-icon.empty {
+            background-color: transparent;
+        }
+
+        /* BuffPanel inside TopGapCluster: flow as a row below the menu buttons instead
+           of using absolute positioning (its old top-level class used absolute). */
+        .hud-top-gap-cluster > .hud-buff-panel {
+            position: relative;
+            left: 0;
+            top: 0;
+            width: auto;
+            margin-top: 4px;
+        }
+
+    /* Right cluster: PC toggle row (circular) above menu row (square).
+   Positioned over the frame's right-slot region (slots x886-1251 at ×1.6 scale). */
+.hud-right-cluster {
+    position: absolute;
+    left: 792px;
+    bottom: 34px;
+    width: 330px;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-bottom: 0px;
+}
+
+.hud-toggle-row {
     flex-direction: row;
-    width: 190px;
-    height: 48px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 6px;
+}
+
+.hud-menu-row {
+    flex-direction: row;
     align-items: center;
     justify-content: flex-end;
 }
 
+/* Toggle button (PC 31px circular SPR: Sit/Run/Horse/Trade/Camera/PK). */
 .hud-round-btn {
-    width: 42px;
-    height: 42px;
-    margin-right: 4px;
-    border-width: 2px;
-    border-color: rgb(45,130,105);
-    border-radius: 21px;
-    background-color: rgba(5,22,20,0.95);
+    width: 36px;
+    height: 36px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-width: 0px;
+    border-radius: 0px;
+    background-color: transparent;
     overflow: hidden;
-}
-
-.hud-hotkey-number {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 14px;
-    height: 14px;
-    color: rgb(210,210,190);
-    font-size: 9px;
-    -unity-text-align: middle-center;
 }
 
 .hud-btn-icon {
@@ -533,22 +843,28 @@
 
 .hud-main-hotbar {
     flex-direction: row;
-    width: 540px;
-    height: 58px;
+    flex-shrink: 0;
+    width: 442px;
+    height: 48px;
     align-items: center;
-    margin-left: 0px;
-    background-color: transparent;
+    margin-left: 116px;
+    margin-bottom: 28px;
+    background-image: none;
+    -unity-background-scale-mode: stretch-to-fill;
     border-width: 0px;
+    background-color: transparent;
 }
 
 .hud-hotbar-slot {
-    width: 58px;
-    height: 54px;
-    background-color: rgba(5,5,5,0.85);
-    border-width: 1px;
-    border-color: rgb(70,70,70);
-    margin-left: 2px;
-    margin-right: 2px;
+    width: 47px;
+    height: 47px;
+    flex-shrink: 0;
+    background-image: none;
+    -unity-background-scale-mode: stretch-to-fill;
+    background-color: transparent;
+    border-width: 0px;
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .hud-slot-number {
@@ -564,21 +880,26 @@
 
 .hud-skill-panel {
     flex-direction: row;
-    width: 120px;
-    height: 58px;
+    flex-shrink: 0;
+    width: 122px;
+    height: 60px;
     align-items: center;
     justify-content: center;
-    margin-left: 8px;
-    background-color: transparent;
+    margin-left: 34px;
+    margin-bottom: 26px;
+    background-image: none;
+    -unity-background-scale-mode: stretch-to-fill;
     border-width: 0px;
+    border-color: transparent;
+    background-color: transparent;
 }
 
 .hud-skill-slot {
     width: 48px;
     height: 48px;
-    background-color: rgba(0,0,0,0.60);
-    border-width: 1px;
-    border-color: rgb(60,140,115);
+    background-color: transparent;
+    border-width: 0px;
+    border-color: transparent;
     margin-left: 2px;
     margin-right: 2px;
 }
@@ -586,19 +907,28 @@
 .hud-skill-panel > .hud-skill-slot {
     width: 56px;
     height: 56px;
-    border-width: 1px;
-    border-color: rgb(100,100,100);
-    background-color: rgba(5,5,5,0.85);
+    border-width: 0px;
+    background-image: none;
+    -unity-background-scale-mode: stretch-to-fill;
+    background-color: transparent;
     border-radius: 0px;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .hud-skill-slot-icon {
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     background-size: contain;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* Main combat icon override must come AFTER the shared .hud-skill-slot-icon rule;
+   otherwise the shared rule can make the 96×96 primary slot reuse sub-slot sizing. */
+.hud-combat-main-icon {
+    width: 88px;
+    height: 88px;
 }
 
 .hud-skill-slot-icon.empty {
@@ -717,28 +1047,34 @@
 }
 
 .hud-skill-keys {
-    display: none;
-}
-
-.hud-right-menu {
     position: absolute;
-    right: 84px;
-    bottom: 0px;
+    left: 18px;
+    bottom: -15px;
+    width: 92px;
+    height: 14px;
     flex-direction: row;
-    height: 48px;
-    align-items: center;
+    justify-content: space-between;
+    color: rgb(235,230,190);
+    font-size: 11px;
+    -unity-font-style: bold;
 }
 
+/* Menu button (PC 28px square SPR: CharF1/InvF2/ItemEx/SkillF3/QuestF4/TeamF6/FactionF7/ChatRoom).
+   Icon drawn by child .hud-btn-icon; button itself is a transparent hit area. */
 .hud-menu-btn {
-    width: 46px;
-    height: 46px;
-    margin-left: 4px;
+    width: 36px;
+    height: 36px;
+    margin-left: 2px;
+    margin-right: 2px;
     border-width: 0px;
+    border-radius: 0px;
     background-color: transparent;
-    overflow: visible;
+    overflow: hidden;
 }
 
+/* PC parity: bottom-right menu buttons are icon-only (no caption labels). */
 .hud-menu-label {
+    display: none;
     position: absolute;
     left: 0px;
     right: 0px;
@@ -751,14 +1087,15 @@
 
 .hud-baovat-btn {
     position: absolute;
-    right: 8px;
-    bottom: 8px;
-    width: 72px;
-    height: 72px;
-    border-radius: 36px;
-    border-width: 3px;
-    border-color: rgb(230, 180, 50);
-    background-color: rgb(110, 20, 10);
+    left: 1132px;
+    bottom: 16px;
+    width: 96px;
+    height: 96px;
+    border-radius: 0px;
+    border-width: 0px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png');
+    -unity-background-scale-mode: scale-to-fit;
+    background-color: transparent;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -813,78 +1150,6 @@
 
 .hud-debuff-timer {
     color: rgb(255, 140, 0);
-}
-
-/* Team Preview Overlay */
-.hud-team-preview {
-    position: absolute;
-    left: 10px;
-    top: 88px;
-    width: 170px;
-    flex-direction: column;
-}
-
-.hud-team-member {
-    position: relative;
-    height: 50px;
-    flex-direction: row;
-    align-items: center;
-    background-color: rgba(5, 10, 8, 0.85);
-    border-width: 1px;
-    border-color: rgb(45, 130, 105);
-    border-radius: 4px;
-    margin-bottom: 4px;
-    padding: 2px 4px;
-}
-
-.hud-team-leader-flag {
-    position: absolute;
-    left: 17px;
-    top: -5px;
-    width: 12px;
-    height: 12px;
-    background-image: url('project://database/Assets/UI/HUD/Art/队长移交_00.png');
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.hud-team-faction-icon {
-    width: 26px;
-    height: 26px;
-    margin-right: 6px;
-    background-color: rgba(0,0,0,0.5);
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.hud-team-member-info {
-    flex-grow: 1;
-    flex-direction: column;
-}
-
-.hud-team-member-name {
-    font-size: 10px;
-    color: rgb(165, 255, 203);
-    -unity-font-style: bold;
-    margin-bottom: 2px;
-    max-width: 120px;
-    overflow: hidden;
-}
-
-.hud-team-bar-track {
-    height: 5px;
-    width: 73px;
-    background-color: rgba(0, 0, 0, 0.6);
-    margin-bottom: 1px;
-    overflow: hidden;
-}
-
-.hud-team-bar-fill-hp {
-    height: 100%;
-    background-color: rgb(220, 50, 40);
-}
-
-.hud-team-bar-fill-mp {
-    height: 100%;
-    background-color: rgb(40, 120, 220);
 }
 
 /* Trade Info Panel */
@@ -991,7 +1256,7 @@
     border-color: rgb(80, 160, 120);
     border-radius: 8px;
     position: absolute;
-    left: 155px;
+    left: 39px;
     bottom: 150px;
 }
 
@@ -1044,3 +1309,18 @@
     -unity-text-align: middle-center;
 }
 
+
+/* =============================================================================
+   HUD-003 Popup overlay host (PopupManager mounts backdrop + window here).
+   Full-screen, on top of all HUD elements; transparent when empty.
+   ========================================================================== */
+.hud-popup-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1001;
+    background-color: rgba(0, 0, 0, 0);   /* backdrop drawn by PopupManager child */
+    picking-mode: Ignore;                  /* let taps pass through to game when empty */
+}

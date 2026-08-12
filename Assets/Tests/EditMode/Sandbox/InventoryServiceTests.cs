@@ -12,6 +12,20 @@ namespace VLTK.Tests.Sandbox
     /// </summary>
     public class InventoryServiceTests
     {
+        private string _stagingRoot;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _stagingRoot = MalePlayerSprStaging.StageForTests();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            MalePlayerSprStaging.CleanupTempDir(_stagingRoot);
+        }
+
         private ItemDefinition Item(int id, string name, int attr, int value, bool iconResolved = true)
         {
             var item = new ItemDefinition
@@ -96,6 +110,38 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(svc.AddItem(999));
         }
 
+        [Test]
+        public void AddItem_RejectsNewStackWhenMobileBagFull()
+        {
+            var items = new List<ItemDefinition>();
+            for (int i = 1; i <= InventoryService.MaxInventorySlots + 1; i++)
+                items.Add(Item(i, $"Item {i}", 28, i));
+
+            var svc = new InventoryService(DbWith(items.ToArray()));
+            for (int i = 1; i <= InventoryService.MaxInventorySlots; i++)
+                Assert.IsTrue(svc.AddItem(i), $"slot {i} should fit");
+
+            Assert.AreEqual(InventoryService.MaxInventorySlots, svc.Inventory.Count);
+            Assert.IsFalse(svc.AddItem(InventoryService.MaxInventorySlots + 1));
+            Assert.AreEqual(InventoryService.MaxInventorySlots, svc.Inventory.Count);
+        }
+
+        [Test]
+        public void AddItem_StacksExistingWhenMobileBagFull()
+        {
+            var items = new List<ItemDefinition>();
+            for (int i = 1; i <= InventoryService.MaxInventorySlots; i++)
+                items.Add(Item(i, $"Item {i}", 28, i));
+
+            var svc = new InventoryService(DbWith(items.ToArray()));
+            for (int i = 1; i <= InventoryService.MaxInventorySlots; i++)
+                Assert.IsTrue(svc.AddItem(i));
+
+            Assert.IsTrue(svc.AddItem(1, 3));
+            Assert.AreEqual(InventoryService.MaxInventorySlots, svc.Inventory.Count);
+            Assert.AreEqual(4, svc.Inventory[0].count);
+        }
+
         // --- AC#3: equip + stat preview ---
 
         [Test]
@@ -167,6 +213,11 @@ namespace VLTK.Tests.Sandbox
                 var controller = go.AddComponent<SandboxPlayerController>();
                 controller.followCameraEnabled = false;
                 controller.allowKeyboardFallback = false;
+                if (controller.visual is MalePlayerVisual maleVisual)
+                {
+                    maleVisual.spritesRootOverride = _stagingRoot;
+                    maleVisual.RefreshActionParts(force: true);
+                }
                 svc.OnWeaponTypeChanged += controller.EquipWeapon;
 
                 svc.Equip(EquipSlot.Weapon, 1);
@@ -182,10 +233,16 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
 
                 svc.Equip(EquipSlot.Weapon, 42);
-                Assert.AreEqual(PcWeaponType.DualWeapon, equipment.GetCurrentWeaponType());
-                Assert.AreEqual(PcWeaponType.DualWeapon, controller.EquippedWeapon);
-                Assert.AreEqual(PcWeaponType.DualWeapon, controller.visual.currentWeapon);
-                Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
+                  Assert.AreEqual(PcWeaponType.DualWeapon, equipment.GetCurrentWeaponType());
+                  Assert.AreEqual(PcWeaponType.DualWeapon, controller.EquippedWeapon);
+                  Assert.AreEqual(PcWeaponType.DualWeapon, controller.visual.currentWeapon);
+                  Assert.IsFalse(controller.visual.HasAllRequiredParts,
+                      "The inventory bridge must preserve the canonical fail-closed state while dual idle weapon bytes are not staged.");
+                  CollectionAssert.AreEquivalent(new[]
+                  {
+                      MalePlayerSpriteCatalog.BuildPath("LW", MalePlayerSpriteCatalog.DualWeaponVariant, "ST06"),
+                      MalePlayerSpriteCatalog.BuildPath("RW", MalePlayerSpriteCatalog.DualWeaponVariant, "ST06"),
+                  }, controller.visual.LastMissingRequiredParts);
 
                 svc.Unequip(EquipSlot.Weapon);
                 Assert.AreEqual(PcWeaponType.EmptyHand, equipment.GetCurrentWeaponType());

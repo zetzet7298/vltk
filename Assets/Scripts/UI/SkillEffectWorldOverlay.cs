@@ -39,9 +39,23 @@ namespace VLTK.UI
 
         public int sortingOrder = 32000;
 
+        [Header("Golden capture isolation")]
+        [Tooltip("Named layer required by manual golden capture. Missing layer disables overlay creation instead of leaking onto Default.")]
+        public string skillFxLayerName = GoldenSnapshotCaptureDriver.SkillFxLayerName;
+        [Tooltip("Test/GM injection. -1 resolves skillFxLayerName.")]
+        public int skillFxLayerOverride = -1;
+
+        /// <summary>Injectable SkillEffectVisualService. Null falls back to SandboxManager singleton (Sandbox scene).</summary>
+        public SkillEffectVisualService Service;
+
+        private bool _layerFailureLogged;
         private readonly Dictionary<ActiveSkillEffect, RuntimeEffectVisual> _visuals = new();
         private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
+        // Per-key header center + per-frame offset (for PC body-aura frame-offset animation).
+        // Key same as LoadPcSprites cacheKey.
+        private readonly Dictionary<string, (int centerX, int centerY, Vector2[] frameOffsets)> _pcSpriteFrameData = new();
         private Material _lineMaterial;
+        
         private Sprite _dotSprite;
         private Camera _cam;
         private float _cachedOrthoSize;
@@ -67,6 +81,8 @@ namespace VLTK.UI
                     ?? Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default")
                     ?? Shader.Find("Unlit/Color");
                 _lineMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+
+
             }
             if (_dotSprite == null)
                 _dotSprite = CreateDotSprite();
@@ -93,8 +109,9 @@ namespace VLTK.UI
             EnsureResources();
             if (_cam == null) return;
 
-            var service = SandboxManager.Instance?.SkillEffectVisual;
+            var service = Service ?? SandboxManager.Instance?.SkillEffectVisual;
             if (service == null) return;
+            if (!TryResolveSkillFxLayer(out var skillFxLayer)) return;
 
             var active = service.GetActiveEffects();
             var stillActive = new HashSet<ActiveSkillEffect>(active);
@@ -103,7 +120,7 @@ namespace VLTK.UI
             {
                 if (!_visuals.TryGetValue(fx, out var visual))
                 {
-                    visual = CreateVisual(fx);
+                    visual = CreateVisual(fx, skillFxLayer);
                     _visuals[fx] = visual;
                 }
                 UpdateVisual(fx, visual);
@@ -124,9 +141,10 @@ namespace VLTK.UI
 
         // ── Factory ──────────────────────────────────────────────────────────
 
-        private RuntimeEffectVisual CreateVisual(ActiveSkillEffect fx)
+        private RuntimeEffectVisual CreateVisual(ActiveSkillEffect fx, int skillFxLayer)
         {
             var root = new GameObject($"SkillVFX_{fx.skillId}_{fx.skillName}");
+            root.layer = skillFxLayer;
             root.transform.SetParent(SandboxManager.Instance?.worldRoot, false);
 
             var ring = CreateLine(root.transform, "PreCastRing", loop: true);
@@ -172,6 +190,7 @@ namespace VLTK.UI
             preCastSr.color = Color.white;
             preCastSr.enabled = false;
 
+            StampLayerRecursively(root, skillFxLayer);
             return new RuntimeEffectVisual
             {
                 root = root,
@@ -188,6 +207,7 @@ namespace VLTK.UI
         private LineRenderer CreateLine(Transform parent, string name, bool loop)
         {
             var go = new GameObject(name);
+            go.layer = parent.gameObject.layer;
             go.transform.SetParent(parent, false);
             var line = go.AddComponent<LineRenderer>();
             line.material = new Material(_lineMaterial); // instance per-line to avoid shared state
@@ -203,6 +223,42 @@ namespace VLTK.UI
             // LineRenderer uses its own generated mesh; ensure the material has a white texture.
             line.material.mainTexture = Texture2D.whiteTexture;
             return line;
+        }
+
+        public static bool ShouldDrawFallbackPreCastRing(ActiveSkillEffect fx) =>
+            fx != null && !fx.isAura;
+
+        public static void StampLayerRecursively(GameObject root, int layer)
+        {
+            if (root == null) throw new System.ArgumentNullException(nameof(root));
+            if (layer < 0 || layer > 31) throw new System.ArgumentOutOfRangeException(nameof(layer));
+            root.layer = layer;
+            foreach (Transform child in root.transform)
+                StampLayerRecursively(child.gameObject, layer);
+        }
+
+        private bool TryResolveSkillFxLayer(out int layer)
+        {
+            try
+            {
+                if (skillFxLayerOverride != -1)
+                {
+                    layer = GoldenSnapshotCaptureDriver.ResolveSkillFxLayer(injectedLayer: skillFxLayerOverride);
+                    return true;
+                }
+                layer = GoldenSnapshotCaptureDriver.ResolveSkillFxLayer(skillFxLayerName);
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                layer = -1;
+                if (!_layerFailureLogged)
+                {
+                    _layerFailureLogged = true;
+                    SubsystemLog.Warn("Golden", $"Skill effect overlay disabled: {ex.Message}");
+                }
+                return false;
+            }
         }
 
         // ── Per-frame update ─────────────────────────────────────────────────
@@ -223,13 +279,59 @@ namespace VLTK.UI
                 {
                     if (fx.isAura)
                     {
-                        float dur = Mathf.Max(0.05f, fx.auraDuration);
-                        float t = Mathf.Clamp01(fx.elapsed / dur);
-                        float pulse = 0.5f + 0.5f * Mathf.Sin(fx.elapsed * fx.auraPulseRate * Mathf.PI * 2f);
-                        var c = fx.color;
-                        c.a = Mathf.Lerp(0.85f, 0.15f, t) * Mathf.Lerp(0.55f, 1f, pulse);
-                        float r = Mathf.Max(1f, fx.auraRadius) * Mathf.Lerp(0.85f, 1.15f, pulse);
-                        DrawRing(v.preCastRing, fx.casterPos, r, c, lineW * 1.25f);
+                        // PC body-aura buff (e.g. Túy Điệp StateSpecial 43 butterfly):
+                        // render the SPR on the player body, following the live player position,
+                        // looping the PC sub-range (pcAuraFrameStart..pcAuraFrameEnd).
+                        if (fx.HasPcPreCastSprite)
+                        {
+                            Hide(v.preCastRing);
+                            Vector2 auraPos = ResolveLiveCasterPos(fx);
+                            v.pcPreCast.enabled = true;
+                            // PC: KSprite::DrawAlpha draws SPR at native pixel size (ppu=1).
+                            // No extra scaling — the camera zoom + screen res handles visibility.
+                            v.pcPreCast.transform.localScale = Vector3.one;
+                            // PC KSprite::DrawAlpha per-frame offset: (offsetX - centerX, centerY - offsetY).
+                            // At ppu=1, the offset is naturally in world units (no extra scale multiplication).
+                            int frameIdx = SelectPcAuraFrameIndex(fx);
+                            v.pcPreCast.sprite = SelectPcAuraFrame(fx, frameIdx);
+                            Vector2 offset = GetPcAuraFrameWorldOffset(fx, frameIdx, 1f);
+
+                            float yOffset = 0f;
+                            bool isMounted = fx.hasStateSourceKey && fx.stateOwnerMounted;
+                            if (!fx.hasStateSourceKey)
+                            {
+                                var player = SandboxManager.Instance?.PlayerController;
+                                if (player != null && player.visual != null)
+                                    isMounted = player.visual.IsMounted;
+                            }
+
+                            if (fx.stateAuraPos == 1) // Head
+                            {
+                                yOffset = 10f;
+                                if (isMounted) yOffset += 38f;
+                            }
+                            else if (fx.stateAuraPos == 2) // Feet
+                            {
+                                yOffset = 0f;
+                            }
+                            else // Body (default)
+                            {
+                                yOffset = 0f;
+                                if (isMounted) yOffset += 38f;
+                            }
+
+                            v.pcPreCast.transform.position = new Vector3(auraPos.x + offset.x, auraPos.y + offset.y + yOffset, 0f);
+                            Hide(v.impactRing);
+                            Hide(v.trail);
+                            SetMissileVisible(v, false);
+                            SetImpactVisible(v, false);
+                            break;
+                        }
+
+                        // Exact PC aura art is source-owned. If the mapped SPR is absent,
+                        // fail closed instead of inventing a generic pulse ring.
+                        Hide(v.preCastRing);
+                        v.pcPreCast.enabled = false;
                         Hide(v.impactRing);
                         Hide(v.trail);
                         SetMissileVisible(v, false);
@@ -243,7 +345,7 @@ namespace VLTK.UI
                         Hide(v.preCastRing);
                         v.pcPreCast.enabled = true;
                         v.pcPreCast.transform.position = new Vector3(fx.casterPos.x, fx.casterPos.y, 0f);
-                        v.pcPreCast.transform.localScale = Vector3.one;
+                        v.pcPreCast.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                         v.pcPreCast.sprite = SelectPcPreCastFrame(fx);
                     }
                     else if (fx.HasPcMissileSprite)
@@ -252,7 +354,7 @@ namespace VLTK.UI
                         // do not draw fake geometry. The visible PC missile starts at MS_DoFly.
                         Hide(v.preCastRing);
                     }
-                    else
+                    else if (ShouldDrawFallbackPreCastRing(fx))
                     {
                         float dur = Mathf.Max(fx.preCastDuration, minPreCastDuration);
                         float t = Mathf.Clamp01(fx.elapsed / dur);
@@ -260,6 +362,10 @@ namespace VLTK.UI
                         c.a = Mathf.Lerp(1f, 0.3f, t);
                         float r = Mathf.Lerp(preCastRMin, preCastRMax, t);
                         DrawRing(v.preCastRing, fx.casterPos, r, c, lineW);
+                    }
+                    else
+                    {
+                        Hide(v.preCastRing);
                     }
                     Hide(v.impactRing);
                     Hide(v.trail);
@@ -275,7 +381,7 @@ namespace VLTK.UI
                     SetImpactVisible(v, false);
 
                     Vector2 p = fx.currentMissilePos;
-                    if (fx.missilePositions != null && fx.missilePositions.Length > 0)
+                    if (fx.HasPcImpactSprite && fx.missilePositions != null && fx.missilePositions.Length > 0)
                         p = fx.missilePositions[0];
                     if (p.sqrMagnitude < 0.01f)
                         p = fx.casterPos;
@@ -289,20 +395,45 @@ namespace VLTK.UI
 
                     if (fx.HasPcMissileSprite && v.pcMissiles != null)
                     {
-                        Vector2 liveTarget = fx.getCurrentTargetPos != null ? fx.getCurrentTargetPos() : fx.targetPos;
                         for (int i = 0; i < v.pcMissiles.Count; i++)
                         {
                             var renderer = v.pcMissiles[i];
                             Vector2 mp = fx.missilePositions != null && i < fx.missilePositions.Length ? fx.missilePositions[i] : p;
-                            // Homing: face the live target from the missile's current position
-                            // so the dragon SPR rotates as it curves toward a moving enemy.
-                            renderer.sprite = SelectPcMissileFrame(fx, mp, liveTarget);
-                            renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
-                            renderer.transform.localScale = Vector3.one; // SPR decoder already outputs PC-correct orientation.
-                            renderer.color = Color.white;
-                            renderer.enabled = true;
+
+                            bool arrived = fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i];
+                            if (arrived)
+                            {
+                                float explodeTime = fx.missileExplodeStartTime != null && i < fx.missileExplodeStartTime.Length && fx.missileExplodeStartTime[i] >= 0f
+                                    ? fx.elapsed - fx.missileExplodeStartTime[i]
+                                    : 0f;
+
+                                if (explodeTime < fx.impactDuration && fx.HasPcImpactSprite)
+                                {
+                                    renderer.sprite = SelectPcImpactFrame(fx, explodeTime);
+                                    renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
+                                    renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
+                                    renderer.color = Color.white;
+                                    renderer.enabled = true;
+                                }
+                                else
+                                {
+                                    renderer.enabled = false;
+                                }
+                            }
+                            else
+                            {
+                                Vector2 direction = fx.ResolveMissileDirection(i);
+                                // 4096x scale keeps the 1px travel direction resolvable after
+                                // int rounding in ComputePcDirection64 (PC mps int parity).
+                                renderer.sprite = SelectPcMissileFrame(fx, mp, mp + direction * 4096f);
+                                renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
+                                renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
+                                renderer.color = Color.white;
+                                renderer.enabled = true;
+                            }
                         }
                     }
+
                     else
                     {
                         v.missileDot.transform.position = new Vector3(p.x, p.y, 0f);
@@ -324,12 +455,21 @@ namespace VLTK.UI
                     Hide(v.trail);
                     SetMissileVisible(v, false);
 
+                    // Multi-missile effects already rendered every individual impact
+                    // during Missile. Do not add an aggregate target explosion.
+                    if (fx.HasPcImpactSprite && fx.missilePositions != null && fx.missilePositions.Length > 0)
+                    {
+                        Hide(v.impactRing);
+                        SetImpactVisible(v, false);
+                        break;
+                    }
+
                     if (fx.HasPcImpactSprite)
                     {
                         Hide(v.impactRing);
                         v.pcImpact.enabled = true;
                         v.pcImpact.transform.position = new Vector3(fx.targetPos.x, fx.targetPos.y, 0f);
-                        v.pcImpact.transform.localScale = Vector3.one;
+                        v.pcImpact.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                         v.pcImpact.sprite = SelectPcImpactFrame(fx);
                         break;
                     }
@@ -351,6 +491,7 @@ namespace VLTK.UI
                     if (t < flashWindow && v.impactFlash == null)
                     {
                         var flashGo = new GameObject("Flash");
+                        flashGo.layer = v.root.layer;
                         flashGo.transform.SetParent(v.root.transform, false);
                         var fsr = flashGo.AddComponent<SpriteRenderer>();
                         fsr.sprite = _dotSprite;
@@ -402,24 +543,40 @@ namespace VLTK.UI
 
             // PC KMissleRes::Draw(MS_DoFly):
             // nImageDir = rounded nDir from 64-dir space into nSprDir; nFramePerDir = totalFrames / nSprDir;
-            // For homing missiles (MoveKind=5 in missles.txt), the dir must update each tick
-            // to face the current target — dragon SPR rotates as it chases a moving enemy.
-            int dir = ComputePc16Dir(fromPos, targetPos);
-            int framePerDir = Mathf.Max(1, fx.pcMissileTotalFrames / Mathf.Max(1, fx.pcMissileDirections));
+            // Homing direction comes from the last simulated PC tick. Do not point the
+            // renderer at the live target before KMissle's 9-tick retarget cadence fires.
+            int pcDir64 = ComputePcDirection64(fromPos, targetPos);
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
-            int localFrame = (lifeTick / Mathf.Max(1, fx.pcMissileIntervalTicks)) % framePerDir;
-            int frameIndex = Mathf.Clamp(dir * framePerDir + localFrame, 0, sprites.Length - 1);
+            int frameIndex = ComputePcMissileFrameIndex(pcDir64, fx.pcMissileTotalFrames,
+                fx.pcMissileDirections, lifeTick, fx.pcMissileIntervalTicks);
+            frameIndex = Mathf.Clamp(frameIndex, 0, sprites.Length - 1);
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcMissileSpriteKey);
         }
 
-        private Sprite SelectPcImpactFrame(ActiveSkillEffect fx)
+        private Sprite SelectPcImpactFrame(ActiveSkillEffect fx, float timeSinceImpact = -1f)
         {
             var sprites = LoadPcSprites(fx.pcImpactSpriteKey);
             if (sprites == null || sprites.Length == 0) return null;
-            int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
-            int frameIndex = Mathf.Clamp(lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks), 0, sprites.Length - 1);
+            float time = timeSinceImpact >= 0f ? timeSinceImpact : (fx.elapsed - fx.phaseStart);
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt(time * 18f));
+            int frameIndex;
+            if (fx.pcStationaryLifetimeOverride && fx.pcMissileLifeTicks > 0)
+            {
+                // PC LoopPlay=0 stationary rows stretch the finite SPR sequence over
+                // LifeTime rather than advancing one frame per simulation tick.
+                int frameCount = Mathf.Max(1, fx.pcImpactTotalFrames);
+                int clampedTick = Mathf.Clamp(lifeTick, 0, fx.pcMissileLifeTicks - 1);
+                frameIndex = Mathf.Min(frameCount - 1,
+                    Mathf.FloorToInt(clampedTick * (float)frameCount / fx.pcMissileLifeTicks));
+            }
+            else
+            {
+                frameIndex = lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks);
+            }
+            frameIndex = Mathf.Clamp(frameIndex, 0, sprites.Length - 1);
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcImpactSpriteKey);
         }
+
 
         private Sprite SelectPcPreCastFrame(ActiveSkillEffect fx)
         {
@@ -430,14 +587,116 @@ namespace VLTK.UI
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcPreCastSpriteKey);
         }
 
+        /// <summary>
+        /// Select a looping body-aura SPR frame for self-buff visuals (e.g. Túy Điệp butterfly).
+        /// PC source: 状态与光效图形对照表 Status entry — PlayMode=Loop over a sub-range
+        /// (主角身后开始帧..结束帧). When pcAuraFrameEnd&gt;pcAuraFrameStart, loop inside that
+        /// range; otherwise loop the full frame set.
+        /// </summary>
+        private Sprite SelectPcAuraFrame(ActiveSkillEffect fx)
+        {
+            int idx = SelectPcAuraFrameIndex(fx);
+            return SelectPcAuraFrame(fx, idx);
+        }
+
+        private int SelectPcAuraFrameIndex(ActiveSkillEffect fx)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || sprites.Length == 0) return 0;
+
+            int lo = fx.pcAuraFrameStart;
+            int hi = fx.pcAuraFrameEnd > 0 ? fx.pcAuraFrameEnd : sprites.Length - 1;
+            int interval = Mathf.Max(1, fx.pcPreCastIntervalTicks);
+
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
+            int entryTicks = lo * interval;
+
+            if (lifeTick < entryTicks)
+            {
+                int entryFrame = lifeTick / interval;
+                return Mathf.Clamp(entryFrame, 0, sprites.Length - 1);
+            }
+            else
+            {
+                int loopSpan = Mathf.Max(1, hi - lo + 1);
+                int loopTick = lifeTick - entryTicks;
+                int local = (loopTick / interval) % loopSpan;
+                return Mathf.Clamp(lo + local, 0, sprites.Length - 1);
+            }
+        }
+
+        private Sprite SelectPcAuraFrame(ActiveSkillEffect fx, int frameIndex)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || sprites.Length == 0) return null;
+            return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcPreCastSpriteKey);
+        }
+
+        /// <summary>
+        /// Compute the world-space offset for a PC body-aura frame.
+        /// PC KSprite::DrawAlpha: (x - centerX + frame.OffsetX, y - centerY + frame.OffsetY).
+        /// Adapted for Unity Y+ up: offsetX = (frame.offsetX - centerX), offsetY = (centerY - frame.offsetY).
+        /// Scaled by auraScale (pixelsPerUnit=1 so 1 px = 1 unit * scale).
+        /// </summary>
+        private string ResolvePcSpritePath(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+
+            string spritesRoot = Path.Combine(Application.dataPath, "..", "SpritesRuntime");
+            string keyWithExt = key.EndsWith(".spr") ? key : key + ".spr";
+            string path = Path.Combine(spritesRoot, keyWithExt);
+            if (File.Exists(path)) return path;
+
+            string fileNameOnly = Path.GetFileName(keyWithExt.Replace('\\', '/'));
+            string fallbackPath = Path.Combine(spritesRoot, fileNameOnly);
+            if (File.Exists(fallbackPath)) return fallbackPath;
+
+            // Fallback to signed hash file on disk
+            string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
+            string hashPath = signedUid != null ? Path.Combine(spritesRoot, signedUid + ".spr") : null;
+            if (hashPath != null && File.Exists(hashPath)) return hashPath;
+
+            // Fallback to unsigned hash file on disk
+            string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
+            string unsignedHashPath = unsignedUid != null ? Path.Combine(spritesRoot, unsignedUid + ".spr") : null;
+            if (unsignedHashPath != null && File.Exists(unsignedHashPath)) return unsignedHashPath;
+
+            return null;
+        }
+
+        private Vector2 GetPcAuraFrameWorldOffset(ActiveSkillEffect fx, int frameIndex, float scale)
+        {
+            // Pivot on Sprite already handles the PC frame offsets correctly by aligning center and frames.
+            // Adding a manual offset shifts the sprite twice, causing misalignment. Return Vector2.zero.
+            return Vector2.zero;
+        }
+
+        /// <summary>
+        /// Resolve the live caster position so body-aura buffs follow the player as it moves.
+        /// Falls back to the cast-time casterPos when the player is unavailable.
+        /// </summary>
+        private static Vector2 ResolveLiveCasterPos(ActiveSkillEffect fx)
+        {
+            if (fx?.getCurrentTargetPos != null)
+                return fx.getCurrentTargetPos();
+            if (fx != null && fx.hasStateSourceKey)
+                return fx.targetPos;
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player != null)
+                return (Vector2)player.transform.position;
+            return fx?.casterPos ?? Vector2.zero;
+        }
+
         private Sprite[] LoadPcSprites(string key)
         {
             if (string.IsNullOrEmpty(key)) return null;
 
-            string path = Path.Combine(Application.streamingAssetsPath, "Sprites", key.EndsWith(".spr") ? key : key + ".spr");
-            if (!File.Exists(path))
+            string path = ResolvePcSpritePath(key);
+            if (path == null)
             {
-                SubsystemLog.Warn("Combat", $"PC skill SPR missing: {path}");
+                string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
+                string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
+                SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (signedHash={signedUid}, unsignedHash={unsignedUid})");
                 _pcSpriteCache[key] = null;
                 return null;
             }
@@ -464,26 +723,59 @@ namespace VLTK.UI
                 tex.name = $"PCSPR_{key}_{i}";
                 // KSprite::DrawAlpha draws at (x - centerX + frame.OffsetX, y - centerY + frame.OffsetY).
                 // Preserve PC center as sprite pivot.
-                float pivotX = decoded.header.width > 0 ? decoded.header.centerX / (float)decoded.header.width : 0.5f;
-                float pivotY = decoded.header.height > 0 ? 1f - decoded.header.centerY / (float)decoded.header.height : 0.5f;
+                float pivotX = 0.5f;
+                float pivotY = 0.5f;
+                if (frame.width > 0)
+                    pivotX = (decoded.header.centerX - frame.offsetX) / (float)frame.width;
+                if (frame.height > 0)
+                    pivotY = (frame.height - (decoded.header.centerY - frame.offsetY)) / (float)frame.height;
                 sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(pivotX, pivotY), 1f);
                 sprites[i].name = $"PCSPR_{key}_{i}";
             }
 
+            // Cache frame offset data for PC body-aura animation.
+            int cx = decoded.header.centerX;
+            int cy = decoded.header.centerY;
+            var offsets = new Vector2[decoded.frames.Length];
+            for (int i = 0; i < decoded.frames.Length; i++)
+            {
+                var f = decoded.frames[i];
+                offsets[i] = new Vector2(f != null ? f.offsetX : 0, f != null ? f.offsetY : 0);
+            }
+            _pcSpriteFrameData[cacheKey] = (cx, cy, offsets);
             _pcSpriteCache[cacheKey] = sprites;
             return sprites;
         }
 
-        private static int ComputePc16Dir(Vector2 from, Vector2 to)
+        // PC source path: g_GetDirIndex(...) yields nDir [0,63], then KMissleRes
+        // maps that raw value to SPR directions. Keep all 64 buckets until that map.
+        private static int ComputePcSpriteDirection(Vector2 from, Vector2 to, int spriteDirections)
+            => MapPc64Direction(ComputePcDirection64(from, to), spriteDirections);
+
+        private static int ComputePcDirection64(Vector2 from, Vector2 to)
+            => SkillEffectRenderer.ComputePcDirection64(from, to);
+
+        private static int ComputePcDirection64FromInts(int fromX, int fromY, int toX, int toY)
+            => SkillEffectRenderer.ComputePcDirection64FromInts(fromX, fromY, toX, toY);
+
+        // PC KMissleRes direction conversion: width=64/nSprDir; round half up; wrap.
+        private static int MapPc64Direction(int pcDir64, int spriteDirections)
         {
-            Vector2 d = to - from;
-            if (d.sqrMagnitude < 0.001f) return 0;
-            // Mobile world uses +X east, +Y north. PC missile SPR frames are stored with image direction
-            // opposite to the movement vector bucket (observed mag_gb_05 dragon heads point back to caster
-            // without this PC 16-dir half-turn). Offset by 8 buckets = 180°.
-            float angle = Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg; // 0=N, +90=E
-            int dir = (Mathf.RoundToInt(angle / 22.5f) + 8) & 15;
-            return dir;
+            int directions = Mathf.Max(1, spriteDirections);
+            int nDir = pcDir64 & 63;
+            int width = 64 / directions;
+            int imageDir = nDir / width;
+            if (nDir % width >= 32 / directions) imageDir++;
+            return imageDir % directions;
+        }
+
+        private static int ComputePcMissileFrameIndex(int pcDir64, int totalFrames,
+            int spriteDirections, int lifeTick, int intervalTicks)
+        {
+            int directions = Mathf.Max(1, spriteDirections);
+            int framePerDir = Mathf.Max(1, totalFrames / directions);
+            int localFrame = (Mathf.Max(0, lifeTick) / Mathf.Max(1, intervalTicks)) % framePerDir;
+            return MapPc64Direction(pcDir64, directions) * framePerDir + localFrame;
         }
 
         private void RenderRendFlashes(ActiveSkillEffect fx, RuntimeEffectVisual v)
@@ -500,6 +792,7 @@ namespace VLTK.UI
                 else
                 {
                     var rendGo = new GameObject("RendFlash");
+                    rendGo.layer = v.root.layer;
                     rendGo.transform.SetParent(v.root.transform, false);
                     sr = rendGo.AddComponent<SpriteRenderer>();
                     sr.sprite = _dotSprite;

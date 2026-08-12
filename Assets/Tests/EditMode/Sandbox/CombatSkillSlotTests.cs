@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VLTK.Model;
@@ -58,6 +59,60 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void MobileSkillTapTarget_ApproachesNearestEnemy_WhenOutsideCastRange()
+        {
+            var service = new CombatAutoTargetService();
+            var skill = new SkillDefinition
+            {
+                skillId = 117,
+                attackRadius = 100,
+                targetEnemy = true,
+                missileForm = SkillMissileForm.Single,
+            };
+
+            var enemies = new List<EnemyRuntimeInfo>
+            {
+                new() { enemyId = 1, position = new Vector2(250, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Xa hơn" },
+                new() { enemyId = 2, position = new Vector2(180, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Gần nhất" },
+            };
+
+            var plan = service.ResolveSkillTapTarget(Vector2.zero, skill, enemies);
+
+            Assert.IsTrue(plan.hasTarget);
+            Assert.IsTrue(plan.shouldApproach, "Mobile tap should move toward the nearest valid enemy instead of doing a no-target forward cast.");
+            Assert.IsFalse(plan.canCastNow);
+            Assert.AreEqual(2, plan.target.enemyId);
+            Assert.AreEqual(88f, plan.approachPosition.x, 0.1f, "Approach point should stop inside attack range with safety padding.");
+            Assert.AreEqual(0f, plan.approachPosition.y, 0.1f);
+        }
+
+        [Test]
+        public void MobileSkillTapTarget_CastsImmediately_WhenNearestEnemyInRange()
+        {
+            var service = new CombatAutoTargetService();
+            var skill = new SkillDefinition
+            {
+                skillId = 117,
+                attackRadius = 100,
+                targetEnemy = true,
+                missileForm = SkillMissileForm.Single,
+            };
+
+            var enemies = new List<EnemyRuntimeInfo>
+            {
+                new() { enemyId = 1, position = new Vector2(80, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Trong tầm" },
+                new() { enemyId = 2, position = new Vector2(180, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Ngoài tầm" },
+            };
+
+            var plan = service.ResolveSkillTapTarget(Vector2.zero, skill, enemies);
+
+            Assert.IsTrue(plan.hasTarget);
+            Assert.IsTrue(plan.canCastNow);
+            Assert.IsFalse(plan.shouldApproach);
+            Assert.AreEqual(1, plan.target.enemyId);
+        }
+
+        [Test]
         public void AutoTarget_SkipsDeadEnemies()
         {
             var service = new CombatAutoTargetService();
@@ -101,15 +156,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_PlayCast_StartsInPreCastPhase()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 128,
-                nameNormalized = "Kháng Long Hữu Hối",
-                attackRadius = 360,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(128);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
             Assert.IsNotNull(fx);
@@ -122,7 +171,10 @@ namespace VLTK.Tests.Sandbox
         {
             var service = new SkillEffectVisualService(null);
 
-            // Test passive: skill 115 (Cái Bang Bổng Pháp)
+            // Test passive: skill 115 (Cái Bang Bổng Pháp).
+            // PC passive skills grant a permanent state but do not produce a visible missile cast.
+            // The visual service should produce an effect object (so the call site can track it) and
+            // clean it up promptly because there is no missile to animate.
             var passive = new SkillDefinition
             {
                 skillId = 115,
@@ -132,42 +184,83 @@ namespace VLTK.Tests.Sandbox
             };
 
             var fx = service.PlaySkillCast(passive, Vector2.zero, Vector2.zero, 1);
-            Assert.IsNotNull(fx);
-            Assert.AreEqual(SkillEffectPhase.Finished, fx.phase);
+            Assert.IsNotNull(fx, "Visual service should produce a non-null effect object for passive skills.");
+            // Passives do not spawn missiles → the effect must not be lingering after a few update ticks.
+            for (int i = 0; i < 5; i++) service.Update(0.5f);
+            Assert.AreEqual(0, service.ActiveEffectCount,
+                "Passive skills (no missile) should not leave lingering effects in the active list.");
         }
 
         [Test]
         public void SkillEffectVisual_SurroundSkill_SpawnsMultipleMissiles()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 125,
-                nameNormalized = "Thiên Hạ Vô Cẩu",
-                attackRadius = 400,
-                missileForm = SkillMissileForm.Surround,
-                missilesGenerateData = 5,
-            };
+            // PC skill 125 (Thiên Hạ Vô Cẩu) — Cái Bang surround burst with N missiles.
+            // Canonical slistcache skills.txt row 125: ChildSkillNum=16, MisslesForm=3.
+            // bangda_egou has no Lua count override, so static row count remains authoritative.
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var skill = catalog.Resolve(125);
+            Assert.IsNotNull(skill, "Skill 125 should be in PC catalog.");
 
+            var service = new SkillEffectVisualService(null, catalog);
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(50, 0), 1);
             Assert.IsNotNull(fx);
-            Assert.AreEqual(16, fx.missileCount);
-            Assert.IsNotNull(fx.missilePositions);
+            Assert.AreEqual(16, fx.missileCount, "PC skill 125 uses sixteen surround missiles");
             Assert.AreEqual(16, fx.missilePositions.Length);
+        }
+
+        [Test]
+        public void NestedByMissileVisual_CallbackResolvesStationaryChildDamage()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var runtime = new CombatRuntimeService(catalog, damage: new DamageFormulaService { RollPercent = _ => true });
+            var caster = new CombatActorState
+            {
+                actorId = 2,
+                faction = CombatFaction.CaiBang,
+                level = 200,
+                currentMana = 1000,
+                maxMana = 1000,
+                currentLife = 1000,
+                maxLife = 1000,
+                knownSkills = { 1073 },
+                skillLevels = { [1073] = 20 },
+            };
+            var targetActor = new CombatActorState
+            {
+                actorId = 99,
+                currentLife = 1000,
+                maxLife = 1000,
+                position = new Vector2(200, 0),
+            };
+            var report = runtime.Cast(caster, targetActor, 1073, targetActor.position, CombatRelation.Enemy);
+            int damageBefore = report.damageResults.Count;
+            int projectileBefore = report.projectiles.Count;
+            int lifeBefore = targetActor.currentLife;
+            var missile335 = report.projectiles.First(p => p.skillId == 335);
+            Assert.IsTrue(runtime.TryResolveProjectileCollision(caster, targetActor, report, missile335, targetActor.position));
+
+            var visuals = new SkillEffectVisualService(null, catalog);
+            var method = typeof(CombatSkillSlotController).GetMethod(
+                "ApplyProjectileCollisionResult", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(method);
+            method.Invoke(null, new object[]
+            {
+                null, visuals, catalog, runtime, caster, null, targetActor, report, targetActor.position,
+                damageBefore, projectileBefore, lifeBefore,
+            });
+
+            var nested = visuals.GetActiveEffects().Single();
+            Assert.IsNotNull(nested.onMissileCollided, "nested missile 334 visual must keep runtime collision callback");
+            nested.onMissileCollided(nested, 0, targetActor.position);
+            Assert.AreEqual(2, report.damageResults.Count, "visual lifecycle resolves delayed 1072 damage");
         }
 
         [Test]
         public void SkillEffectVisual_PreCastAdvancesToMissile()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 117,
-                nameNormalized = "Ném Đá Hỏi Đường",
-                attackRadius = 280,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(117);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
             Assert.AreEqual(SkillEffectPhase.PreCast, fx.phase);
@@ -180,15 +273,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_SingleMissileDoesNotImpactBeforeArrival()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 117,
-                nameNormalized = "Ném Đá Hỏi Đường",
-                attackRadius = 280,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(117);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
 
@@ -204,15 +291,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_MissileAdvancesToImpact()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 117,
-                nameNormalized = "Ném Đá Hỏi Đường",
-                attackRadius = 280,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(117);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
             // Advance past PreCast + Missile
@@ -245,24 +326,26 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void CaiBangSkill_AllActiveSkillsHaveCorrectVisuals()
         {
-            // Verify each CaiBang active combat skill gets a PC visual assignment
-            var service = new SkillEffectVisualService(null);
+            // Verify each Cái Bang active combat skill gets a PC visual assignment from the catalog.
+            // PC source skills (PC gaibang.lua):
+            // 117 Đả Cẩu (棍击) — single missile 7
+            // 119 Phi Long Hữu Hối — missile 25
+            // 122 Bổng Đả — missile 46
+            // 125 Thiên Hạ Vô Cẩu — surround 16 missiles 47
+            // 128 Vân Khởi Tụ Phong — missile 166
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var service = new SkillEffectVisualService(null, catalog);
             int[] activeSkills = { 117, 119, 122, 125, 128 };
 
             var spriteKeys = new HashSet<string>();
             foreach (var id in activeSkills)
             {
-                var skill = new SkillDefinition
-                {
-                    skillId = id,
-                    nameNormalized = $"Skill_{id}",
-                    attackRadius = 300,
-                    missileForm = id == 125 ? SkillMissileForm.Surround : SkillMissileForm.Single,
-                };
+                var skill = catalog.Resolve(id);
+                Assert.IsNotNull(skill, $"Skill {id} should exist in PC catalog.");
 
                 var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
                 Assert.IsNotNull(fx, $"Skill {id} should produce an effect");
-                Assert.IsTrue(fx.HasPcMissileSprite, $"Skill {id} should use PC missile SPR");
+                Assert.IsTrue(fx.HasPcMissileSprite, $"Skill {id} should use PC missile SPR (key={fx.pcMissileSpriteKey})");
                 spriteKeys.Add(fx.pcMissileSpriteKey);
             }
 
@@ -309,44 +392,78 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void GetDefaultSkillsForFaction_ReturnsCorrectSkillsForAllFactions()
         {
-            var go = new GameObject("Test");
-            var controller = go.AddComponent<CombatSkillSlotController>();
+            // Other factions derive their default hotbar from PC order after filtering unresolved,
+            // NPC variants, passives, and unlearned skills. Cái Bang has a requested runtime deck.
+            var factions = new[]
+            {
+                new { faction = CombatFaction.WuDang, slot0 = 151, slot1 = 152, slot2 = 153, slot3 = 154, slot4 = 155 },
+                new { faction = CombatFaction.Shaolin, slot0 = 3, slot1 = 4, slot2 = 6, slot3 = 8, slot4 = 9 },
+                new { faction = CombatFaction.TangMen, slot0 = 43, slot1 = 45, slot2 = 47, slot3 = 48, slot4 = 50 },
+                new { faction = CombatFaction.EMei, slot0 = 77, slot1 = 79, slot2 = 80, slot3 = 81, slot4 = 82 },
+                new { faction = CombatFaction.TianWang, slot0 = 23, slot1 = 24, slot2 = 26, slot3 = 29, slot4 = 30 },
+                new { faction = CombatFaction.WuDu, slot0 = 60, slot1 = 62, slot2 = 63, slot3 = 64, slot4 = 65 },
+                new { faction = CombatFaction.CuiYan, slot0 = 95, slot1 = 97, slot2 = 99, slot3 = 100, slot4 = 101 },
+                new { faction = CombatFaction.TianRen, slot0 = 131, slot1 = 132, slot2 = 135, slot3 = 136, slot4 = 137 },
+                new { faction = CombatFaction.KunLun, slot0 = 167, slot1 = 168, slot2 = 169, slot3 = 170, slot4 = 171 },
+            };
+
+            Assert.AreEqual(5, CombatSkillSlotController.MobileSkillSlotCount,
+                "Mobile uses 5-slot deck (PC JX default 5 combat skills per faction).");
+
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = new PlayerProgressionState();
+            progression.GrantFactionSkillPanelProgression(catalog, CombatFaction.CaiBang);
+            progression.MaxAllSkillLevels(catalog);
+            var go = new GameObject("CaiBangRequestedDefaultHotbarTest");
             try
             {
-                var method = typeof(CombatSkillSlotController).GetMethod("GetDefaultSkillsForFaction", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-                Assert.IsNotNull(method);
+                var controller = go.AddComponent<CombatSkillSlotController>();
+                controller.Initialize(catalog, progression);
 
-                var factions = new[]
-                {
-                    new { faction = CombatFaction.CaiBang, left = 357, right = 359 },
-                    new { faction = CombatFaction.WuDang, left = 153, right = 155 },
-                    new { faction = CombatFaction.Shaolin, left = 10, right = 11 },
-                    new { faction = CombatFaction.TangMen, left = 47, right = 58 },
-                    new { faction = CombatFaction.EMei, left = 80, right = 91 },
-                    new { faction = CombatFaction.TianWang, left = 40, right = 41 },
-                    new { faction = CombatFaction.WuDu, left = 63, right = 65 },
-                    new { faction = CombatFaction.CuiYan, left = 99, right = 105 },
-                    new { faction = CombatFaction.TianRen, left = 142, right = 148 },
-                    new { faction = CombatFaction.KunLun, left = 172, right = 182 }
-                };
-
-                foreach (var f in factions)
-                {
-                    var args = new object[] { f.faction, 0, 0 };
-                    method.Invoke(controller, args);
-                    Assert.AreEqual(f.left, (int)args[1], $"Left skill mismatch for {f.faction}");
-                    Assert.AreEqual(f.right, (int)args[2], $"Right skill mismatch for {f.faction}");
-                }
+                var expectedRegulars = new[] { 127, 359, 130, 125, 128 };
+                CollectionAssert.AreEqual(
+                    expectedRegulars,
+                    Enumerable.Range(0, CombatSkillSlotController.MobileSkillSlotCount)
+                        .Select(slot => controller.GetAssignedSkill(slot, 0))
+                        .ToArray(),
+                    "Cái Bang regular slots must use the requested runtime order");
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill(0),
+                    "Phi Long Tại Thiên must occupy the dedicated primary slot");
             }
             finally
             {
                 Object.DestroyImmediate(go);
             }
+            foreach (var f in factions)
+            {
+                var order = PcSkillPanelService.GetPcSkillOrder(f.faction);
+                CollectionAssert.AreEqual(
+                    new[] { f.slot0, f.slot1, f.slot2, f.slot3, f.slot4 },
+                    order.Take(5).ToArray(),
+                    $"PC skill order[0..4] mismatch for {f.faction}");
+            }
+        }
+
+        [Test]
+        public void Catalog_ResolvesPcKhinhCongSpecialSkill()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var skill = catalog.Resolve(PcCombatCatalogFactory.UniversalLightnessSkill);
+
+            Assert.IsNotNull(skill, "SkillId=210 Khinh công must be registered from PC Skills.txt evidence.");
+            Assert.AreEqual("Khinh công", skill.DisplayName);
+            Assert.AreEqual(CombatFaction.None, skill.faction, "Khinh công is a universal PC special skill, not a Cái Bang-only skill.");
+            Assert.AreEqual("\\spr\\Ui\\技能图标\\轻功.spr", skill.iconSourceId.sourcePath);
+            Assert.AreEqual(400, skill.attackRadius);
+            Assert.AreEqual(PcSkillStyle.InitiativeNpcState, skill.skillStyle);
         }
 
         [Test]
         public void CreateCombatActor_UsesPlayerFactionAndComputesCorrectMana()
         {
+            typeof(SandboxManager).GetProperty("Instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)?
+                .GetSetMethod(true)?.Invoke(null, new object[] { null });
+
             var go = new GameObject("Test");
             var controller = go.AddComponent<CombatSkillSlotController>();
             
@@ -383,6 +500,438 @@ namespace VLTK.Tests.Sandbox
                 Object.DestroyImmediate(go);
                 Object.DestroyImmediate(playerGo);
             }
+        }
+
+        [Test]
+        public void CaiBangDeckMigration_DoesNotTreatPartiallyCustomizedDeckAsEmpty()
+        {
+            var method = typeof(CombatSkillSlotController).GetMethod(
+                "IsEmptyDeck", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(method);
+            Assert.IsTrue((bool)method.Invoke(null, new object[] { new[] { 0, 0, 0, 0, 0 } }));
+            Assert.IsFalse((bool)method.Invoke(null, new object[] { new[] { 359, 119, 0, 125, 128 } }),
+                "one cleared slot must not make a customized deck eligible for full replacement");
+        }
+
+        [Test]
+        public void MobileDeck_AssignsFiveSlotsAndSwitchesIndependentDecks()
+        {
+            var go = new GameObject("CombatDeckTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                controller.AssignSkill(0, 357);
+                controller.AssignSkill(1, 359);
+                controller.AssignSkill(2, 117);
+                controller.AssignSkill(3, 128);
+                controller.AssignSkill(4, 125);
+
+                Assert.AreEqual(357, controller.GetAssignedSkill(0));
+                Assert.AreEqual(125, controller.GetAssignedSkill(4));
+                Assert.AreEqual(357, controller.LeftSkillId, "legacy left slot should mirror deck A slot 0");
+                Assert.AreEqual(359, controller.RightSkillId, "legacy right slot should mirror deck A slot 1");
+
+                controller.ToggleDeck();
+                Assert.AreEqual(1, controller.ActiveDeckIndex);
+                Assert.AreEqual(0, controller.GetAssignedSkill(0));
+                controller.AssignSkill(0, 153);
+                Assert.AreEqual(153, controller.GetAssignedSkill(0));
+
+                controller.ToggleDeck();
+                Assert.AreEqual(357, controller.GetAssignedSkill(0), "deck A assignment must survive deck B edits");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void PrimaryAttack_UsesDedicatedPrimaryPerDeckOnly()
+        {
+            var go = new GameObject("PrimaryAttackSlotTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                controller.AssignSkill(2, 117);
+                Assert.AreEqual(0, controller.ResolvePrimaryAttackSkill(), "primary must not borrow regular slots");
+                Assert.AreEqual(-1, controller.ResolvePrimaryAttackSlot());
+
+                controller.AssignPrimarySkill(357);
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill());
+                Assert.AreEqual(357, controller.ResolvePrimaryAttackSkill());
+
+                controller.ToggleDeck();
+                Assert.AreEqual(0, controller.GetAssignedPrimarySkill(), "deck B primary starts empty");
+                controller.AssignPrimarySkill(153);
+                Assert.AreEqual(153, controller.GetAssignedPrimarySkill());
+
+                controller.ToggleDeck();
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill(), "deck A primary survives deck B edits");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_NonCaiBangCustomDeckPreservesRegularsAndAddsPrimary()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.WuDang);
+            var deckA = new[] { 153, 154, 155, 156, 157 };
+            var go = new GameObject("LegacyWuDangHotbarMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckASkillIds", (int[])deckA.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+
+                controller.Initialize(catalog, progression);
+
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.WuDang, deckA, 0);
+                for (int i = 0; i < deckA.Length; i++)
+                    Assert.AreEqual(deckA[i], controller.GetAssignedSkill(i, 0));
+                Assert.Greater(GetPrivateInt(controller, "hotbarSchemaVersion"), 0);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_CustomCaiBangDeckPreservesRegularsAndAddsDistinctPrimary()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.CaiBang);
+            var deckA = new[] { 119, 122, 125, 128, 130 };
+            var go = new GameObject("LegacyCaiBangCustomHotbarMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckASkillIds", (int[])deckA.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+
+                controller.Initialize(catalog, progression);
+
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.CaiBang, deckA, 0);
+                for (int i = 0; i < deckA.Length; i++)
+                    Assert.AreEqual(deckA[i], controller.GetAssignedSkill(i, 0));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_PreviousCaiBangDefaultUpgradesRequestedRuntimeDeck()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.CaiBang);
+            var go = new GameObject("LegacyCaiBangRequestedRuntimeDeckMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckAPrimarySkillId", 117);
+                SetPrivateField(controller, "deckASkillIds", new[] { 357, 359, 130, 125, 128 });
+                SetPrivateField(controller, "hotbarSchemaVersion", 3);
+
+                controller.Initialize(catalog, progression);
+
+                CollectionAssert.AreEqual(
+                    new[] { 127, 359, 130, 125, 128 },
+                    Enumerable.Range(0, CombatSkillSlotController.MobileSkillSlotCount)
+                        .Select(slot => controller.GetAssignedSkill(slot, 0))
+                        .ToArray());
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill(0));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_PopulatedDeckBMigratesPrimaryAndPreservesRegulars()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.WuDang);
+            var deckB = new[] { 153, 154, 155, 156, 157 };
+            var go = new GameObject("LegacyDeckBHotbarMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckBSkillIds", (int[])deckB.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+
+                controller.Initialize(catalog, progression);
+
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.WuDang, deckB, 1);
+                for (int i = 0; i < deckB.Length; i++)
+                    Assert.AreEqual(deckB[i], controller.GetAssignedSkill(i, 1));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_IsIdempotentAfterSchemaUpgrade()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.WuDang);
+            var go = new GameObject("LegacyHotbarMigrationIdempotentTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                var deckA = new[] { 153, 154, 155, 156, 157 };
+                SetPrivateField(controller, "deckASkillIds", (int[])deckA.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+                controller.Initialize(catalog, progression);
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.WuDang, deckA, 0);
+
+                controller.AssignPrimarySkill(159);
+                controller.Initialize(catalog, progression);
+
+                Assert.AreEqual(159, controller.GetAssignedPrimarySkill(0));
+                Assert.Greater(GetPrivateInt(controller, "hotbarSchemaVersion"), 0);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        private static PlayerProgressionState LearnedProgression(SkillCatalog catalog, CombatFaction faction)
+        {
+            var progression = new PlayerProgressionState();
+            progression.GrantFactionSkillPanelProgression(catalog, faction);
+            progression.MaxAllSkillLevels(catalog);
+            return progression;
+        }
+
+        private static void AssertMigratedPrimary(
+            CombatSkillSlotController controller,
+            SkillCatalog catalog,
+            PlayerProgressionState progression,
+            CombatFaction faction,
+            int[] regularSkillIds,
+            int deckIndex)
+        {
+            int primarySkillId = controller.GetAssignedPrimarySkill(deckIndex);
+            Assert.Greater(primarySkillId, 0);
+            CollectionAssert.DoesNotContain(regularSkillIds, primarySkillId,
+                "legacy migration should prefer a distinct primary when the faction has one");
+            var skill = catalog.Resolve(primarySkillId);
+            Assert.IsNotNull(skill);
+            Assert.AreEqual(faction, skill.faction);
+            Assert.AreNotEqual(PcSkillStyle.PassivityNpcState, skill.skillStyle);
+            Assert.Greater(progression.GetSkillLevel(primarySkillId), 0);
+        }
+
+        private static void SetPrivateField(CombatSkillSlotController controller, string fieldName, object value)
+        {
+            typeof(CombatSkillSlotController)
+                .GetField(fieldName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(controller, value);
+        }
+
+        private static int GetPrivateInt(CombatSkillSlotController controller, string fieldName)
+        {
+            var field = typeof(CombatSkillSlotController)
+                .GetField(fieldName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(field, fieldName);
+            return (int)field.GetValue(controller);
+        }
+
+        [Test]
+        public void TargetLock_CanLockAndClearWithoutPhysicsScan()
+        {
+            var go = new GameObject("TargetLockTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                controller.LockTarget(42, "Cọc gỗ");
+                Assert.AreEqual(42, controller.LockedTargetId);
+                controller.ClearTargetLock();
+                Assert.AreEqual(-1, controller.LockedTargetId);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void CombatRuntime_PlayerActor_BypassesManaCostAndSucceeds()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var svc = new CombatRuntimeService(catalog);
+            
+            // Create a player actor with actorId = 1, currentMana = 10 (very low)
+            var player = new CombatActorState
+            {
+                actorId = 1, // Player Actor ID
+                faction = CombatFaction.CaiBang,
+                level = 60,
+                fightMode = true,
+                currentMana = 10,
+                position = Vector2.zero,
+                knownSkills = { 117 },
+                skillLevels = { [117] = 20 }
+            };
+            
+            var enemy = new CombatActorState
+            {
+                actorId = 2,
+                currentLife = 1000,
+                maxLife = 1000,
+                position = new Vector2(10, 0)
+            };
+            
+            var report = svc.Cast(player, enemy, 117, enemy.position, CombatRelation.Enemy);
+            
+            // The cast should succeed, and mana cost should be set to 0, and currentMana should remain 10
+            Assert.IsTrue(report.success, $"Cast failed: {report.reason} - {report.detail}");
+            Assert.AreEqual(0, report.manaCost);
+            Assert.AreEqual(10, player.currentMana);
+        }
+
+        [Test]
+        public void CombatRuntime_BuffStates_TickDownAndExpire()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var loop = new GameplayLoopService(catalog);
+            var player = loop.RegisterPlayer(1, "TestPlayer", 60, Vector2.zero);
+            
+            // Manually add a temporary state with duration of 180 ticks (10 seconds)
+            player.combat.states[MagicAttributeKind.FastWalkRunP] = new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, 66, 180, 0);
+            
+            // Manually add a permanent state with duration of -1 (should not expire)
+            player.combat.states[MagicAttributeKind.MeleeDamageReturnP] = new SkillMagicAttribute(MagicAttributeKind.MeleeDamageReturnP, 20, -1, 0);
+            
+            // Advance time by 5 seconds (90 ticks)
+            loop.Tick(5f);
+            
+            // FastWalkRunP should still be active, with duration reduced by 90
+            Assert.IsTrue(player.combat.states.ContainsKey(MagicAttributeKind.FastWalkRunP));
+            Assert.AreEqual(90, player.combat.states[MagicAttributeKind.FastWalkRunP].value2);
+            
+            // MeleeDamageReturnP should still be active, duration unchanged (-1)
+            Assert.IsTrue(player.combat.states.ContainsKey(MagicAttributeKind.MeleeDamageReturnP));
+            Assert.AreEqual(-1, player.combat.states[MagicAttributeKind.MeleeDamageReturnP].value2);
+            
+            // Advance time by another 6 seconds (108 ticks, total 198 ticks)
+            loop.Tick(6f);
+            
+            // FastWalkRunP should have expired and been removed
+            Assert.IsFalse(player.combat.states.ContainsKey(MagicAttributeKind.FastWalkRunP));
+            
+            // MeleeDamageReturnP should still remain
+            Assert.IsTrue(player.combat.states.ContainsKey(MagicAttributeKind.MeleeDamageReturnP));
+        }
+
+        [Test]
+        public void CombatRuntime_BuffStates_ApplyAddedDamageAndResistances()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(catalog, damage: deterministicDamage);
+            
+            var player = new CombatActorState
+            {
+                actorId = 1,
+                faction = CombatFaction.CaiBang,
+                level = 60,
+                fightMode = true,
+                position = Vector2.zero,
+                knownSkills = { 122 },
+                skillLevels = { [122] = 20 }
+            };
+            
+            // Add a fire damage buff to the player
+            // (Dùng 122 jianren_shenshou: PC 117 LvlData rỗng → 0 damage, không dùng làm skill test được.)
+            player.states[MagicAttributeKind.FireDamageV] = new SkillMagicAttribute(MagicAttributeKind.FireDamageV, 50, 180, 0);
+            
+            var enemy = new CombatActorState
+            {
+                actorId = 2,
+                currentLife = 1000,
+                maxLife = 1000,
+                position = new Vector2(10, 0)
+            };
+            
+            // Case 1: Enemy has no resistances
+            var report1 = svc.Cast(player, enemy, 122, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(report1.success);
+            // PC KSkill::Cast: 122 SkillStyle=Missiles -> damage waits for missile impact.
+            foreach (var m1 in report1.projectiles.Where(p => p.skillId == 46))
+                svc.TryResolveProjectileCollision(player, enemy, report1, m1, enemy.position);
+            int lifeAfterCast1 = enemy.currentLife;
+            
+            // Bypass cooldown
+            svc.AdvanceTime(100);
+            
+            // Reset enemy HP
+            enemy.currentLife = 1000;
+            
+            // Case 2: Enemy has AllResP active
+            enemy.states[MagicAttributeKind.AllResP] = new SkillMagicAttribute(MagicAttributeKind.AllResP, 30, -1, 0); // 30% resist
+            var report2 = svc.Cast(player, enemy, 122, enemy.position, CombatRelation.Enemy);
+            foreach (var m2 in report2.projectiles.Where(p => p.skillId == 46))
+                svc.TryResolveProjectileCollision(player, enemy, report2, m2, enemy.position);
+            Assert.IsTrue(report2.success);
+            int lifeAfterCast2 = enemy.currentLife;
+            
+            // Target life after cast 2 should be higher because of the 30% resistance mitigation
+            int damage1 = 1000 - lifeAfterCast1;
+            int damage2 = 1000 - lifeAfterCast2;
+            Assert.Less(damage2, damage1, $"Resisted damage ({damage2}) should be less than unresisted damage ({damage1})");
+        }
+
+        [Test]
+        public void VisualService_PlayStateAura_UsesPcStateDurationAndExpires()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(130); // Túy Điệp Cuồng Vũ
+            
+            Assert.IsNotNull(skill);
+            Assert.AreEqual(43, skill.stateSpecialId);
+            
+            var fx = service.PlaySkillCast(skill, Vector2.zero, Vector2.zero, 1);
+            Assert.IsNotNull(fx);
+            Assert.IsTrue(fx.isAura);
+            Assert.AreEqual(120f, fx.auraDuration, 0.001f, "Túy Điệp L1 lasts 18*120 PC ticks = 120 seconds");
+            Assert.AreEqual(fx.auraDuration, fx.preCastDuration);
+            Assert.AreEqual("\\spr\\skill\\丐帮\\mag_gb_11_醉蝶狂舞.spr", fx.pcPreCastSpriteKey);
+
+            service.Update(119.9f);
+            Assert.AreEqual(1, service.ActiveEffectCount);
+            service.Update(0.2f);
+            Assert.AreEqual(0, service.ActiveEffectCount);
+        }
+
+        [Test]
+        public void VisualService_HoatBatLuuThu_UsesCanonicalPreCastWithoutBorrowedAura()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(127);
+
+            Assert.IsNotNull(skill);
+            Assert.AreEqual(0, skill.stateSpecialId);
+            Assert.IsFalse(skill.isAura);
+
+            var fx = service.PlaySkillCast(skill, Vector2.zero, Vector2.zero, 1);
+            Assert.IsNotNull(fx);
+            Assert.IsFalse(fx.isAura);
+            Assert.AreEqual("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr", fx.pcPreCastSpriteKey);
+            Assert.AreNotEqual("\\spr\\skill\\昆仑\\kl_10_滑不留手.spr", fx.pcPreCastSpriteKey);
         }
     }
 }

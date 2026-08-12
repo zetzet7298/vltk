@@ -191,6 +191,30 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(SettingsPanelService.GetBool("x"));
         }
 
+        // ─── FriendPanelService ─────────────────────────────────────────────
+        [Test]
+        public void FriendPanel_BuildSnapshot_MatchesPc2b9c5056Controls()
+        {
+            var snap = FriendPanelService.BuildSnapshot(null, 1);
+            Assert.AreEqual(10, snap.controls.Count, "PC 2b9c5056.ini active friend controls must stay covered, including GroupBtn.");
+            Assert.AreEqual("GroupBtn", snap.controls[0].pcSection);
+            Assert.AreEqual("UnitBtnFriend", snap.controls[1].pcSection);
+            Assert.AreEqual("UnitBtnBrother", snap.controls[2].pcSection);
+            Assert.AreEqual("UnitBtnEnemy", snap.controls[3].pcSection);
+            Assert.AreEqual("UnitBtnOther", snap.controls[4].pcSection);
+            Assert.AreEqual("FindBtn", snap.controls[5].pcSection);
+            Assert.AreEqual("Invisible", snap.controls[6].pcSection);
+            Assert.AreEqual("ScrollUp", snap.controls[7].pcSection);
+            Assert.AreEqual("ScrollDown", snap.controls[8].pcSection);
+            Assert.AreEqual("CloseBtn", snap.controls[9].pcSection);
+            StringAssert.Contains("Danh sách bằng hữu", snap.friendRows[0]);
+            Assert.IsTrue(FriendPanelService.DisabledPcFriendControls.ContainsKey("OptionBtn"));
+            Assert.IsTrue(FriendPanelService.DisabledPcFriendControls.ContainsKey("FriendScroll"));
+            Assert.IsTrue(FriendPanelService.DisabledPcFriendControls.ContainsKey("FriendScroll_Btn"));
+            StringAssert.Contains("Width=0 Height=0", FriendPanelService.DisabledPcFriendControls["OptionBtn"]);
+            StringAssert.Contains("ScrollUp/ScrollDown", FriendPanelService.DisabledPcFriendControls["FriendScroll"]);
+        }
+
         // ─── SystemMenuPanelService ─────────────────────────────────────────
         [Test]
         public void SystemMenu_BuildSnapshot_DoesNotThrow()
@@ -203,8 +227,27 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SystemMenu_GetByName_NonNull()
         {
-            var menu = SystemMenuPanelService.GetByName("Nhân Vật");
+            var menu = SystemMenuPanelService.GetByName("Tùy chọn");
             Assert.IsTrue(menu.HasValue);
+            Assert.AreEqual(SystemMenuPanelService.MenuOptions, menu.Value.menuId);
+        }
+
+        [Test]
+        public void SystemMenu_BuildSnapshot_MatchesPcE6641da3Buttons()
+        {
+            var snap = SystemMenuPanelService.BuildSnapshot();
+            Assert.AreEqual(5, snap.rows.Count, "PC e6641da3.ini exposes exactly ExitGame/GameHelp/Options/OffLine/ContiumeGame.");
+            Assert.AreEqual("Thoát game", snap.rows[0].name);
+            Assert.AreEqual("Trợ giúp", snap.rows[1].name);
+            Assert.AreEqual("Tùy chọn", snap.rows[2].name);
+            Assert.AreEqual("Treo máy offline", snap.rows[3].name);
+            Assert.AreEqual("Tiếp tục game", snap.rows[4].name);
+            Assert.IsTrue(snap.rows[0].requiresConfirm);
+            Assert.IsTrue(snap.rows[3].requiresConfirm);
+            Assert.AreEqual(@"\spr\Ui3\系统\系统－离线托管.spr", snap.rows[3].iconPath);
+            Assert.AreEqual(@"\spr\Ui3\系统\系统－返回.spr", snap.rows[4].iconPath);
+            Assert.IsTrue(SystemMenuPanelService.DisabledPcSystemMenuButtons.ContainsKey("CloseGame"));
+            Assert.IsTrue(SystemMenuPanelService.DisabledPcSystemMenuButtons.ContainsKey("GameTask"));
         }
 
         [Test]

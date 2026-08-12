@@ -1,0 +1,142 @@
+// -----------------------------------------------------------------------------
+// VLTK Mobile — PC settings/skills.txt full skill catalog parser
+// Source: server settings/skills.txt (GB2312, 1,555 rows, 114 tab-separated columns)
+// Purpose: expose the full PC skill catalog (id, name, faction, icon, cooldown,
+// damage, range, attribute flags) to mobile runtime for skill databases and
+// lookup. Reuses the same header layout as PcSkills.txt (the smaller curated
+// reference file under Reference/).
+// -----------------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.IO;
+using VLTK.Model;
+
+namespace VLTK.Sandbox
+{
+    public static class PcSkillFullParser
+    {
+        public const int MinColumns = 4;
+        public const int NameCol = 0;
+        public const int PropertyCol = 1;
+        public const int SkillIdCol = 2;
+        public const int AttribCol = 3;
+        public const int SkillStyleCol = 4;
+        public const int IconCol = 5;
+        public const int IsAuraCol = 11;          // header: IsAura at col 11
+        public const int AttackRadiusCol = 14;   // header: AttackRadius at col 14
+        public const int ReqLevelCol = 53;       // header: ReqLevel at col 53
+        public const int MaxLevelCol = 54;       // header: MaxLevel at col 54
+        public const int LvlSetScriptCol = 71;   // header: LvlSetScript at col 71
+        public const int LevelUpScriptCol = 112; // header: LevelUpScript at col 112
+
+        public static List<PcSkillEntry> ParseFile(string path)
+        {
+            var rows = new List<PcSkillEntry>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var lines = PcText.ReadLinesTcvn3(path);
+            bool headerSkipped = false;
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                if (!headerSkipped) { headerSkipped = true; continue; }
+                var cols = line.Split('\t');
+                if (cols.Length < MinColumns) continue;
+                // Always read the real SkillIdCol — never shadow it with a row index.
+                var entry = ParseRow(cols);
+                if (entry != null) rows.Add(entry);
+            }
+            return rows;
+        }
+
+        public static PcSkillEntry ParseRow(string[] cols, int idHint = 0)
+        {
+            if (cols == null || cols.Length < MinColumns) return null;
+            string name = PcItemCommon.Str(cols, NameCol);
+            int skillId = idHint > 0 ? idHint : PcItemCommon.Int(cols, SkillIdCol);
+            if (string.IsNullOrEmpty(name) && skillId <= 0) return null;
+
+            return new PcSkillEntry
+            {
+                skillId = skillId,
+                nameRaw = name,
+                nameNormalized = name.Trim(),
+                property = PcItemCommon.Str(cols, PropertyCol),
+                attrib = PcItemCommon.Int(cols, AttribCol),
+                skillStyle = PcItemCommon.Int(cols, SkillStyleCol),
+                iconPath = PcItemCommon.Str(cols, IconCol),
+                isAura = PcItemCommon.Int(cols, IsAuraCol) > 0,
+                attackRadius = PcItemCommon.Int(cols, AttackRadiusCol),
+                reqLevel = PcItemCommon.Int(cols, ReqLevelCol),
+                maxLevel = PcItemCommon.Int(cols, MaxLevelCol),
+                lvlSetScript = PcItemCommon.Str(cols, LvlSetScriptCol),
+                levelUpScript = PcItemCommon.Str(cols, LevelUpScriptCol),
+                warningCount = PcItemCommon.ContainsReplacementChar(name) ? 1 : 0,
+            };
+        }
+    }
+
+    [System.Serializable]
+    public class PcSkillEntry
+    {
+        public int skillId;
+        public string nameRaw;
+        public string nameNormalized;
+        public string property;
+        public int attrib;
+        public int skillStyle;
+        public string iconPath;
+        public bool isAura;
+        public int attackRadius;
+        public int reqLevel;
+        public int maxLevel;
+        public string lvlSetScript;
+        public string levelUpScript;
+        public int warningCount;
+    }
+
+    /// <summary>In-memory runtime registry of all parsed PC skills.</summary>
+    public sealed class PcSkillRegistry
+    {
+        private readonly Dictionary<int, PcSkillEntry> _byId = new();
+        private readonly Dictionary<string, List<PcSkillEntry>> _byName = new();
+
+        public int Count => _byId.Count;
+
+        public static PcSkillRegistry LoadFromDirectory(string dir)
+        {
+            var reg = new PcSkillRegistry();
+            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
+            string main = Path.Combine(dir, "skills.txt");
+            if (File.Exists(main))
+            {
+                foreach (var s in PcSkillFullParser.ParseFile(main))
+                    reg.Register(s);
+            }
+            return reg;
+        }
+
+        public void Register(PcSkillEntry entry)
+        {
+            if (entry == null || entry.skillId <= 0) return;
+            _byId[entry.skillId] = entry;
+            if (!string.IsNullOrEmpty(entry.nameNormalized))
+            {
+                if (!_byName.TryGetValue(entry.nameNormalized, out var rows))
+                {
+                    rows = new List<PcSkillEntry>();
+                    _byName[entry.nameNormalized] = rows;
+                }
+                rows.Add(entry);
+            }
+        }
+
+        public PcSkillEntry Resolve(int skillId)
+            => _byId.TryGetValue(skillId, out var s) ? s : null;
+
+        public IReadOnlyList<PcSkillEntry> FindByName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return System.Array.Empty<PcSkillEntry>();
+            return _byName.TryGetValue(name, out var rows) ? rows : System.Array.Empty<PcSkillEntry>();
+        }
+    }
+}

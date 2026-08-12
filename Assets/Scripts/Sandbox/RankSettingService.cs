@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcRankSettingRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public RankSettingService() : this(null) { }
+
         public RankSettingService(PcRankSettingRegistry reg) { _reg = reg ?? new PcRankSettingRegistry(); }
 
         public static RankSettingService LoadFromStreamingAssets(string subDir = "Reference")

@@ -74,12 +74,17 @@ namespace VLTK.UI
 
         public static IReadOnlyList<MapPanelRow> GetMapsByType(IReadOnlyList<MapPanelRow> source, int type)
         {
-            return System.Array.Empty<MapPanelRow>();
+            if (source == null) return System.Array.Empty<MapPanelRow>();
+            var result = new List<MapPanelRow>();
+            foreach (var row in source)
+                if (row.type == type) result.Add(row);
+            return result;
         }
 
         public static string GetMapIconPath(int mapId)
         {
-            return string.Empty;
+            // PC map icon convention: icon_<4-digit zero-padded mapId>.
+            return $"map/icon_{mapId:D4}";
         }
 
     }

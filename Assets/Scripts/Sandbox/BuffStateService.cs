@@ -30,6 +30,7 @@ namespace VLTK.Sandbox
     /// </summary>
     public class BuffStateService
     {
+        private IBuffStateHost _host;
         private readonly Dictionary<int, Dictionary<int, BuffInstance>> _actorBuffs = new(); // actorId -> skillId -> Buff
 
         /// <summary>Event kích hoạt khi có buff mới được thêm.</summary>
@@ -37,6 +38,15 @@ namespace VLTK.Sandbox
 
         /// <summary>Event kích hoạt khi buff kết thúc.</summary>
         public event Action<int, int> OnBuffRemoved; // (actorId, skillId)
+
+        public BuffStateService() : this(null) { }
+
+        public BuffStateService(IBuffStateHost host)
+        {
+            _host = host;
+        }
+
+        public void AttachHost(IBuffStateHost host) { _host = host; }
 
         /// <summary>
         /// Áp dụng buff lên đối tượng.
@@ -87,6 +97,12 @@ namespace VLTK.Sandbox
                 }
 
                 OnBuffAdded?.Invoke(actorId, instance);
+                if (_host != null)
+                {
+                    _host.ShowStateEffect(actorId, skill.skillId, skillLevel, durationSeconds, isHapticEffect);
+                    _host.PlayStateSFX(actorId, skill.skillId, isHapticEffect);
+                    _host.LogStateNotice(actorId, skill.skillId, skillLevel, true);
+                }
                 SubsystemLog.Info("BuffState", $"Applied buff {skill.DisplayName} on actor {actorId} (duration={durationSeconds}s)");
             }
         }
@@ -100,6 +116,11 @@ namespace VLTK.Sandbox
             {
                 buffs.Remove(skillId);
                 OnBuffRemoved?.Invoke(actorId, skillId);
+                if (_host != null)
+                {
+                    _host.HideStateEffect(actorId, skillId);
+                    _host.LogStateNotice(actorId, skillId, 0, false);
+                }
                 SubsystemLog.Info("BuffState", $"Removed buff {skillId} from actor {actorId}");
             }
         }
@@ -167,6 +188,16 @@ namespace VLTK.Sandbox
 
         private void TriggerHapticFeedback()
         {
+            TriggerHapticFeedback(0, 0);
+        }
+
+        private void TriggerHapticFeedback(int actorId, int skillId)
+        {
+            if (_host != null)
+            {
+                _host.TriggerHapticFeedback(actorId, skillId);
+                return;
+            }
 #if UNITY_ANDROID || UNITY_IOS
             // Rung phản hồi trên thiết bị di động
             Handheld.Vibrate();

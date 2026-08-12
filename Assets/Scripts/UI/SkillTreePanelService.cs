@@ -81,11 +81,14 @@ namespace VLTK.UI
             return PcCaiBangSkillOrder;
         }
 
-        // Tái sử dụng danh sách skill từ PcSkillPanelService
-        public static readonly int[] PcCaiBangSkillOrder = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277 };
+        // Player-facing order is one authority for both the grid and skill tree.
+        public static readonly int[] PcCaiBangSkillOrder = PcSkillPanelService.PcCaiBangSkillOrder;
         public static readonly int[] PcWuDangSkillOrder = { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166 };
         public static readonly int[] PcShaolinSkillOrder = { 3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 };
-        public static readonly int[] PcTangMenSkillOrder = { 43, 45, 47, 48, 50, 51, 54, 55, 57, 58 };
+          // Keep every player-facing skill surface on the same PC-proven TangMen
+          // learned-root list.  Do not reintroduce the unresolved display-only
+          // residuals 51/55/57 through the legacy skill-tree service.
+          public static readonly int[] PcTangMenSkillOrder = PcSkillPanelService.PcTangMenSkillOrder;
         public static readonly int[] PcEMeiSkillOrder = { 77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93 };
         public static readonly int[] PcTianWangSkillOrder = { 23, 24, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 40, 41, 42 };
         public static readonly int[] PcWuDuSkillOrder = { 60, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76 };

@@ -12,6 +12,8 @@ namespace VLTK.Sandbox
         LuaInvoked,     // AC#2: Lua function ran successfully
         LuaFailed,      // AC#3: Lua function failed/errored
         NoScript,       // trap has no script ref
+        PcActionApplied,// deterministic PC trap action applied without fake Lua
+        PcActionFailed, // deterministic PC trap action found but could not apply
     }
 
     /// <summary>Record of a single trap fire (for the GM Logs tab).</summary>
@@ -36,6 +38,7 @@ namespace VLTK.Sandbox
     public class TrapTriggerService
     {
         private readonly LuaScriptBridge _bridge;
+        private readonly ITrapActionExecutor _actionExecutor;
         private readonly List<TrapFireRecord> _log = new();
 
         /// <summary>AC#1/AC#2 — when false, traps only stub-log; when true, Lua hooks fire.</summary>
@@ -46,9 +49,10 @@ namespace VLTK.Sandbox
 
         public IReadOnlyList<TrapFireRecord> Log => _log;
 
-        public TrapTriggerService(LuaScriptBridge bridge, bool luaEnabled = false)
+        public TrapTriggerService(LuaScriptBridge bridge, bool luaEnabled = false, ITrapActionExecutor actionExecutor = null)
         {
             _bridge = bridge;
+            _actionExecutor = actionExecutor;
             LuaBridgeEnabled = luaEnabled;
         }
 
@@ -58,6 +62,22 @@ namespace VLTK.Sandbox
             if (trap == null) throw new ArgumentNullException(nameof(trap));
 
             var record = new TrapFireRecord { trapIndex = trap.trapIndex, scriptRef = trap.scriptRef };
+
+            // Deterministic PC trap actions are generated from original trap Lua main().
+            // Use them while the general Lua bridge is still disabled.
+            if ((!LuaBridgeEnabled || _bridge == null) &&
+                _actionExecutor != null &&
+                _actionExecutor.TryExecute(trap, out var actionResult))
+            {
+                record.outcome = actionResult.success ? TrapFireOutcome.PcActionApplied : TrapFireOutcome.PcActionFailed;
+                record.detail = actionResult.detail;
+                if (actionResult.success)
+                    SubsystemLog.Info("Trap", $"PC trap action applied: {record.detail}");
+                else
+                    SubsystemLog.Error("Trap", $"PC trap action failed: {record.detail}");
+                _log.Add(record);
+                return record;
+            }
 
             // AC#1 — bridge disabled: stub log only.
             if (!LuaBridgeEnabled || _bridge == null)

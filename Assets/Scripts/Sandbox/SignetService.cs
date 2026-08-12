@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcSignetRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public SignetService() : this(null) { }
+
         public SignetService(PcSignetRegistry reg) { _reg = reg ?? new PcSignetRegistry(); }
 
         public static SignetService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

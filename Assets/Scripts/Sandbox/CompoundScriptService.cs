@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcCompoundScriptRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public CompoundScriptService() : this(null) { }
+
         public CompoundScriptService(PcCompoundScriptRegistry reg) { _reg = reg ?? new PcCompoundScriptRegistry(); }
 
         public static CompoundScriptService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

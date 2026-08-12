@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcTollgateKillerRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public TollgateKillerService() : this(null) { }
+
         public TollgateKillerService(PcTollgateKillerRegistry reg) { _reg = reg ?? new PcTollgateKillerRegistry(); }
 
         public static TollgateKillerService LoadFromStreamingAssets(string subDir = "Reference/PcTask/tollgate/killer")

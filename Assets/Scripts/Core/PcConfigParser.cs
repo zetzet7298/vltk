@@ -175,7 +175,7 @@ namespace VLTK.Core
 
         // ── PcSkills.txt parser ──────────────────────────────────────────────
         //
-        // Header columns (0-indexed):
+        // Canonical 114-col header (0-indexed):
         //   0  SkillName      1  Property         2  SkillId        3  Attrib
         //   4  SkillStyle     5  SkillIcon         6  PreCastSpr     7  ManCastSnd
         //   8  FMCastSnd      9  StateSpecialId   10  StatePriority  11 IsAura
@@ -183,36 +183,80 @@ namespace VLTK.Core
         //  16  MslsGenerate   17 MslsGenerateData 18  CharClass     19 MisslesForm
         //  20  ChildSkillId   21 ChildSkillLevel  22  ChildSkillNum  23 BaseSkill
         //  24  CharAnimId     25 EventSkillLevel  26  IsMelee        27 WaitTime
-        //  28  ClientSend     29 SkillCostType    30  CostValue      31 TimePerCast
-        //  32  TimePerCastOnHorse  33 IsPhysical  34  TargetOnly     35 TargetEnemy
-        //  36  TargetAlly     37 TargetSelf       38  TargetOther    39 TargetObj
-        //  40  TargetNoNpc   41 ByMissle          42  IsUseAR        43 StartEvent
-        //  44  StartSkillId  45 FlyEvent          46  FlySkillId     47 FlyEventTime
-        //  48  CollideEvent  49 CollidSkillId     50  VanishedEvent  51 VanishedSkillId
-        //  52  ReqLevel      53 MaxLevel          54  EqtLimit       55 HorseLimit
-        //  56  DoHurt         57 WeaponSkill       58  Param1         59 Param1Memo
-        //  60  Param2         61 Param2Memo        62  StopWhenMove   63 HeelAtParent
+        //  28  IsSaveCd      29 ClientSend        30  SkillCostType  31 CostValue
+        //  32  TimePerCast    33 TimePerCastOnHorse 34 IsPhysical    35 TargetOnly
+        //  36  TargetEnemy    37 TargetAlly       38  TargetSelf     39 TargetOther
+        //  40  TargetObj      41 TargetNoNpc      42  ByMissle       43 IsUseAR
+        //  44  StartEvent     45 StartSkillId     46  FlyEvent       47 FlySkillId
+        //  48  FlyEventTime   49 CollideEvent      50  CollidSkillId  51 VanishedEvent
+        //  52  VanishedSkillId 53 ReqLevel        54  MaxLevel       55 EqtLimit
+        //  56  HorseLimit     57 DoHurt           58  WeaponSkill    59 Param1
+        //  60  Param1Memo     61 Param2Memo       62  StopWhenMove   63 HeelAtParent
         //  64  RelativePosType 65 PeaceCanUse     66  ShowEvent      67 IsExpSkill
-        //  68  Series         69 ShowAddition      70  LvlSetScript
-        //  71-110 LvlSetting1..20, LvlData1..20
-        //  111 LevelUpScript  112 SkillDesc
+        // Canonical tail: 69 Series  70 ShowAddition  71 LvlSetScript  72 LvlSetting1
+        //  72-111 LvlSetting1..20 / LvlData1..20  112 LevelUpScript  113 SkillDesc
+        // Canonical 114-column sources insert IsSaveCd at 28; legacy 113-column rows omit it.
+        // Header-name mapping keeps both layouts aligned without positional guessing.
 
         public static List<SkillDefinition> ParseSkills(string path)
         {
+            return ParseSkillsLines(File.ReadAllLines(path));
+        }
+
+        public static List<SkillDefinition> ParseSkillsLines(IReadOnlyList<string> lines)
+        {
             var result = new List<SkillDefinition>();
-            string[] lines = File.ReadAllLines(path);
-            if (lines.Length < 2) return result;
+            if (lines == null || lines.Count < 2) return result;
 
-            // Validate header starts with "SkillName"
             string[] header = lines[0].Split(SEP);
+            var headerIndex = BuildHeaderIndex(header);
 
-            for (int i = 1; i < lines.Length; i++)
+            int waitTimeIdx = HeaderCol(headerIndex, "WaitTime");
+            int clientSendIdx = HeaderCol(headerIndex, "ClientSend");
+            int skillCostTypeIdx = HeaderCol(headerIndex, "SkillCostType");
+            int costIdx = HeaderCol(headerIndex, "CostValue");
+            int timePerCastIdx = HeaderCol(headerIndex, "TimePerCast");
+            int timePerCastOnHorseIdx = HeaderCol(headerIndex, "TimePerCastOnHorse");
+            int isPhysicalIdx = HeaderCol(headerIndex, "IsPhysical");
+            int targetOnlyIdx = HeaderCol(headerIndex, "TargetOnly");
+            int targetEnemyIdx = HeaderCol(headerIndex, "TargetEnemy");
+            int targetAllyIdx = HeaderCol(headerIndex, "TargetAlly");
+            int targetSelfIdx = HeaderCol(headerIndex, "TargetSelf");
+            int targetObjIdx = HeaderCol(headerIndex, "TargetObj");
+            int byMissileIdx = HeaderCol(headerIndex, "ByMissle");
+            int isUseAttackRatingIdx = HeaderCol(headerIndex, "IsUseAR");
+            int reqLevelIdx = HeaderCol(headerIndex, "ReqLevel");
+            int maxLevelIdx = HeaderCol(headerIndex, "MaxLevel");
+            int eqtLimitIdx = HeaderCol(headerIndex, "EqtLimit");
+            int horseLimitIdx = HeaderCol(headerIndex, "HorseLimit");
+            int doHurtIdx = HeaderCol(headerIndex, "DoHurt");
+            int weaponSkillIdx = HeaderCol(headerIndex, "WeaponSkill");
+            int lvlSetScriptIdx = HeaderCol(headerIndex, "LvlSetScript");
+            int lvlSetting1Idx = HeaderCol(headerIndex, "LvlSetting1");
+            int levelUpScriptIdx = HeaderCol(headerIndex, "LevelUpScript");
+
+            if (waitTimeIdx < 0 || clientSendIdx < 0 || skillCostTypeIdx < 0 || costIdx < 0 || timePerCastIdx < 0 ||
+                timePerCastOnHorseIdx < 0 || isPhysicalIdx < 0 || targetOnlyIdx < 0 || targetEnemyIdx < 0 ||
+                targetAllyIdx < 0 || targetSelfIdx < 0 || targetObjIdx < 0 || byMissileIdx < 0 ||
+                isUseAttackRatingIdx < 0 || reqLevelIdx < 0 || maxLevelIdx < 0 || eqtLimitIdx < 0 ||
+                horseLimitIdx < 0 || doHurtIdx < 0 || weaponSkillIdx < 0 || lvlSetScriptIdx < 0 ||
+                lvlSetting1Idx < 0 || levelUpScriptIdx < 0)
             {
-                string line = lines[i].Trim();
+                return result;
+            }
+
+            for (int i = 1; i < lines.Count; i++)
+            {
+                // Preserve trailing tab-delimited empty fields. Some canonical rows
+                // (for example SkillId 720) intentionally have an empty final
+                // SkillDesc column; trimming the whole line collapses that column
+                // and makes an otherwise complete row look truncated.
+                string line = lines[i]?.TrimEnd('\r') ?? string.Empty;
                 if (string.IsNullOrEmpty(line)) continue;
 
                 string[] cols = line.Split(SEP);
-                if (cols.Length < 54) continue; // Need at least up to MaxLevel
+                if (cols.Length < 54) continue; // Need at least up to MaxLevel.
+                if (cols.Length <= levelUpScriptIdx || cols.Length <= lvlSetting1Idx) continue;
 
                 var skill = new SkillDefinition();
                 int ci = 0;
@@ -223,9 +267,26 @@ namespace VLTK.Core
                 ci++; // 3 Attrib (skip)
                 skill.skillStyle = (PcSkillStyle)IntCol(cols, ref ci);// 4
                 ci++; // 5 SkillIcon (skip, referenced as string)
-                ci++; // 6 PreCastSpr (skip)
-                ci++; // 7 ManCastSnd (skip)
-                ci++; // 8 FMCastSnd (skip)
+                // [CaiBang-SoundParity 2026-06-18] cols 6/7/8 used to be skipped,
+                // which silently dropped every PC skill cast sound (ManCastSnd/
+                // FMCastSnd) and skill-level PreCastSpr. PC source: skills.txt cols
+                // 6 PreCastSpr / 7 ManCastSnd / 8 FMCastSnd — consumed by KSkill::Cast
+                // to fire the cast-frame sound + body precast SPR before missile spawn.
+                string preCastSprPath = ColSafe(cols, ci);            // 6 PreCastSpr
+                ci++;
+                skill.manCastSndPath = ColSafe(cols, ci);             // 7 ManCastSnd
+                ci++;
+                skill.fmCastSndPath = ColSafe(cols, ci);              // 8 FMCastSnd
+                ci++;
+                if (!string.IsNullOrEmpty(preCastSprPath) && skill.effectSourceId == null)
+                {
+                    skill.effectSourceId = new SourceAssetId
+                    {
+                        sourcePath = preCastSprPath,
+                        resourceKind = ResourceKind.Sprite,
+                        uid = preCastSprPath.GetHashCode(),
+                    };
+                }
                 skill.stateSpecialId = IntCol(cols, ref ci);          // 9
                 ci++; // 10 StatePriority (skip)
                 skill.isAura = IntCol(cols, ref ci) != 0;            // 11
@@ -244,33 +305,28 @@ namespace VLTK.Core
                 skill.charAnimId = IntCol(cols, ref ci);              // 24
                 ci++; // 25 EventSkillLevel (skip)
                 skill.isMelee = IntCol(cols, ref ci) != 0;           // 26
-                skill.waitTime = IntCol(cols, ref ci);                // 27
-                ci++; // 28 ClientSend (skip)
-                skill.skillCostType = IntCol(cols, ref ci);           // 29
-                skill.cost = IntCol(cols, ref ci);                    // 30 CostValue
-                skill.timePerCast = IntCol(cols, ref ci);             // 31 TimePerCast
-                ci++; // 32 TimePerCastOnHorse (skip)
-                skill.isPhysical = IntCol(cols, ref ci) != 0;        // 33
-                skill.targetOnly = IntCol(cols, ref ci) != 0;        // 34
-                skill.targetEnemy = IntCol(cols, ref ci) != 0;       // 35
-                skill.targetAlly = IntCol(cols, ref ci) != 0;        // 36
-                skill.targetSelf = IntCol(cols, ref ci) != 0;        // 37
-                ci++; // 38 TargetOther (skip)
-                skill.targetObj = IntCol(cols, ref ci) != 0;         // 39
-                ci++; // 40 TargetNoNpc (skip)
-                skill.byMissile = IntCol(cols, ref ci) != 0;         // 41
-                skill.isUseAttackRating = IntCol(cols, ref ci) != 0; // 42
-                ci += 8; // 43-50 StartEvent..VanishedSkillId (skip)
-                skill.reqLevel = IntColSafe(cols, 52);                // 52 ReqLevel
-                skill.maxLevel = IntColSafe(cols, 53);                // 53 MaxLevel
-                int eqtLimit = IntColSafe(cols, 54);
+                skill.waitTime = IntColSafe(cols, waitTimeIdx);      // 27 WaitTime
+                skill.skillCostType = IntColSafe(cols, skillCostTypeIdx);
+                skill.cost = IntColSafe(cols, costIdx);              // CostValue
+                skill.timePerCast = IntColSafe(cols, timePerCastIdx);
+                skill.timePerCastOnHorse = IntColSafe(cols, timePerCastOnHorseIdx);
+                skill.isPhysical = IntColSafe(cols, isPhysicalIdx) != 0;
+                skill.targetOnly = IntColSafe(cols, targetOnlyIdx) != 0;
+                skill.targetEnemy = IntColSafe(cols, targetEnemyIdx) != 0;
+                skill.targetAlly = IntColSafe(cols, targetAllyIdx) != 0;
+                skill.targetSelf = IntColSafe(cols, targetSelfIdx) != 0;
+                skill.targetObj = IntColSafe(cols, targetObjIdx) != 0;
+                skill.byMissile = IntColSafe(cols, byMissileIdx) != 0;
+                skill.isUseAttackRating = IntColSafe(cols, isUseAttackRatingIdx) != 0;
+                skill.reqLevel = IntColSafe(cols, reqLevelIdx);
+                skill.maxLevel = IntColSafe(cols, maxLevelIdx);
+                int eqtLimit = IntColSafe(cols, eqtLimitIdx);
                 skill.equipLimit = eqtLimit;
-                skill.horseLimit = IntColSafe(cols, 55);              // 55 HorseLimit
-                skill.doHurt = IntColSafe(cols, 56) != 0;            // 56 DoHurt
-                skill.weaponSkill = IntColSafe(cols, 57) != 0;       // 57 WeaponSkill
+                skill.horseLimit = IntColSafe(cols, horseLimitIdx);
+                skill.doHurt = IntColSafe(cols, doHurtIdx) != 0;
+                skill.weaponSkill = IntColSafe(cols, weaponSkillIdx) != 0;
 
-                // Faction from CharClass
-                string scriptPath = ColSafe(cols, 70);
+                string scriptPath = ColSafe(cols, lvlSetScriptIdx);
                 int factionId = CombatFactionExt.FactionFromLuaScript(scriptPath);
                 if (factionId == CombatFactionExt.NoneId)
                 {
@@ -284,13 +340,15 @@ namespace VLTK.Core
                         _ => CombatFactionExt.NoneId
                     };
                 }
+                skill.lvlSetScript = scriptPath;
                 skill.faction = (CombatFaction)factionId;
+
+                skill.levelUpScript = ColSafe(cols, levelUpScriptIdx);
 
                 // Vietnamese name: PcSkills.txt names are already Vietnamese-ized
                 skill.nameNormalized = skill.nameRaw?.Trim();
 
-                // Parse per-level data from LvlSetting/LvlData columns (71-110)
-                ParseLevelData(cols, skill);
+                ParseLevelData(cols, skill, lvlSetting1Idx);
 
                 // Icon reference
                 string iconPath = ColSafe(cols, 5);
@@ -458,26 +516,31 @@ namespace VLTK.Core
             return 0;
         }
 
+        private static Dictionary<string, int> BuildHeaderIndex(string[] header)
+        {
+            var map = new Dictionary<string, int>(header.Length, StringComparer.Ordinal);
+            for (int i = 0; i < header.Length; i++)
+            {
+                if (!map.ContainsKey(header[i]))
+                    map[header[i]] = i;
+            }
+            return map;
+        }
 
-
+        private static int HeaderCol(IReadOnlyDictionary<string, int> headerIndex, string name)
+        {
+            return headerIndex.TryGetValue(name, out int index) ? index : -1;
+        }
 
         /// <summary>
         /// Parse LvlSetting1..20 / LvlData1..20 columns into SkillLevelData.
-        /// PcSkills.txt columns 71-90: LvlSetting1, LvlData1, ..., LvlSetting10, LvlData10
-        /// Columns 91-110: LvlSetting11, LvlData11, ..., LvlSetting20, LvlData20
-        /// LvlSetting = attribute name (e.g. "physicsenhance_p")
-        /// LvlData = value (e.g. "jingang_fumo" or numeric)
-        /// Pairs come in groups of 3: LvlSetting_i, LvlData_i
+        /// Canonical PcSkills.txt slice shifts LvlSetting1 to 72; legacy 113-col
+        /// fixtures keep it at 71. Column index comes from header map.
         /// </summary>
-        private static void ParseLevelData(string[] cols, SkillDefinition skill)
+        private static void ParseLevelData(string[] cols, SkillDefinition skill, int lvlStartCol)
         {
-            // LvlSetScript is column 70
-            // LvlSetting1 = col 71, LvlData1 = col 72
-            // Up to LvlSetting10 = col 89, LvlData10 = col 90
-            // Pattern: attribute_name  script_key
-            // Each pair describes one level-curve parameter for the skill.
+            if (lvlStartCol < 0 || lvlStartCol >= cols.Length) return;
 
-            const int lvlStartCol = 71;
             int maxPairs = Math.Min(20, (cols.Length - lvlStartCol) / 2);
 
             for (int p = 0; p < maxPairs; p++)
@@ -541,7 +604,10 @@ namespace VLTK.Core
                 "badstatustimereduce_v" => MagicAttributeKind.BadStatusTimeReduceV,
                 "addpoisondamage_v" => MagicAttributeKind.AddPoisonDamageV,
                 "addcolddamage_v" => MagicAttributeKind.AddColdDamageV,
-                "addfiremagic_v" or "addfiredamage_v" => MagicAttributeKind.AddFireDamageV,
+                // [CaiBang-FirePool 2026-07-17] PC has two distinct fire-add kinds (jx-pc
+                //   KNpcAttribModify::AddFireMagicV vs AddFireDamageV). Do not conflate.
+                "addfiremagic_v" => MagicAttributeKind.AddFireMagicV,
+                "addfiredamage_v" => MagicAttributeKind.AddFireDamageV,
                 "addlightingmagic_v" or "addlightingdamage_v" => MagicAttributeKind.AddLightingDamageV,
                 "steallife_p" => MagicAttributeKind.StealLifeP,
                 "lifereplenish_v" => MagicAttributeKind.LifeReplenishV,
@@ -554,6 +620,16 @@ namespace VLTK.Core
                 "lifemax_p" or "lifemax_yan_p" => MagicAttributeKind.LifeMaxP,
                 "fireenhance_p" => MagicAttributeKind.FireEnhanceP,
                 "fastwalkrun_p" => MagicAttributeKind.FastWalkRunP,
+                // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua new attribute kinds.
+                "physicsres_yan_p" => MagicAttributeKind.PhysicsResYanP,
+                "fireres_yan_p" => MagicAttributeKind.FireResYanP,
+                "allres_yan_p" => MagicAttributeKind.AllResYanP,
+                "returnres_p" => MagicAttributeKind.ReturnResP,
+                "anti_do_hurt_p" => MagicAttributeKind.AntiDoHurtP,
+                "fatallystrike_p" => MagicAttributeKind.FatallyStrikeP,
+                "me2metaldamage_p" => MagicAttributeKind.Me2MetalDamageP,
+                "metal2medamage_p" => MagicAttributeKind.Metal2MeDamageP,
+                "anti_block_rate" => MagicAttributeKind.AntiBlockRate,
                 _ => (MagicAttributeKind?)null,
             };
 

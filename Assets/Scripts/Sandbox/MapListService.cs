@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcMapListRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public MapListService() : this(null) { }
+
         public MapListService(PcMapListRegistry reg) { _reg = reg ?? new PcMapListRegistry(); }
 
         public static MapListService LoadFromStreamingAssets(string subDir = "Reference/PcMap")

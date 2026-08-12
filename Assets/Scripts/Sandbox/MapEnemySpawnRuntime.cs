@@ -11,9 +11,9 @@ using VLTK.Model;
 namespace VLTK.Sandbox
 {
     /// <summary>
-    /// Multi-map enemy spawn runtime. Loads Region_S data for any map,
+    /// Multi-map enemy spawn runtime. Loads PC Region_S data for any map,
     /// spawns enemies with proper templates, AI, nameplates.
-    /// Falls back to procedural spawns when Region_S data is unavailable.
+    /// Does not fabricate NPC spawns when PC Region_S data is unavailable.
     /// </summary>
     public sealed class MapEnemySpawnRuntime : MonoBehaviour
     {
@@ -40,12 +40,20 @@ namespace VLTK.Sandbox
             _registry = new NpcTemplateRegistry();
             MapEnemyDatabase.RegisterAllForMap(mapId, _registry);
 
-            // Try Region_S data first
+            if (VuotAiKillBossMatchSpawns.IsMissionMap(mapId))
+            {
+                int missionBosses = VuotAiKillBossMatchSpawns.AddMissionBossEntries(mapId, _registry, _entries);
+                BuildSceneObjects();
+                SubsystemLog.Info("MapEnemy",
+                    $"Map {mapId}: PC killbossmatch ClearMapNpc/Obj/Trap active; spawned {missionBosses} mission bosses instead of static Region_S enemies");
+                return;
+            }
+
             var spawns = BaLangEnemyRegionScanner.ScanRegionS(regionSFolder);
             if (spawns.Count == 0)
             {
-                // Fallback: procedural spawns around default spawn point
-                spawns = GenerateProceduralSpawns(mapId);
+                SubsystemLog.Info("MapEnemy",
+                    $"Map {mapId}: no PC Region_S entries to spawn; leaving enemy layer empty");
             }
 
             int id = 1;
@@ -71,50 +79,7 @@ namespace VLTK.Sandbox
 
             BuildSceneObjects();
             SubsystemLog.Info("MapEnemy",
-                $"Map {mapId}: Spawned {liveEnemyCount} enemies from {spawns.Count} Region_S entries");
-        }
-
-        /// <summary>
-        /// Generate procedural enemy spawns when Region_S data is not available.
-        /// Spawns enemies around the default spawn point for the map.
-        /// </summary>
-        private List<RegionSSpawnEntry> GenerateProceduralSpawns(int mapId)
-        {
-            var result = new List<RegionSSpawnEntry>();
-            var spawnCenter = MapEnemyDatabase.GetDefaultSpawnPoint(mapId);
-            var templateIds = MapEnemyDatabase.GetEnemyTemplateIdsForMap(mapId);
-
-            // Convert world center to approximate MPS for spawn generation
-            MapEnemyDatabase.WorldToMps(spawnCenter.x, spawnCenter.y, out int cx, out int cy);
-
-            // Spawn 30-60 enemies spread across 3-5 region tiles around the center
-            var rng = new System.Random(mapId * 7919 + 42);
-            int count = 30 + (mapId % 5) * 8;
-
-            for (int i = 0; i < count; i++)
-            {
-                int tid = templateIds[i % templateIds.Length];
-                int offsetX = (rng.Next(-3, 4)) * 512 + rng.Next(-200, 200);
-                int offsetY = (rng.Next(-3, 4)) * 1024 + rng.Next(-400, 400);
-
-                result.Add(new RegionSSpawnEntry
-                {
-                    templateId = tid,
-                    mpsX = cx + offsetX,
-                    mpsY = cy + offsetY,
-                    nameRaw = "",
-                    level = 1 + (mapId % 10),
-                    curFrame = rng.Next(0, 8),
-                    kind = 0,
-                    camp = 0,
-                    series = (byte)(tid % 5),
-                    script = "",
-                });
-            }
-
-            SubsystemLog.Info("MapEnemy",
-                $"Map {mapId}: Generated {count} procedural spawns (no Region_S data)");
-            return result;
+                $"Map {mapId}: spawned {liveEnemyCount} enemies from {spawns.Count} PC Region_S entries");
         }
 
         /// <summary>
@@ -144,10 +109,8 @@ namespace VLTK.Sandbox
 
         public void Clear()
         {
-            if (enemyRoot != null)
-                Destroy(enemyRoot.gameObject);
-            if (pcObjectRoot != null)
-                Destroy(pcObjectRoot.gameObject);
+            DestroyExistingChild(enemyRoot, "MapEnemies");
+            DestroyExistingChild(pcObjectRoot, "MapPcObjects");
             enemyRoot = new GameObject("MapEnemies").transform;
             enemyRoot.SetParent(transform, false);
             pcObjectRoot = new GameObject("MapPcObjects").transform;
@@ -156,6 +119,31 @@ namespace VLTK.Sandbox
             trainerMarkerCount = 0;
             _entries.Clear();
             _registry = null;
+        }
+
+
+        private void DestroyExistingChild(Transform cachedRoot, string childName)
+        {
+            if (cachedRoot != null)
+            {
+                var go = cachedRoot.gameObject;
+                if (go != null)
+                {
+                    if (Application.isPlaying) Destroy(go); else DestroyImmediate(go);
+                }
+            }
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                var child = transform.GetChild(i);
+                if (child.name == childName)
+                {
+                    var go = child.gameObject;
+                    if (go != null)
+                    {
+                        if (Application.isPlaying) Destroy(go); else DestroyImmediate(go);
+                    }
+                }
+            }
         }
 
         private void SpawnTrainerMarkers(List<RegionSSpawnEntry> spawns)
@@ -176,7 +164,21 @@ namespace VLTK.Sandbox
                 marker.mpsX = sp.mpsX;
                 marker.mpsY = sp.mpsY;
                 marker.script = sp.script;
-                marker.missingVisual = "SPR not staged";
+                
+                // Render training objects (cọc gỗ/mộc nhân/bao cát) with PC stand SPRs.
+                var template = MapEnemyDatabase.GetTemplate(sp.templateId);
+                if (template != null && (sp.templateId == 413 || sp.templateId == 414 || sp.templateId == 415))
+                {
+                    string sprPath = $@"spr\npcres\enemy\{template.spriteClipRef}\{template.spriteClipRef}_st.spr";
+                    var visual = go.AddComponent<PcNpcVisual>();
+                    visual.Configure(sprPath, sprPath, new Vector2(160f, 192f));
+                    marker.missingVisual = null;
+                }
+                else
+                {
+                    marker.missingVisual = "SPR not staged";
+                }
+                
                 trainerMarkerCount++;
             }
         }
@@ -191,8 +193,9 @@ namespace VLTK.Sandbox
                 go.transform.position = new Vector3(entry.worldPosition.x, entry.worldPosition.y, 0f);
 
                 var visual = go.AddComponent<PcNpcVisual>();
+                string standPath = MapEnemyDatabase.BuildNpcSprPath(template.spriteClipRef, "st");
                 string walkPath = MapEnemyDatabase.BuildNpcSprPath(template.spriteClipRef, "wlk");
-                visual.Configure(walkPath, walkPath, ReferencePixelForTemplate(template));
+                visual.Configure(standPath, walkPath, ReferencePixelForTemplate(template));
 
                 string displayName = $"{MapEnemyDatabase.VietnameseSeriesName(entry.series)} {template?.DisplayName ?? "Kẻ địch"}";
                 int maxLife = Mathf.Max(1, template?.maxLife ?? 50);
@@ -217,6 +220,8 @@ namespace VLTK.Sandbox
                 };
                 var ai = go.AddComponent<BaLangEnemyAi>();
                 ai.Initialize(npcInstance, plate);
+                // Store reference for runtime position sync (enemy AI moves → GL worldPos tracks).
+                entry.enemyBehaviour = ai;
 
                 liveEnemyCount++;
                 if (!ContainsChinese(displayName))

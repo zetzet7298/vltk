@@ -1,0 +1,809 @@
+{
+    "files": [
+        {
+            "file": "vng_event/compensate.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/give_support_item.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/bonus_atm.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/bonus_online_survey.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110215_thdnb8/vng_thdnb8_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110215_thdnb8/vng_npah0211.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110215_thdnb8/npah0211_acclist.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110215_thdnb8/acclist.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110215_thdnb8/item/goldenseed100.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_change/box_troluchoan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_change/box_hoathuyetdon.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/2012_vlnb/main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/den_bu_event_thang6/main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/den_bu_event_thang6/globalvar.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20120415_bach_bao_ruong/bbr_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/201112_promotion_noel_outgame/main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/denbu_baotri_5server/main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/denbutrongkhaihoan/main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/denbu_congthanh/congthanh.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/denbu_congthanh/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang7/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang7/thuytuhotien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang6/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang6/banhkemcattuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang6/tuidaihythu.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang6/banhkemnhuy.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang1/bchaohang.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang1/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang1/tuimungxuan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang1/bcthuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang1/bcthuonghang.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang1/cay.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang5/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang5/pan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang5/banhchaychuachin.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang5/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang5/cookies_ma.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang5/banhchaythuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang5/banhchaydacbiet.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang3/bohoahong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang3/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang3/bohoacuc.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang4/lacochienthang.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang4/hopquamayman.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang4/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/banhtrungthunhantrung.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/banhtrungthudacbiet.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/banhtrungthuconheo.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/banhtrungthuhatsen.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/longdenkeoquan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/longdenong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/longdentron.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/banhtrungthuthuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/longdenbuom.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/longdencachep.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/longdenngoisao.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/banhtrungthudauxanh.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang10/hopvatlieulongden.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/hopquagiangsinh.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/ntkhanchoangdothuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/ntkhanchoangxanhdb.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/ntkhanchoangxanhthuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/ntthuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/nguoituyetdb.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang12/ntkhanchoangdodb.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang11/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang11/bikiep.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang11/hopqua.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang8/ruongbac.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang8/hoangkimbaohap.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang8/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/phongphaotrungdacbiet.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/phongphaotrungthuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/baolixi.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/phongphaodaidacbiet.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/phongphaotieuthuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/phongphaotieudacbiet.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang2/phongphaodaithuong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang9/npc_sukien.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang9/huychuongquockhanh.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/eventpgaming/thang9/quaquockhanh.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/add_npc.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/mission_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/npcdeath_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/npc/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/npc/lequan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/npc/gardener.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/npc/giftbox.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/npc/gongnv.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/item/colortree.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/item/item_head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/item/giftbox.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/item/colortree_head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/item/boxofbow.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20110225_8_thang_3/item/colorseed.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/mission_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npcdeath_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/vng_ly2011_head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/giao_thua/giao_thua_2011.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npc/lares.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npc/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npc/maitree.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npc/mastergift.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npc/cardshop.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npc/baker.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/npc/factiontransport.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/item/banh_chung.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/item/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/item/banh_tet.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/item/banh_chung_db.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/lunaryear2011/item/thiep_nam_moi.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_bachquan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_bhdopho.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_honnguyenlinhlo.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_bhl.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/boxquantrang.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_thienlong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_phutang.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_bhthanthach.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_troluchoan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ib_shop_saleoff/box_hoathuyetdon.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vuoncaysinhnhat/seed.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vuoncaysinhnhat/vng_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vuoncaysinhnhat/tree.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vuoncaysinhnhat/lucky_chest.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vuoncaysinhnhat/plant.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/doi_hanh_hiep_lenh/exchangeitem.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/event_thang_long/event_1000_thanglong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/npc/nskt_compose_item.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/npc/nskt_gongnv.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/crystal_5colors.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/crystal_head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/star_white.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/star_happiness.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/crystal_3colors.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/crystal_4colors.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/star_head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/item/star_safe.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/script/nskt_challengeoftime.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/script/nskt_dropitem.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/ngusackettinh/script/nskt_songjin.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/pah_12_2010/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/pah_12_2010/pah_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/vldnb2010/vlbnb.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/vlmc2011/vlmc2011_main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/vlmc2011/vlmc2011_globalvar.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/vng_awardclass.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/vng_toolaward.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/thdnb10.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/2/npah_thang05_bosung.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/3/thdnb9.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/8/thdnb_forum_prediction.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/5/banchunhiem_clb.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/4/banchunhiem_clb.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/7/maskcompensate.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/1/npah_thang05.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/traogiai/npah/awards/6/ngubamientay.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/change_request_baoruong/exp_award.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/20101228_dctk/item/tk_lebao.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/den_bu_pqch/den_bu_pqch.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/den_bu_pqch/item/tang_ruong.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/item/kimochibao.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/item/ruongbachho.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/item/boxchest.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/item/giahanphu.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/201010/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/201010/item/potion.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/201010/item/freezingstar.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/trongcaythang112011/mysticchest.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/trongcaythang112011/ficus_seed.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/trongcaythang112011/kimlangxuan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/trongcaythang112011/tree.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/trongcaythang112011/plant.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/trongcaythang112011/rose_seed.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/trongcaythang112011/buy_rose_seed.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/npc/peachtree.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/npc/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/npc/lequan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/npc/volamtruyennhan.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/item/nhu_y_le_bao_trung.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/item/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/item/baolixi.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/item/nhu_y_le_bao_tieu.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip_account_2011/item/nhu_y_le_bao_dai.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/tochieukynang150/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/tochieukynang150/bch_kynang.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/tochieukynang150/item/skillmiji_19.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/tochieukynang150/item/skillmiji_20.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/201203_huyenvulenh/main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "vng_event/vip2012/main.lua",
+            "status": "☐"
+        },
+        {
+            "file": "event/vng/mergeserver201105/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "event/vng/mergeserver201105/cityvar7.lua",
+            "status": "☐"
+        },
+        {
+            "file": "event/vng/mergeserver201105/tonggetaward.lua",
+            "status": "☐"
+        },
+        {
+            "file": "event/vng/mergeserver201010/head.lua",
+            "status": "☐"
+        },
+        {
+            "file": "event/vng/mergeserver201010/cityvar7.lua",
+            "status": "☐"
+        },
+        {
+            "file": "event/vng/mergeserver201010/tonggetaward.lua",
+            "status": "☐"
+        }
+    ],
+    "count": 201
+}

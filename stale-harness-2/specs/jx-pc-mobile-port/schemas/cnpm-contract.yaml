@@ -1,0 +1,15 @@
+schema_version: 1
+skill: cnpm
+templates:
+  01-yeu-cau.md:
+    sha256: 2cf5c076f8d997e829137eebf242de3ac3ccb80ee248c73cc4a31de40adcf672
+    required_headings: ["Mô hình cơ cấu tổ chức", "Nhu cầu người dùng và Yêu cầu của phần mềm (NGHIỆP VỤ)", "Biểu mẫu", "Quy định", "Danh sách yêu cầu", "Bảng trách nhiệm", "Bảng mô tả chi tiết yêu cầu nghiệp vụ"]
+  02-mo-hinh-yeu-cau.md:
+    sha256: 8d1d1df2fe07b7b1f7aae9b1212d1bc1dd587346773aa62e860414fe15789c8c
+    required_headings: ["Mô hình chức năng", "Sơ đồ sử dụng chức năng", "Sơ đồ phân quyền sử dụng", "Sơ đồ luồng dữ liệu", "Sơ đồ khai thác hệ thống"]
+  03-du-lieu.md:
+    sha256: ff1cfe397ee4fc222f7097d638adc9ae0c321e7fa6d6b8354e218e4b243b4858
+    required_headings: ["Thiết kế dữ liệu với tính đúng đắn", "Thiết kế dữ liệu với yêu cầu chất lượng (tối ưu tiến hóa, lưu trữ và tốc độ xử lý)", "Thiết kế dữ liệu với yêu cầu hệ thống"]
+  04-giao-dien.md:
+    sha256: 4851a19b70a3817fb7f21216b3e4677e5d1e1d1fcb726825b161da3db6d8a539
+    required_headings: ["Bảng tiêu chuẩn thiết kế giao diện", "Sơ đồ giao diện tổng quát", "Giao diện chi tiết"]

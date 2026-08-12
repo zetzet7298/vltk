@@ -1,0 +1,134 @@
+{
+  "encoding": "byte-preserving",
+  "key_column": "SkillId",
+  "requested_ids": [
+    95,
+    97,
+    99,
+    100,
+    101,
+    102,
+    103,
+    105,
+    108,
+    109,
+    111,
+    113,
+    114,
+    269,
+    336,
+    337,
+    713,
+    1063,
+    1065
+  ],
+  "schema": "vltk.table-slice-provenance/v1",
+  "selected_ids": [
+    95,
+    97,
+    99,
+    100,
+    101,
+    102,
+    103,
+    105,
+    108,
+    109,
+    111,
+    113,
+    114,
+    269,
+    336,
+    337,
+    713,
+    1063,
+    1065
+  ],
+  "slice": {
+    "bytes": 14893,
+    "sha256": "cb784d8a10416f83fcbf1ba39a6d137fb5a3f3f22bc6453e27d227259e428e84"
+  },
+  "source": {
+    "bytes": 845831,
+    "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+    "sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c"
+  },
+  "source_lines": [
+    {
+      "id": 95,
+      "line": 96
+    },
+    {
+      "id": 97,
+      "line": 98
+    },
+    {
+      "id": 99,
+      "line": 100
+    },
+    {
+      "id": 100,
+      "line": 101
+    },
+    {
+      "id": 101,
+      "line": 102
+    },
+    {
+      "id": 102,
+      "line": 103
+    },
+    {
+      "id": 103,
+      "line": 104
+    },
+    {
+      "id": 105,
+      "line": 106
+    },
+    {
+      "id": 108,
+      "line": 109
+    },
+    {
+      "id": 109,
+      "line": 110
+    },
+    {
+      "id": 111,
+      "line": 112
+    },
+    {
+      "id": 113,
+      "line": 114
+    },
+    {
+      "id": 114,
+      "line": 115
+    },
+    {
+      "id": 269,
+      "line": 270
+    },
+    {
+      "id": 336,
+      "line": 337
+    },
+    {
+      "id": 337,
+      "line": 338
+    },
+    {
+      "id": 713,
+      "line": 715
+    },
+    {
+      "id": 1063,
+      "line": 1063
+    },
+    {
+      "id": 1065,
+      "line": 1065
+    }
+  ]
+}

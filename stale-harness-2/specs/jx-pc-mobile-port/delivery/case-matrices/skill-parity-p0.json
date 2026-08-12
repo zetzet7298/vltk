@@ -1,0 +1,44 @@
+{
+  "case_schema": "./skill-parity-case-p0.schema.json",
+  "matrix_id": "MATRIX-SKL-P0-001",
+  "schema_version": 1,
+  "catalog": {
+    "path": "../../registry/catalogs/skills.jsonl",
+    "sha256": "a968a6a8414cbe0698e542a6983e1951c2f70aafb1a2f003cca3685352b8903e",
+    "records_discovered": 1554,
+    "authority": "DISCOVERED_UNVERIFIED"
+  },
+  "fixture_schema": "../fixtures/training-npcs.p0.schema.json",
+  "fixture_ref": "../fixtures/training-npcs.p0.json#FIXTURE-CBT-TRAINING-001",
+  "case_instances": [],
+  "expansion_rule": "Mỗi skill canonical thuộc một nhóm phải sinh case cho từng level hợp lệ, cast kind, target relation, biên range/cost/cooldown, RNG outcome, state/stacking, reconnect và death interaction; không được chỉ lấy một skill đại diện.",
+  "required_variants": [
+    "level_min", "level_mid", "level_max", "cost_exact", "cost_short_one", "cooldown_ready", "cooldown_one_tick_left",
+    "range_inside_one_unit", "range_exact_boundary", "range_outside_one_unit", "target_valid", "target_dead", "target_relation_invalid",
+    "los_clear", "los_blocked", "duplicate_command", "out_of_order_command", "disconnect_before_result", "replay_same_seed"
+  ],
+  "groups": [
+    {"group": "shared", "stable_prefix": "SKL-SHARED", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Chưa reconcile danh sách shared canonical từ client/server/runtime PC."},
+      {"group": "novice", "stable_prefix": "SKL-NOVICE", "selection_status": "SOURCE_PROVEN", "catalog_selection": ["SKILL-1", "SKILL-2", "SKILL-53"], "blocker": null},
+    {"group": "shaolin", "stable_prefix": "SKL-SHAOLIN", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Skills.txt không tự chứng minh membership/nhánh/behavior Thiếu Lâm."},
+    {"group": "tianwang", "stable_prefix": "SKL-TIANWANG", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Chưa có membership canonical và runtime oracle Thiên Vương."},
+    {"group": "tangmen", "stable_prefix": "SKL-TANGMEN", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Chưa có membership canonical và runtime oracle Đường Môn."},
+    {"group": "wudu", "stable_prefix": "SKL-WUDU", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Chưa có membership canonical và runtime oracle Ngũ Độc."},
+    {"group": "emei", "stable_prefix": "SKL-EMEI", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Script rời rạc chưa đủ chứng minh catalog/behavior Nga Mi."},
+    {"group": "cuiyan", "stable_prefix": "SKL-CUIYAN", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Script rời rạc chưa đủ chứng minh catalog/behavior Thúy Yên."},
+    {"group": "gaibang", "stable_prefix": "SKL-GAIBANG", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Script rời rạc chưa đủ chứng minh catalog/behavior Cái Bang."},
+    {"group": "tianren", "stable_prefix": "SKL-TIANREN", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Chưa có membership canonical và runtime oracle Thiên Nhẫn."},
+    {"group": "wudang", "stable_prefix": "SKL-WUDANG", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Chưa có membership canonical và runtime oracle Võ Đang."},
+    {"group": "kunlun", "stable_prefix": "SKL-KUNLUN", "selection_status": "BLOCKED", "catalog_selection": null, "blocker": "Script rời rạc chưa đủ chứng minh catalog/behavior Côn Lôn."}
+  ],
+  "case_required_fields": [
+    "catalog_ref", "skill_level", "cast_kind", "target_mode", "target_relation", "range", "cost", "cooldown", "formula", "rounding",
+    "rng", "proc_order", "missile", "states", "stacking", "death_interaction", "logic_event_stream", "damage_state_snapshot",
+    "visual_frame_sequence", "audio_sequence", "deterministic_replay", "source_refs", "blocked_fields"
+  ],
+  "current_blocked_fields": [
+      "groups[shared|factions].catalog_selection", "case[*].formula", "case[*].rounding", "case[*].rng", "case[*].proc_order", "case[*].states",
+    "case[*].stacking", "case[*].logic_event_stream", "case[*].damage_state_snapshot", "case[*].visual_frame_sequence", "case[*].audio_sequence"
+  ],
+  "release_rule": "Chỉ được PARITY_DONE khi mọi record được gán đúng một nhóm, mọi case sinh theo expansion_rule không còn blocked_fields, logic khớp 100%, SSIM từng visual case >= 0.99 và reviewer sign-off."
+}

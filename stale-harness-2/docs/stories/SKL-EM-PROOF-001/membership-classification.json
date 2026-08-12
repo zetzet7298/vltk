@@ -1,0 +1,232 @@
+{
+  "canonical_sources": {
+    "regular_progression": {
+      "line_end": 1438,
+      "line_start": 1431,
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
+      "sha256": "7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3"
+    },
+    "skillbook_grants": {
+      "line": 6,
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
+      "sha256": "4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9"
+    },
+    "static_rows": {
+      "hash_status": "verified_vltktool_provenance",
+      "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+      "provenance_path": "harness/docs/stories/SKL-EM-PROOF-001/PcEMeiSkills.provenance.json",
+      "slice_bytes": 17756,
+      "slice_path": "harness/docs/stories/SKL-EM-PROOF-001/PcEMeiSkills.txt",
+      "slice_sha256": "8dabca7226f8dd0ff6c0731a60c87ea842399ba865e43b4800ca1e0d47e117b9",
+      "source_sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c"
+    }
+  },
+  "pc_learned_evidence_ids": [
+    77,
+    79,
+    80,
+    82,
+    85,
+    86,
+    88,
+    89,
+    91,
+    92,
+    93,
+    252,
+    282,
+    328,
+    332,
+    380,
+    385,
+    712,
+    1061,
+    1062,
+    1114
+  ],
+  "pc_learned_only": [
+    {
+      "evidence": [
+        "progression_tier_7"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 252
+    },
+    {
+      "evidence": [
+        "progression_tier_7"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 282
+    },
+    {
+      "evidence": [
+        "progression_tier_9",
+        "skillbook_90"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 328
+    },
+    {
+      "evidence": [
+        "skillbook_90"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 332
+    },
+    {
+      "evidence": [
+        "progression_tier_9",
+        "skillbook_90"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 380
+    },
+    {
+      "evidence": [
+        "progression_tier_4"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 385
+    },
+    {
+      "evidence": [
+        "progression_tier_9",
+        "skillbook_120"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 712
+    },
+    {
+      "evidence": [
+        "skillbook_150"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 1061
+    },
+    {
+      "evidence": [
+        "skillbook_150"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 1062
+    },
+    {
+      "evidence": [
+        "skillbook_150"
+      ],
+      "membership": "pc_learned",
+      "oracle_include": true,
+      "skill_id": 1114
+    }
+  ],
+  "regular_progression_ids": [
+    80,
+    85,
+    77,
+    79,
+    93,
+    82,
+    89,
+    385,
+    86,
+    92,
+    88,
+    91,
+    252,
+    282,
+    328,
+    380,
+    712
+  ],
+  "schema": "vltk.emei.membership-classification/v1",
+  "shared_ids": [
+    77,
+    79,
+    80,
+    82,
+    85,
+    86,
+    88,
+    89,
+    91,
+    92,
+    93
+  ],
+  "skillbook_by_level": {
+    "120": [
+      712
+    ],
+    "150": [
+      1061,
+      1062,
+      1114
+    ],
+    "90": [
+      380,
+      328,
+      332
+    ]
+  },
+  "status": "reviewed_static_membership_evidence",
+  "ui_contract": {
+    "ordered_skill_ids": null,
+    "reason": "No canonical UI ordering evidence; static learned proof must not infer order"
+  },
+  "unity_display_ids": [
+    77,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    91,
+    92,
+    93
+  ],
+  "unity_only_unresolved": [
+    {
+      "membership": "unresolved",
+      "oracle_include": false,
+      "reason": "No direct PC progression or skillbook grant evidence found",
+      "relationship_target_of": [],
+      "skill_id": 81
+    },
+    {
+      "membership": "unresolved",
+      "oracle_include": false,
+      "reason": "No direct PC progression or skillbook grant evidence found",
+      "relationship_target_of": [],
+      "skill_id": 83
+    },
+    {
+      "membership": "unresolved",
+      "oracle_include": false,
+      "reason": "No direct PC progression or skillbook grant evidence found",
+      "relationship_target_of": [],
+      "skill_id": 84
+    },
+    {
+      "membership": "unresolved",
+      "oracle_include": false,
+      "reason": "No direct PC progression or skillbook grant evidence found",
+      "relationship_target_of": [],
+      "skill_id": 87
+    }
+  ]
+}

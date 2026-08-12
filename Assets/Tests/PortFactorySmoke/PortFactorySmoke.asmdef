@@ -1,0 +1,33 @@
+{
+    "name": "PortFactorySmoke",
+    "rootNamespace": "VLTK.Tests.PortFactorySmoke",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "VLTK.Combat",
+        "VLTK.PortData",
+        "VLTK.Sandbox.Runtime",
+        "VLTK.Core",
+        "VLTK.Model",
+        "VLTK.Gameplay.Domain",
+        "Network",
+        "Unity.Mathematics",
+        "VLTK.UI",
+        "VLTK.Resources",
+        "VLTK.Sprites"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

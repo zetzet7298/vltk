@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — ST-XX Hongbao Service (Hồng Bao runtime)
-// Wraps PcHongbaoRegistry. PC source: settings/hongbaosetting.ini (69 entries).
+// Wraps PcHongbaoRegistry. PC source: settings/item/hongbao.txt (69 entries).
 // Hỗ trợ kiểm tra cấp nhân vật có đủ để nhận hồng bao không.
 // Vietnamese: "Hồng Bao", "Lì Xì", "Quà Tặng", "Sự Kiện".
 // -----------------------------------------------------------------------------
@@ -15,7 +15,7 @@ namespace VLTK.Sandbox
 {
     /// <summary>
     /// Service quản lý Hồng Bao (lì xì / quà tặng sự kiện).
-    /// PC source: settings/hongbaosetting.ini.
+    /// PC source: settings/item/hongbao.txt.
     /// </summary>
     public class HongbaoService
     {
@@ -69,10 +69,13 @@ namespace VLTK.Sandbox
             return true;
         }
 
-        public static HongbaoService LoadFromStreamingAssets(string subdir = "Reference/PcHongbao")
+        public static HongbaoService LoadFromStreamingAssets(string subdir = "Reference/PcItemFull")
         {
             var svc = new HongbaoService();
             string dir = Path.Combine(Application.streamingAssetsPath, subdir);
+            if (!Directory.Exists(dir) && subdir == "Reference/PcItemFull")
+                dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcHongbao");
+
             if (Directory.Exists(dir))
             {
                 var reg = PcHongbaoParser.BuildRegistry(dir);

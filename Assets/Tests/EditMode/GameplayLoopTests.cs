@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using VLTK.Model;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
@@ -36,6 +37,10 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(10, player.level);
             Assert.AreEqual(Vector2.zero, player.worldPos);
             Assert.AreEqual(300, player.combat.maxLife); // 100 + 10*20
+            Assert.AreEqual(CombatFaction.CaiBang, GameplayLoopService.DefaultPlayerFaction);
+            Assert.AreEqual(CombatFaction.CaiBang, player.combat.faction,
+                "fresh GameplayLoop player must use the persistent sandbox default faction");
+            Assert.AreEqual(PcMaxManaFormula.Compute(10, 0, CombatFaction.CaiBang), player.combat.maxMana);
         }
 
         [Test]

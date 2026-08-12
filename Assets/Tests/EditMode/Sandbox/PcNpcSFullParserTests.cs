@@ -28,7 +28,10 @@ namespace VLTK.Tests.Sandbox
             int withResType = 0;
             foreach (var t in templates)
             {
-                Assert.Greater(t.templateId, 0, "Template ID should be positive");
+                // templateId is a synthetic 0-based row index (npcs.txt has no numeric
+                // ID column; col0 is the Vietnamese Name). 0 is a valid index, so the
+                // validity check is >= 0, not > 0.
+                Assert.GreaterOrEqual(t.templateId, 0, "Template ID (row index) should be non-negative");
                 if (!string.IsNullOrEmpty(t.nameRaw)) withName++;
                 if (!string.IsNullOrEmpty(t.spriteClipRef)) withResType++;
             }

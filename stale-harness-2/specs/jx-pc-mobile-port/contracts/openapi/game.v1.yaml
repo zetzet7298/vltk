@@ -1,0 +1,962 @@
+openapi: 3.1.0
+info:
+  title: VLTK Mobile Production REST API
+  version: 1.0.0
+  description: Normative auth, bootstrap and character API. Idempotency-Key is required
+    on side-effect operations except secret-bearing register/login/refresh/password-reset
+    flows; the exceptions use uniqueness, rotation or single-use-token semantics.
+  license:
+    name: Proprietary
+    identifier: LicenseRef-Proprietary
+servers:
+- url: https://api.example.invalid/v1
+security:
+- bearerAuth: []
+paths:
+  /auth/register:
+    post:
+      summary: Register a username/password account; verified email enables self-service
+        reset
+      operationId: register
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+        '409':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/Problem'
+  /auth/login:
+    post:
+      summary: Authenticate an account in a realm
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+        '401':
+          $ref: '#/components/responses/Problem'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/Problem'
+  /auth/refresh:
+    post:
+      summary: Rotate a refresh token
+      operationId: refresh
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  minLength: 32
+                  maxLength: 4096
+                  writeOnly: true
+      responses:
+        '200':
+          description: Rotated token pair
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+        '401':
+          $ref: '#/components/responses/Problem'
+  /auth/logout:
+    post:
+      summary: Revoke the current session
+      operationId: logout
+      parameters:
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '204':
+          description: Revoked or already revoked
+          headers:
+            Idempotency-Replayed:
+              $ref: '#/components/headers/IdempotencyReplayed'
+        '401':
+          $ref: '#/components/responses/Problem'
+  /auth/password-reset/request:
+    post:
+      summary: Request an OTP for a verified email; response never reveals account
+        existence
+      operationId: requestPasswordReset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+      responses:
+        '202':
+          description: Accepted whether or not the identity exists
+        '429':
+          $ref: '#/components/responses/Problem'
+  /auth/password-reset/confirm:
+    post:
+      summary: Confirm reset OTP and replace the password
+      operationId: confirmPasswordReset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+      responses:
+        '204':
+          description: Password changed and prior sessions revoked
+        '401':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/Problem'
+  /realms:
+    get:
+      summary: List realms available for login
+      operationId: listRealms
+      security: []
+      responses:
+        '200':
+          description: Realm list
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                - realms
+                properties:
+                  realms:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Realm'
+        '429':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /bootstrap:
+    post:
+      summary: Bootstrap realm, content and WSS admission
+      operationId: bootstrap
+      parameters:
+      - $ref: '#/components/parameters/RealmId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      - name: clientVersion
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+      - name: characterId
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '200':
+          description: Bootstrap data
+          headers:
+            Idempotency-Replayed:
+              $ref: '#/components/headers/IdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bootstrap'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '426':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+  /characters:
+    get:
+      summary: List active characters and optionally recoverable soft-deleted characters
+      operationId: listCharacters
+      parameters:
+      - $ref: '#/components/parameters/RealmId'
+      - name: includeDeleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: At most three active characters plus recoverable entries when
+            requested
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - characters
+                additionalProperties: false
+                properties:
+                  characters:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Character'
+        '403':
+          $ref: '#/components/responses/Problem'
+    post:
+      summary: Create a character aggregate
+      operationId: createCharacter
+      parameters:
+      - $ref: '#/components/parameters/RealmId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCharacter'
+      responses:
+        '201':
+          description: Character created
+          headers:
+            Idempotency-Replayed:
+              $ref: '#/components/headers/IdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+        '409':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+  /characters/{characterId}:
+    get:
+      summary: Get durable character state
+      operationId: getCharacter
+      parameters:
+      - $ref: '#/components/parameters/RealmId'
+      - $ref: '#/components/parameters/CharacterId'
+      responses:
+        '200':
+          description: Character state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+        '404':
+          $ref: '#/components/responses/Problem'
+    delete:
+      summary: Soft-delete a character for seven days
+      operationId: deleteCharacter
+      parameters:
+      - $ref: '#/components/parameters/RealmId'
+      - $ref: '#/components/parameters/CharacterId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+          pattern: ^"[0-9]+"$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteCharacterRequest'
+      responses:
+        '202':
+          description: Soft-delete scheduled with purgeAfter seven days later
+          headers:
+            Idempotency-Replayed:
+              $ref: '#/components/headers/IdempotencyReplayed'
+        '404':
+          $ref: '#/components/responses/Problem'
+        '409':
+          $ref: '#/components/responses/Problem'
+  /characters/{characterId}/restore:
+    post:
+      summary: Restore a character within seven days when an active slot is available
+      operationId: restoreCharacter
+      parameters:
+      - $ref: '#/components/parameters/RealmId'
+      - $ref: '#/components/parameters/CharacterId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Character restored
+          headers:
+            Idempotency-Replayed:
+              $ref: '#/components/headers/IdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+        '404':
+          $ref: '#/components/responses/Problem'
+        '409':
+          $ref: '#/components/responses/Problem'
+  /characters/{characterId}/select:
+    post:
+      summary: Select character and issue single-use WSS ticket
+      operationId: selectCharacter
+      parameters:
+      - $ref: '#/components/parameters/RealmId'
+      - $ref: '#/components/parameters/CharacterId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - contentReleaseId
+              properties:
+                contentReleaseId:
+                  $ref: '#/components/schemas/Uuid'
+      responses:
+        '200':
+          description: WSS admission
+          headers:
+            Idempotency-Replayed:
+              $ref: '#/components/headers/IdempotencyReplayed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admission'
+        '409':
+          $ref: '#/components/responses/Problem'
+        '503':
+          $ref: '#/components/responses/Problem'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    RealmId:
+      name: X-Realm-ID
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    CharacterId:
+      name: characterId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Uuid'
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+        pattern: ^[!-~]+$
+  headers:
+    IdempotencyReplayed:
+      description: Present with value true only when this is a stored replay.
+      schema:
+        type: string
+        const: 'true'
+    RetryAfter:
+      description: Whole seconds before a safe retry.
+      schema:
+        type: integer
+        minimum: 1
+  responses:
+    Problem:
+      description: RFC 9457 problem
+      headers:
+        Idempotency-Replayed:
+          $ref: '#/components/headers/IdempotencyReplayed'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Uuid:
+      type: string
+      format: uuid
+      pattern: ^[0-9a-f-]{36}$
+    RegisterRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - realmId
+      - accountName
+      - password
+      properties:
+        realmId:
+          $ref: '#/components/schemas/Uuid'
+        accountName:
+          type: string
+          minLength: 3
+          maxLength: 32
+        password:
+          type: string
+          minLength: 8
+          maxLength: 256
+          writeOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+    PasswordResetRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - email
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+    PasswordResetConfirm:
+      type: object
+      additionalProperties: false
+      required:
+      - email
+      - otp
+      - newPassword
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        otp:
+          type: string
+          pattern: ^[0-9]{6,12}$
+          writeOnly: true
+        newPassword:
+          type: string
+          minLength: 8
+          maxLength: 256
+          writeOnly: true
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - realmId
+      - accountName
+      - password
+      properties:
+        realmId:
+          $ref: '#/components/schemas/Uuid'
+        accountName:
+          type: string
+          minLength: 3
+          maxLength: 32
+        password:
+          type: string
+          minLength: 8
+          maxLength: 256
+          writeOnly: true
+        otp:
+          type: string
+          minLength: 6
+          maxLength: 12
+          writeOnly: true
+    TokenPair:
+      type: object
+      additionalProperties: false
+      required:
+      - accountId
+      - realmId
+      - accessToken
+      - accessExpiresAt
+      - refreshToken
+      - refreshExpiresAt
+      properties:
+        accountId:
+          $ref: '#/components/schemas/Uuid'
+        realmId:
+          $ref: '#/components/schemas/Uuid'
+        accessToken:
+          type: string
+          writeOnly: true
+        accessExpiresAt:
+          type: string
+          format: date-time
+        refreshToken:
+          type: string
+          writeOnly: true
+        refreshExpiresAt:
+          type: string
+          format: date-time
+    Admission:
+      type: object
+      additionalProperties: false
+      required:
+      - url
+      - subprotocol
+      - ticket
+      - expiresAt
+      - tickRateHz
+      - sessionEpoch
+      - reconnectGraceSeconds
+      properties:
+        url:
+          type: string
+          format: uri
+          pattern: ^wss://
+        subprotocol:
+          type: string
+          const: game.v1
+        ticket:
+          type: string
+          minLength: 32
+          writeOnly: true
+        expiresAt:
+          type: string
+          format: date-time
+        tickRateHz:
+          type: integer
+          const: 18
+        sessionEpoch:
+          type: integer
+          format: int64
+          minimum: 1
+        reconnectGraceSeconds:
+          type: integer
+          const: 15
+    Bootstrap:
+      type: object
+      additionalProperties: false
+      required:
+      - realmId
+      - contentReleaseId
+      - sourceSnapshotId
+      - userFacingLocale
+      - manifestUrl
+      - manifestSha256
+      - minClientVersion
+      - recommendedClientVersion
+      - uiPanelFlags
+      - contentDigest
+      - runtimeSkillPolicy
+      - admission
+      properties:
+        realmId:
+          $ref: '#/components/schemas/Uuid'
+        contentReleaseId:
+          $ref: '#/components/schemas/Uuid'
+        sourceSnapshotId:
+          type: string
+          minLength: 7
+          maxLength: 128
+        userFacingLocale:
+          type: string
+          const: vi
+        manifestUrl:
+          type: string
+          format: uri
+        manifestSha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        minClientVersion:
+          type: string
+        recommendedClientVersion:
+          type: string
+        uiPanelFlags:
+          $ref: '#/components/schemas/UiPanelFlagBundle'
+        admission:
+          $ref: '#/components/schemas/Admission'
+        contentDigest:
+          $ref: '#/components/schemas/ContentDigest'
+        runtimeSkillPolicy:
+          $ref: '#/components/schemas/RuntimeSkillPolicy'
+    UiPanelFlagBundle:
+      type: object
+      additionalProperties: false
+      description: Signed canonical payload. contentReleaseId must equal Bootstrap.contentReleaseId;
+        clients verify signature before evaluating any ui.panel_v2 flag.
+      required:
+      - schemaVersion
+      - revision
+      - contentReleaseId
+      - issuedAt
+      - signingKeyId
+      - signatureAlgorithm
+      - signature
+      - flags
+      properties:
+        schemaVersion:
+          type: integer
+          const: 1
+        revision:
+          type: integer
+          format: int64
+          minimum: 1
+        contentReleaseId:
+          $ref: '#/components/schemas/Uuid'
+        issuedAt:
+          type: string
+          format: date-time
+        signingKeyId:
+          type: string
+          minLength: 1
+          maxLength: 128
+        signatureAlgorithm:
+          type: string
+          const: Ed25519
+        signature:
+          type: string
+          contentEncoding: base64
+          minLength: 40
+        flags:
+          type: array
+          items:
+            $ref: '#/components/schemas/UiPanelFlag'
+    UiPanelFlag:
+      type: object
+      additionalProperties: false
+      description: key must equal ui.panel_v2.<panelId>. Unknown, expired, unsigned
+        or client-incompatible flags fail closed to a releaseAllowedVariants choice;
+        no flag may alter frozen HUD geometry or gameplay rules.
+      required:
+      - key
+      - panelId
+      - variant
+      - cohort
+      - minClientVersion
+      - contentVersion
+      - rolloutBasisPoints
+      - owner
+      - expiresAt
+      - rollbackKey
+      - reason
+      - revision
+      - releaseAllowedVariants
+      properties:
+        key:
+          type: string
+          pattern: ^ui\.panel_v2\.[a-z0-9][a-z0-9_.-]{0,63}$
+        panelId:
+          type: string
+          pattern: ^[a-z0-9][a-z0-9_.-]{0,63}$
+        variant:
+          type: string
+          enum:
+          - legacy
+          - v2
+        cohort:
+          type: string
+          minLength: 1
+          maxLength: 128
+        minClientVersion:
+          type: string
+          minLength: 1
+          maxLength: 64
+        contentVersion:
+          type: string
+          minLength: 1
+          maxLength: 64
+        rolloutBasisPoints:
+          type: integer
+          minimum: 0
+          maximum: 10000
+        owner:
+          type: string
+          minLength: 1
+          maxLength: 128
+        expiresAt:
+          type: string
+          format: date-time
+        rollbackKey:
+          type: string
+          minLength: 1
+          maxLength: 128
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 512
+        revision:
+          type: integer
+          format: int64
+          minimum: 1
+        releaseAllowedVariants:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - legacy
+            - v2
+    CreateCharacter:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - gender
+      - series
+      - homelandId
+      - slot
+      - appearanceId
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 24
+        gender:
+          type: string
+          enum:
+          - male
+          - female
+        series:
+          type: integer
+          minimum: 0
+          maximum: 4
+        homelandId:
+          type: integer
+          minimum: 1
+        appearanceId:
+          type: integer
+          minimum: 0
+        slot:
+          type: integer
+          minimum: 1
+          maximum: 3
+    DeleteCharacterRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - password
+      - characterName
+      properties:
+        password:
+          type: string
+          minLength: 8
+          maxLength: 256
+          writeOnly: true
+        characterName:
+          type: string
+          minLength: 2
+          maxLength: 24
+    Realm:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - code
+      - name
+      - status
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        code:
+          type: string
+          pattern: ^[a-z0-9][a-z0-9-]{1,31}$
+        name:
+          type: string
+          minLength: 1
+          maxLength: 80
+        status:
+          type: string
+          enum:
+          - open
+          - maintenance
+          - closed
+    Character:
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - gender
+      - faction
+      - series
+      - homelandId
+      - level
+      - mapId
+      - slot
+      - appearanceId
+      - appearanceRevision
+      - version
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        legacyRoleId:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+        gender:
+          type: string
+          enum:
+          - male
+          - female
+        faction:
+          type: integer
+        series:
+          type: integer
+        homelandId:
+          type: integer
+          minimum: 1
+        level:
+          type: integer
+          minimum: 1
+          maximum: 200
+        mapId:
+          type: integer
+          minimum: 0
+        slot:
+          type: integer
+          minimum: 1
+          maximum: 3
+        appearanceId:
+          type: integer
+          minimum: 0
+        appearanceRevision:
+          type: integer
+          format: int64
+          minimum: 1
+        version:
+          type: integer
+          format: int64
+          minimum: 1
+        deletedAt:
+          type: string
+          format: date-time
+        purgeAfter:
+          type: string
+          format: date-time
+    Problem:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      - requestId
+      - retryable
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        code:
+          type: string
+          pattern: ^[A-Z][A-Z0-9_]+$
+        detail:
+          type: string
+        requestId:
+          $ref: '#/components/schemas/Uuid'
+        retryable:
+          type: boolean
+    ContentDigest:
+      type: object
+      additionalProperties: false
+      required:
+      - contentReleaseId
+      - manifestSha256
+      - sourceSnapshotId
+      - catalogUnionSize
+      - catalogUnionSha256
+      - clientProjectionSha256
+      - runtimeSkillPolicyId
+      properties:
+        contentReleaseId:
+          $ref: '#/components/schemas/Uuid'
+        manifestSha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        sourceSnapshotId:
+          type: string
+          minLength: 7
+          maxLength: 128
+        catalogUnionSize:
+          type: integer
+          const: 242
+        catalogUnionSha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        clientProjectionSha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        runtimeSkillPolicyId:
+          type: string
+          minLength: 1
+          maxLength: 128
+    RuntimeSkillPolicy:
+      type: object
+      additionalProperties: false
+      required:
+      - policyId
+      - catalogUnionSize
+      - catalogUnionSha256
+      - sourceTool
+      - filesystemFallbackAllowed
+      - runtimeParityClaimed
+      - pcRuntimeEvidenceStatus
+      - androidPhysicalEvidenceStatus
+      properties:
+        policyId:
+          type: string
+          minLength: 1
+          maxLength: 128
+        catalogUnionSize:
+          type: integer
+          const: 242
+        catalogUnionSha256:
+          type: string
+          pattern: ^[0-9a-f]{64}$
+        sourceTool:
+          type: string
+          const: vltktool
+        filesystemFallbackAllowed:
+          type: boolean
+          const: false
+        runtimeParityClaimed:
+          type: boolean
+          const: false
+        pcRuntimeEvidenceStatus:
+          type: string
+          const: BLOCKED
+        androidPhysicalEvidenceStatus:
+          type: string
+          const: BLOCKED

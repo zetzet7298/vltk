@@ -117,7 +117,7 @@ namespace VLTK.Sandbox
             // AC#3 — range check (attackRadius in source units → world).
             float range = skill.attackRadius * RangeWorldPerUnit;
             float dist = (target - origin).magnitude;
-            if (range > 0f && dist > range)
+            if (range > 0f && dist > range + 0.999f) // PC int-distance parity: boundary equality is in range
             {
                 SubsystemLog.Info("Projectile", $"Cast {skill.skillId} rejected: out of range ({dist:F1} > {range:F1})");
                 return new CastResult { success = false, reason = CastRejectReason.OutOfRange,

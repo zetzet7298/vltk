@@ -1,0 +1,51 @@
+schema_version: 1
+migrations:
+- id: MIG-001
+  dri: migration-platform
+  reviewer: qa-parity-review
+  phase: P1
+  status: PLANNED
+  acceptance_evidence:
+  - TEST-CONTRACT-001
+  - TEST-CONTRACT-002
+  title: Route legacy CSharp REST/mock sang DevHarness va production Go adapter.
+  rollback: Bat lai legacy feature flag trong dev; production khong co fallback.
+- id: MIG-002
+  dri: migration-platform
+  reviewer: qa-parity-review
+  phase: P1
+  status: PLANNED
+  acceptance_evidence:
+  - TEST-UI-002
+  - TEST-UI-007
+  title: Chuyen panel popup stale sang implementation mobile SPR-backed.
+  rollback: Feature flag legacy chi cho QA comparison.
+- id: MIG-003
+  dri: migration-platform
+  reviewer: qa-parity-review
+  phase: P1
+  status: PLANNED
+  acceptance_evidence:
+  - TEST-MAP-053
+  title: Thay map 53 alias bang canonical content bundle.
+  rollback: Rollback content version; khong phuc hoi alias trong production.
+- id: MIG-004
+  dri: migration-platform
+  reviewer: qa-parity-review
+  phase: P1
+  status: PLANNED
+  acceptance_evidence:
+  - TEST-ECON-001
+  - TEST-RESTORE-001
+  title: Chuyen mock/local persistence sang PostgreSQL schema.
+  rollback: Khong import production data tu fixture; rollback migration expand-contract.
+- id: MIG-005
+  dri: migration-platform
+  reviewer: qa-parity-review
+  phase: P0
+  status: PLANNED
+  acceptance_evidence:
+  - TEST-CONTENT-001
+  - TEST-CONTENT-002
+  title: Chuyen asset lookup sang manifest-pinned resolver.
+  rollback: Rollback content bundle; fail closed neu winner khong resolve.

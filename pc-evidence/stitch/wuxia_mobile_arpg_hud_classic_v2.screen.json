@@ -1,0 +1,16 @@
+{
+  "projectId": "12426770499803462933",
+  "screenId": "34fc0413483548ebab83752d8a1271c3",
+  "name": "projects/12426770499803462933/screens/34fc0413483548ebab83752d8a1271c3",
+  "title": "Wuxia Mobile ARPG HUD - Classic Style V2",
+  "deviceType": "DESKTOP",
+  "width": 1376,
+  "height": 768,
+  "htmlCode": {},
+  "screenshot": {
+    "name": "projects/12426770499803462933/files/30beda2b5d92488d9db4b1aae41038d1",
+    "downloadUrl": "https://lh3.googleusercontent.com/aida/AP1WRLuoPgWhkCYi7ToGAVgNbvpgOXxWCDN79-D0XzezqKgNu_wv5mtcyVsBW-geUROjBbSaJ9Hm3TZnz68dyBCESXSI3zsERdDz7bhWUORV_gsBpeNEyDbVt0UaE59_EVItwaTsz6tCkhMlD6Eh2zIWXqiZq7OCbvNHV2p9qLC5sDKsS6YoBb3IDgANN6AYMdINnjQjuq1lDlTS4u_T9IJtZt6KSpnDiMfcu0EJsQ34hRUhwMC53cgPqw4iaa8",
+    "localPath": "pc-evidence/stitch/wuxia_mobile_arpg_hud_classic_v2.png"
+  },
+  "note": "Fetched via Stitch MCP get_screen; htmlCode was empty for this screen, so only screenshot metadata/code placeholder is available."
+}

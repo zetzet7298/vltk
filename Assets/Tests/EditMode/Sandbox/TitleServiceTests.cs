@@ -20,10 +20,36 @@ namespace VLTK.Tests.Sandbox
         public void LoadFromStreamingAssets_LoadsBothRegistries()
         {
             var svc = BuildService();
-            Assert.GreaterOrEqual(svc.PlayerTitleCount, 100, "PC playertitle.txt có 363+ entries");
-            Assert.GreaterOrEqual(svc.FactionTitleCount, 30, "PC factiontitle.txt có 81 entries");
+            // PC settings/playertitle.txt = 363 danh hiệu nhân vật (TitleId > 0).
+            Assert.AreEqual(363, svc.PlayerTitleCount, "PC playertitle.txt có đúng 363 entries");
+            // PC settings/factiontitle.txt = 81 danh hiệu môn phái (RANKID > 0).
+            Assert.AreEqual(81, svc.FactionTitleCount, "PC factiontitle.txt có đúng 81 entries");
             Assert.AreEqual(0, svc.UnlockedPlayerTitleCount);
             Assert.AreEqual(0, svc.UnlockedFactionTitleCount);
+            // playertitle.txt và factiontitle.txt dùng chung thư mục: player registry
+            // KHÔNG được nuốt các dòng faction (363, không phải 444).
+            Assert.AreEqual(363, svc.AllPlayerTitles.Count);
+            Assert.AreEqual(81, svc.AllFactionTitles.Count);
+        }
+
+        [Test]
+        public void PlayerTitle_NamesDecodeAsVietnamese_NotMojibake()
+        {
+            var svc = BuildService();
+            // Bytes win1252 + bảng glyph TCVN3 → tên tiếng Việt sạch.
+            var first = svc.GetPlayerTitle(1);
+            Assert.IsNotNull(first, "Danh hiệu #1 phải tồn tại");
+            Assert.AreEqual("Binh sĩ", (first.nameRaw ?? string.Empty).Trim(),
+                "playertitle.txt phải giải mã TCVN3, không phải GB2312/mojibake");
+            // Một vài danh hiệu PC mốc phải có dấu tiếng Việt đúng.
+            StringAssert.Contains("Thống Lĩnh", svc.GetPlayerTitle(3)?.nameRaw ?? string.Empty);
+            // Tuyệt đại đa số (>=99%) tên KHÔNG chứa ký tự thay thế U+FFFD —
+            // chỉ vài dòng PC mang byte trang trí ngoài bảng mã (vd #359-361).
+            int bad = 0;
+            foreach (var e in svc.AllPlayerTitles)
+                if ((e.nameRaw ?? string.Empty).Contains("\ufffd")) bad++;
+            Assert.LessOrEqual(bad, 3,
+                $"{bad} danh hiệu bị mojibake — vượt ngưỡng byte trang trí PC đã biết");
         }
 
         [Test]

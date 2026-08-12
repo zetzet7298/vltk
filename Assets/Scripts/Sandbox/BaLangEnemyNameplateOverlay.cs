@@ -54,6 +54,11 @@ namespace VLTK.Sandbox
             float y = Screen.height - sp.y + screenOffset.y;
             if (x < -120f || x > Screen.width + 120f || y < -80f || y > Screen.height + 80f) return;
 
+            // Skip drawing if the nameplate would overlap the bottom HUD toolbar area
+            // (bottom ~30% of screen reserved for PC toolbar strip + quick slots + chat).
+            float hudTop = Screen.height * 0.70f;
+            if (y > hudTop) return;
+
             string name = PcStyleName(plate.DisplayName);
             string hp = $"{plate.CurrentLife}/{plate.MaxLife}";
             float ratio = plate.MaxLife > 0 ? Mathf.Clamp01((float)plate.CurrentLife / plate.MaxLife) : 0f;

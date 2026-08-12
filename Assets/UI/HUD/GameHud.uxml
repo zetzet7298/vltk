@@ -1,18 +1,28 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/PopupWindow.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/CharacterInfo/CharacterInfo.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/Inventory/Inventory.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/Treasure/Treasure.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/Team/Team.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/Faction/Faction.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/Skill/Skill.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
         <!-- Full-width PC top frame art background (main_hud_bg scaled 1280px) -->
         <ui:VisualElement name="TopFrameBg" class="hud-top-frame-bg"/>
 
-        <!-- Top PC-style full status bar: PC 顶部控制条.ini layout -->
-        <!-- Stamina Left=87, Life Left=182, Mana Left=277, Exp Left=372, Level Left=53, WorldSort Left=499 -->
+        <!-- Top PC-style full status bar: ground-truth = ffb7d31b.ini / 8da7027d.ini (pak_unpacked/1024) -->
+        <!-- PC 1024-space, Main.Left=120; mobile design 1280-wide => scale 1280/1024 = 1.25 -->
+        <!-- Absolute left = (Main.Left + bar.Left) x 1.25: Level=194, Stamina=223, Life=360, Mana=498, Exp=635, WorldSort=803 -->
         <ui:VisualElement name="TopLeftPanel" class="hud-top-status">
             <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
             <ui:Label name="LevelText" text="1" class="hud-level-box"/>
-            <ui:VisualElement name="StaminaBarTrack" class="hud-top-bar hud-stamina-track"><ui:VisualElement name="StaminaBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="HpBarTrack" class="hud-top-bar hud-hp-track"><ui:VisualElement name="HpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="MpBarTrack" class="hud-top-bar hud-mp-track"><ui:VisualElement name="MpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"/></ui:VisualElement>
+            <ui:VisualElement name="StaminaBarTrack" class="hud-top-bar hud-stamina-track"><ui:VisualElement name="StaminaBarFill" class="hud-top-fill"><ui:VisualElement name="StaminaBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
+            <ui:VisualElement name="HpBarTrack" class="hud-top-bar hud-hp-track"><ui:VisualElement name="HpBarFill" class="hud-top-fill"><ui:VisualElement name="HpBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
+            <ui:VisualElement name="MpBarTrack" class="hud-top-bar hud-mp-track"><ui:VisualElement name="MpBarFill" class="hud-top-fill"><ui:VisualElement name="MpBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
+            <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"><ui:VisualElement name="ExpBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
+            <!-- WorldSort (Hạng thế giới): PC Player_WorldSort, chữ xanh 55,231,63, nằm sau EXP -->
+            <ui:Label name="WorldSortText" text="0" class="hud-worldsort-box"/>
             <ui:Label text="Cấp" class="hud-vn-top-caption hud-vn-level-caption"/>
             <ui:Label text="Thể lực" class="hud-vn-top-caption hud-vn-stamina-caption"/>
             <ui:Label text="Sinh lực" class="hud-vn-top-caption hud-vn-hp-caption"/>
@@ -36,7 +46,9 @@
             <ui:Label name="ScenePos" text="" class="hud-scene-pos"/>
             <ui:VisualElement name="MinimapBtns" class="hud-minimap-btns">
                 <ui:VisualElement name="ToggleMapBtn" class="hud-minimap-btn"/>
+                <ui:VisualElement name="CaveMapBtn" class="hud-minimap-btn"/>
                 <ui:VisualElement name="WorldMapBtn" class="hud-minimap-btn"/>
+                <ui:VisualElement name="FlagMapBtn" class="hud-minimap-btn"/>
             </ui:VisualElement>
         </ui:VisualElement>
 
@@ -58,34 +70,179 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Cái Bang skill sheet: PC source UiSkillsSheet + UiSkillsFightSub layout. IMGUI overlay renders PC art/text/icons for visual parity. -->
-        <ui:VisualElement name="CaiBangSkillPanel" class="hud-cb-skill-panel hidden">
-            <ui:VisualElement name="CaiBangSkillClose" class="hud-cb-close"/>
-            <ui:Label name="CaiBangSkillSummary" text="200" class="hud-cb-summary"/>
-            <ui:ScrollView name="CaiBangSkillList" class="hud-cb-list"/>
-            <ui:VisualElement name="CaiBangSkillPageOne" class="hud-cb-page-tab hud-cb-page-one"><ui:Label text="Một" class="hud-cb-page-tab-label"/></ui:VisualElement>
-            <ui:VisualElement name="CaiBangSkillPageTwo" class="hud-cb-page-tab hud-cb-page-two"><ui:Label text="Hai" class="hud-cb-page-tab-label"/></ui:VisualElement>
-        </ui:VisualElement>
-
-        <!-- Chat message area + input -->
+        <!-- PC chat bar (聊天条) — rebuilt per port-pc-chat-bar-parity design §2.
+             PC source: 7e20a7ac.ini. Layout top→bottom (column-reverse = bottom first):
+             ChannelSelector → ChatRoomArea (history) → SysRoomArea → ChatInputRow.
+             Frame SPRs (top/bottom/middle) + toggle/scroll icons load at runtime via C#.
+             Element names ChatInput/FaceBtn/SendBtnIcon preserved for GameHudController. -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
-            <ui:Label text="!! Hãy sử dụng hồi phục" class="hud-chat-warning"/>
-            <ui:VisualElement class="hud-chat-input-row">
+            <!-- PC frame/shadow pieces: [MoveImg]/[SizeBtn]/[ShadowBtn]. Runtime-loaded from real SPR. -->
+            <ui:VisualElement name="ChatBarTopFrame" class="hud-chat-frame-top"/>
+            <ui:VisualElement name="ChatBarBottomFrame" class="hud-chat-frame-bottom"/>
+            <ui:VisualElement name="ShadowToggle" class="hud-chat-shadow-toggle"/>
+
+            <!-- Channel tabs: mobile-safe position above the chat frame to avoid input/button mis-taps. -->
+            <ui:VisualElement name="ChannelSelector" class="hud-chat-channel-row">
+                <ui:VisualElement name="ChatTab0" class="hud-chat-tab selected"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab1" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab2" class="hud-chat-tab"><ui:Label text="Phòng" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab3" class="hud-chat-tab"><ui:Label text="Bang hội" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab4" class="hud-chat-tab"><ui:Label text="Môn phái" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab5" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148)
+                 PC scroll strip is LEFT of the chat list: [ChatRoom_Scroll].Left=-15, [ChatRoom].Left=15. -->
+            <ui:VisualElement name="ChatRoomArea" class="hud-chat-room-area">
+                <ui:ScrollView name="ChatRoomList" class="hud-chat-room-list">
+                    <ui:Label name="ChatRoomContent" class="hud-chat-room-content" text=""/>
+                </ui:ScrollView>
+                <ui:VisualElement name="ChatRoomScrollTrack" class="hud-chat-scroll-track">
+                    <ui:VisualElement name="ChatRoomScrollThumb" class="hud-chat-scroll-thumb"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- SysRoom: system/combat message strip (PC [SysRoom_List] 235×42).
+                 Mobile omits the PC sys toggle/up/down controls; they occupy an unused touch zone. -->
+            <ui:VisualElement name="SysRoomArea" class="hud-chat-sys-area">
+                <ui:Label name="SysRoomContent" class="hud-chat-sys-content" text=""/>
+            </ui:VisualElement>
+
+            <!-- Input row (existing elements preserved: ChatInput/FaceBtn/SendBtnIcon) -->
+            <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
+                <ui:VisualElement name="ChannelToggle" class="hud-chat-channel-toggle">
+                    <ui:VisualElement name="ChannelToggleIcon" class="hud-chat-toggle-icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ChatChannelIcon" class="hud-chat-channel-identity"/>
+                <ui:Label name="ChatSendName" text="Nhắc nhở" class="hud-chat-send-name"/>
                 <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
-                <ui:Button name="FaceBtn" text="😊" class="hud-face-btn"/>
+                <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
                 <ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/>
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Bottom ornate action strip -->
-        <ui:VisualElement name="BottomPanel" class="hud-bottom-strip">
-            <ui:VisualElement name="ToolbarLeft" class="hud-left-tools">
-                <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:Label text="1" class="hud-hotkey-number"/><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:Label text="2" class="hud-hotkey-number"/><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnHorse" class="hud-round-btn"><ui:Label text="3" class="hud-hotkey-number"/><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnExchange" class="hud-round-btn"><ui:Label text="4" class="hud-hotkey-number"/><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
+        <!-- ===================================================================
+             HUD-004 (mobile-native-hud-layout) — Slice S1: mobile-native layout
+             The PC 快捷栏 replica bottom-center strip has been REMOVED from the
+             center lane. Bottom-center is now RESERVED for the future mobile chat
+             canvas. The former strip elements (9 hotbar slots, T/P skill slots,
+             toggle row, menu row, BtnTreasure) are parked in PendingRelocation
+             (display:none) so their click-wiring + icon names still resolve via
+             root.Q(...) until S2 (combat cluster) and S3 (menu relocation) repopulate
+             them into the new anchored clusters below.
+             =================================================================== -->
+
+        <!-- BOTTOM-CENTER LANE: RESERVED for the future mobile chat canvas.
+             ChatBar is the only bottom-center content. Do NOT place combat slots,
+             quick slots, action buttons, or menu buttons here. -->
+
+            <!-- S2 (HUD-004): right-thumb combat cluster — 1 main + 5 sub assignable slots
+                 + run/horse/sit action buttons. Anchored bottom-right. Fan layout per
+                 design.md: 2 sub slots upper arc, main slot center, 3 sub slots lower arc,
+                 action buttons below. Slot element NAMES (SkillSlot0-4, PrimaryAttackBtn)
+                 match what CombatSkillSlotController.BindElements() queries so the existing
+                 controller binds/casts automatically — no new gameplay wiring needed.
+                 PC sprite frames: btn_skill_empty_pc.png (42×42 PC SPR, scale-to-fit).
+                 Skill icons: Generated/cai_bang_skill_*.png (resolved by controller). -->
+            <ui:VisualElement name="CombatCluster" class="hud-combat-cluster">
+                <!-- Upper arc: 2 sub slots (above-right of main) -->
+                <ui:VisualElement name="SkillSlot4" class="hud-combat-sub-slot hud-combat-pos-sub5">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="5" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SkillSlot3" class="hud-combat-sub-slot hud-combat-pos-sub4">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="4" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+
+                <!-- Main slot (player-chosen priority, visually larger for thumb rest).
+                     Name PrimaryAttackBtn matches CombatSkillSlotController's primary attack
+                     pseudo-slot binding. Frame: btn_skill_empty_pc.png. -->
+                <ui:VisualElement name="PrimaryAttackBtn" class="hud-combat-main-slot">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon hud-combat-main-icon"/>
+                    <ui:Label name="SlotLabel" text="Tấn công" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+
+                <!-- Lower arc: 3 sub slots (below main) -->
+                <ui:VisualElement name="SkillSlot0" class="hud-combat-sub-slot hud-combat-pos-sub1">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SkillSlot1" class="hud-combat-sub-slot hud-combat-pos-sub2">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="2" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SkillSlot2" class="hud-combat-sub-slot hud-combat-pos-sub3">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="3" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+
+                <!-- Action buttons (right-thumb reach): run / horse / sit.
+                     Fresh names (ActionBtnRun etc.) to avoid collision with parked
+                     BtnRun/BtnSit/BtnHorse in PendingRelocation. Icons loaded via
+                     ButtonIcons dict + LoadArt(). RegisterClick wires to existing
+                     OnRunClick/OnSitClick/OnHorseClick (no-op log stubs, no new gameplay). -->
+                <ui:VisualElement name="ActionBtnRun" class="hud-action-btn hud-combat-pos-run">
+                    <ui:VisualElement name="ActionBtnRunIcon" class="hud-btn-icon"/>
+                    <ui:VisualElement name="ActionBtnRunRing" class="hud-action-toggle-ring"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ActionBtnHorse" class="hud-action-btn hud-combat-pos-horse">
+                    <ui:VisualElement name="ActionBtnHorseIcon" class="hud-btn-icon"/>
+                    <ui:VisualElement name="ActionBtnHorseRing" class="hud-action-toggle-ring"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ActionBtnSit" class="hud-action-btn hud-combat-pos-sit">
+                    <ui:VisualElement name="ActionBtnSitIcon" class="hud-btn-icon"/>
+                    <ui:VisualElement name="ActionBtnSitRing" class="hud-action-toggle-ring"/>
+                </ui:VisualElement>
             </ui:VisualElement>
 
+        <!-- S3 target: usable-item quick slots (3) between minimap and combat buttons. -->
+            <!-- S3 (HUD-004): 3 usable-item quick slots restored from the PC HUD.
+                 Frame chrome = PC 1/2/3 evidence split with short mobile gaps for safer taps;
+                 child slots are transparent click/icon overlays so the PC chrome stays visible.
+                 Each slot assignable to a consumable (e.g. Ngũ Hoa Ngọc Lộ). Activation =
+                 consume intent (no-op log; backend effect is a follow-up gameplay change). -->
+            <ui:VisualElement name="QuickSlots" class="hud-quick-slots">
+                <ui:VisualElement name="QuickSlot1" class="hud-quick-slot hud-quick-slot-1">
+                    <ui:VisualElement name="QuickSlot1Icon" class="hud-quick-slot-icon empty"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="QuickSlot2" class="hud-quick-slot hud-quick-slot-2">
+                    <ui:VisualElement name="QuickSlot2Icon" class="hud-quick-slot-icon empty"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="QuickSlot3" class="hud-quick-slot hud-quick-slot-3">
+                    <ui:VisualElement name="QuickSlot3Icon" class="hud-quick-slot-icon empty"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+        <!-- S3 target: relocated overflow PC UI (8 menu buttons + buff + Bảo Vật)
+             into the minimap↔topbar gap. Empty shell for S1; populated in S3. -->
+            <!-- S3 (HUD-004): relocated overflow PC UI — 8 menu buttons (PC F-key icons)
+                 + BtnTreasure (Bảo Vật) as a compact horizontal row in the minimap↔topbar gap.
+                 BuffPanel renders below when buffs exist. Click handlers unchanged
+                 (RegisterClick names preserved so popups still fire via PopupManager). -->
+            <ui:VisualElement name="TopGapCluster" class="hud-top-gap-cluster">
+                <ui:VisualElement name="TopGapMenuRow" class="hud-top-gap-menu-row">
+                    <ui:VisualElement name="BtnStatus" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnItems" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnItemEx" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnSkills" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnQuest" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnQuestIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnTeam" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnFaction" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnChatRoom" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnTreasure" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnTreasureIcon" class="hud-btn-icon"/></ui:VisualElement>
+                </ui:VisualElement>
+                <!-- Buff / Debuff panel: PC MiniSkill.ini / SkillState.ini. Hidden baseline;
+                     runtime re-enables when buffs exist. Relocated from old top-level position. -->
+                <ui:VisualElement name="BuffPanel" class="hud-buff-panel hidden">
+                    <!-- Dynamically populated in C# -->
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+        <!-- PendingRelocation: parked PC 快捷栏 replica elements (display:none).
+             Names preserved so root.Q("BtnRun"), RegisterClick, and LoadArt icon
+             wiring still resolve. S2/S3 move these out into the clusters above. -->
+        <ui:VisualElement name="PendingRelocation" class="hud-pending-relocation">
             <ui:VisualElement name="HotbarCenter" class="hud-main-hotbar">
                 <ui:VisualElement name="ItemSlot0" class="hud-hotbar-slot"><ui:Label text="1" class="hud-slot-number"/></ui:VisualElement>
                 <ui:VisualElement name="ItemSlot1" class="hud-hotbar-slot"><ui:Label text="2" class="hud-slot-number"/></ui:VisualElement>
@@ -110,24 +267,21 @@
                 <ui:VisualElement class="hud-skill-keys"><ui:Label text="T"/><ui:Label text="P"/></ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="ToolbarRight" class="hud-right-menu">
-                <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/><ui:Label text="Nhân" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/><ui:Label text="Túi" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSkills" class="hud-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-btn-icon"/><ui:Label text="Võ" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/><ui:Label text="Đội" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/><ui:Label text="Bang" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/><ui:Label text="PK" class="hud-menu-label"/></ui:VisualElement>
+            <ui:VisualElement name="ToolbarRight" class="hud-right-cluster">
+                <ui:VisualElement class="hud-toggle-row">
+                    <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnHorse" class="hud-round-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnExchange" class="hud-round-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnRec" class="hud-round-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnPK" class="hud-round-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/></ui:VisualElement>
+                </ui:VisualElement>
+                <!-- S3 (HUD-004): 8 menu buttons (BtnStatus…BtnChatRoom) + BtnTreasure
+                     relocated to TopGapCluster above. Only the toggle-row (Sit/Run/Horse/
+                     Exchange/Rec/PK) remains parked here for the S2 ActionBtn* to reuse. -->
             </ui:VisualElement>
-            <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
-        </ui:VisualElement>
-        <!-- Buff / Debuff panel: PC MiniSkill.ini / SkillState.ini -->
-        <ui:VisualElement name="BuffPanel" class="hud-buff-panel">
-            <!-- Dynamically populated in C# -->
-        </ui:VisualElement>
-
-        <!-- Team Preview: PC 队伍一览信息.ini -->
-        <ui:VisualElement name="TeamPreview" class="hud-team-preview hidden">
-            <!-- Dynamically populated in C# -->
+            <!-- BuffPanel moved into TopGapCluster above by S3 (HUD-004). The C# code
+                 resolves it via root.Q("BuffPanel") which searches the whole tree. -->
         </ui:VisualElement>
 
         <!-- Trade Info Panel: PC TradeInfo.ini -->
@@ -172,5 +326,8 @@
                 <ui:ScrollView name="SkillPickerList" class="hud-skill-picker-list"/>
             </ui:VisualElement>
         </ui:VisualElement>
+
+        <!-- HUD-003 Popup overlay host: PopupManager mounts backdrop + window here. -->
+        <ui:VisualElement name="PopupOverlay" class="hud-popup-overlay" />
     </ui:VisualElement>
 </ui:UXML>

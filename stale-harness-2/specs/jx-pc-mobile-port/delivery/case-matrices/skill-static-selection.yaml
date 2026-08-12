@@ -1,0 +1,60 @@
+schema_version: 1
+artifact_id: SKILL-STATIC-SELECTION-001
+source_authority:
+  source_revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  source_snapshot_status: DIRTY_BLOCKED_FOR_RELEASE
+  client_skills_path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/Skills.txt
+  client_skills_sha256: 62142f7e6587e5e39105249b07e35d16ca72efa9f7351d2d274ff57dbf91e097
+  client_rows: 1554
+  columns: 114
+  bootstrap_paths:
+    - bin/client/settings/npc/player/NewPlayerIni00.ini
+    - bin/client/settings/npc/player/NewPlayerIni09.ini
+  faction_script_path: bin/client/script/tagnewplayer/skillid.lua
+  formula_preload_path: bin/Server/Server/script/skill/head.lua
+  formula_preload_sha256: 0717545cde7874c14ceb24ad77611ed4f4a0c335837e896f8f03aa9367982e72
+  encoding_policy: Preserve raw bytes; decode legacy cp1252/TCVN/GBK per artifact and never hash decoded display text.
+status: SOURCE_PROVEN_STATIC_JOIN
+novice:
+  skill_ids: [1, 2, 53]
+  evidence: NewPlayerIni00..09.ini [FSKILLS] canonical IDs at level 1
+faction_scripts:
+  shaolin: {script_skill_rows: 45, selection_evidence: tagnewplayer/skillid.lua}
+  tianwang: {script_skill_rows: 51, selection_evidence: tagnewplayer/skillid.lua}
+  tangmen: {script_skill_rows: 55, selection_evidence: tagnewplayer/skillid.lua}
+  wudu: {script_skill_rows: 39, selection_evidence: tagnewplayer/skillid.lua}
+  emei: {script_skill_rows: 53, selection_evidence: tagnewplayer/skillid.lua}
+  cuiyan: {script_skill_rows: 55, selection_evidence: tagnewplayer/skillid.lua}
+  gaibang: {script_skill_rows: 34, selection_evidence: tagnewplayer/skillid.lua}
+  tianren: {script_skill_rows: 38, selection_evidence: tagnewplayer/skillid.lua}
+  wudang: {script_skill_rows: 40, selection_evidence: tagnewplayer/skillid.lua}
+  kunlun: {script_skill_rows: 50, selection_evidence: tagnewplayer/skillid.lua}
+faction_root_ids_from_factionhead:
+  authority_path: bin/client/script/header/factionhead.lua
+  authority_sha256: 28d122375a95c75ed24d6dc4026ac3d6fec50bdb4d9f66c791fe17533a7aff07
+  selection_rule: Union SKILLNORMAL, SKILL90_ARRAY, SKILL120AR by faction index, and SKILL150_ARRAY; then traverse child/event dependencies without promoting dependencies as player roots.
+  shaolin: [14, 10, 4, 6, 8, 15, 16, 20, 271, 11, 19, 21, 273, 318, 319, 321, 709, 1055, 1056, 1057]
+  tianwang: [34, 30, 29, 24, 23, 26, 33, 37, 35, 31, 40, 42, 32, 41, 324, 36, 322, 323, 325, 708, 1058, 1059, 1060]
+  tangmen: [45, 347, 43, 303, 50, 47, 54, 343, 345, 349, 249, 341, 58, 48, 339, 342, 302, 351, 710, 1069, 1070, 1071, 1110]
+  wudu: [63, 65, 62, 60, 67, 70, 66, 68, 384, 64, 69, 356, 73, 72, 71, 74, 75, 353, 355, 390, 711, 1066, 1067]
+  emei: [85, 80, 77, 79, 93, 385, 82, 89, 86, 92, 88, 91, 282, 252, 328, 380, 332, 712, 1061, 1062]
+  cuiyan: [99, 102, 95, 97, 269, 105, 113, 100, 109, 108, 111, 114, 336, 337, 713, 1063, 1064]
+  gaibang: [122, 119, 116, 115, 129, 274, 124, 277, 128, 125, 360, 130, 357, 359, 714, 1073, 1074]
+  tianren: [135, 145, 132, 131, 136, 137, 141, 138, 140, 364, 143, 142, 148, 150, 361, 362, 391, 715, 1075, 1076]
+  wudang: [153, 155, 152, 151, 159, 164, 158, 160, 157, 165, 267, 166, 365, 368, 716, 1078, 1079]
+  kunlun: [169, 179, 167, 168, 392, 171, 174, 178, 172, 393, 173, 175, 181, 176, 90, 182, 275, 630, 372, 375, 394, 717, 1080, 1081]
+  conflicts:
+    - {skill_id: 332, faction: emei, helper_path: tagnewplayer/skillid.lua, helper_value: 333, resolution: factionhead_newer_authority_but_runtime_golden_required}
+    - {skill_id: 1064, faction: cuiyan, helper_path: task/150skilltask/item/lv150skillbook.lua, helper_value: 1065, resolution: factionhead_newer_authority_but runtime_golden_required}
+shared_candidates:
+  skill_ids: [22, 59, 497]
+deferred:
+  reason: Remaining rows include child/missile/NPC/partner/event/special scripts; membership and learnability require reconciled joins, package winner and runtime golden.
+  lifecycle: DEFERRED
+  owner: Gameplay/Content/Reconciler
+  exit_criteria: Every row has one disposition, source package/hash, canonical group/branch and formula/effect/visual/audio case before P0 parity promotion.
+contradiction:
+  skill_id: 836
+  client_script: bin/client/script/skill/special/rankex.lua
+  server_script: bin/Server/script/skill/special/skillstate.lua
+  resolution: Client snapshot governs visual/catalog; server logic remains BLOCKED until authority review.

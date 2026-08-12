@@ -1,0 +1,4 @@
+Key	FileName	ServerPath	ClientPath	Bytes	Sha256	LineCount	SectionCount	DataRowCount	ClientServerByteIdentical	Notes
+weather	weather.ini	Server 6.0/server/home_jxser/server1/settings/weather/weather.ini	Client 6.0/settings/weather/weather.ini	1624	e0b3738b63dd8114847e2a28e01071b20758da3a377a1861a5344f54ffebd8cf	94	8	57	true	PC weather profile INI
+musicfight	musicfightset.ini	Server 6.0/server/home_jxser/server1/settings/music/musicfightset.ini	Client 6.0/settings/music/musicfightset.ini	4339	4415587146328a8ad08d42d8a892034ea9f22e58763e1c2f7db66945afe6d888	322	16	255	true	PC fight-stage music INI
+musicset	musicset.txt	Server 6.0/server/home_jxser/server1/settings/music/musicset.txt	Client 6.0/settings/music/musicset.txt	9564	d0553e1d4ed5cff94b4e7f17fb0699e96499d4ab8274ce2c1e333521f5e6d0b9	250	0	249	true	PC map background music TSV

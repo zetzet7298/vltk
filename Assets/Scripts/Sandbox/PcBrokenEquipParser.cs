@@ -36,7 +36,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "brokenequip.txt");
             if (!File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             int nextId = 1;
             foreach (var raw in lines)
             {

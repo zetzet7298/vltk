@@ -27,6 +27,7 @@ namespace VLTK.Sandbox
         public const int PotentialPointsPerLevel = 5;
         public const int SkillPointsPerLevel = 1;
 
+        private readonly IPlayerLevelHost _host;
         private int _level = 1;
         private long _currentExp;
         private int _potentialPoints;
@@ -49,9 +50,14 @@ namespace VLTK.Sandbox
         /// <summary>Event kích hoạt khi EXP thay đổi.</summary>
         public event Action<long, long> OnExpChanged; // (current, required)
 
-        public PlayerLevelService(int initialLevel = 1)
+        public PlayerLevelService(int initialLevel = 1) : this(initialLevel, null) { }
+
+        public PlayerLevelService(int initialLevel, IPlayerLevelHost host)
         {
+            _host = host;
             _level = Mathf.Clamp(initialLevel, 1, MaxPlayerLevel);
+            // PC semantics: char starts with 0 potential/skill points; gains them via AddExp/GrantSkillPoint.
+            // (Backwards-compat with tests + PlayerProgressionTests that expect 0 baseline.)
             // Reset basic attributes according to level
             Strength = 20 + (_level - 1) * 2;
             Dexterity = 20 + (_level - 1) * 1;
@@ -91,18 +97,28 @@ namespace VLTK.Sandbox
                 req = PlayerStatService.GetExpRequired(_level);
             }
 
+            if (_host != null) _host.OnExpChanged(_currentExp, req);
             OnExpChanged?.Invoke(_currentExp, req);
 
             if (leveledUp > 0)
             {
+                int potentialGranted = leveledUp * PotentialPointsPerLevel;
+                int skillGranted = leveledUp * SkillPointsPerLevel;
                 SubsystemLog.Info("LevelService", $"Level up: {oldLevel} → {_level}");
                 OnLevelUp?.Invoke(new LevelUpEvent
                 {
                     oldLevel = oldLevel,
                     newLevel = _level,
-                    potentialPointsGranted = leveledUp * PotentialPointsPerLevel,
-                    skillPointsGranted = leveledUp * SkillPointsPerLevel
+                    potentialPointsGranted = potentialGranted,
+                    skillPointsGranted = skillGranted
                 });
+                if (_host != null)
+                {
+                    _host.OnLevelUp(oldLevel, _level, potentialGranted, skillGranted);
+                    _host.TryPlayLevelUpSfx();
+                    _host.LogLevelUpNotice(oldLevel, _level);
+                    _host.GrantLevelUpReward(oldLevel, _level);
+                }
             }
         }
 

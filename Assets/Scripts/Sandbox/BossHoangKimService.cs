@@ -20,6 +20,7 @@ namespace VLTK.Sandbox
         private PcBossHoangKimRegistry _registry;
         private readonly List<BossHoangKimSpawn> _legacyBosses = new();
         private readonly Dictionary<int, float> _respawnTimers = new();
+        private IBossHoangKimHost _host;
 
         public event Action OnBossLoaded;
         public event Action<BossHoangKimSpawn> OnBossSpawned;
@@ -35,15 +36,34 @@ namespace VLTK.Sandbox
             AttachRegistry(registry);
         }
 
+        public void AttachHost(IBossHoangKimHost host) { _host = host; }
+
         public void AttachRegistry(PcBossHoangKimRegistry registry)
         {
             _registry = registry ?? new PcBossHoangKimRegistry();
             SubsystemLog.Info(LogTag, $"Đã tải {_registry.Count} boss Hoàng Kim");
             OnBossLoaded?.Invoke();
+            if (_host != null)
+            {
+                _host.OnBossRegistryAttached(_registry.Count);
+                _host.LogBossEvent("load", 0, $"Loaded {_registry.Count} boss entries");
+                _host.PlayBossSFX("load", 0);
+                _host.SaveBossState(0, DateTime.MinValue, 0);
+            }
         }
 
         public PcBossHoangKimEntry GetBoss(int id)
-            => _registry != null ? _registry.Get(id) : null;
+        {
+            var b = _registry != null ? _registry.Get(id) : null;
+            if (_host != null)
+            {
+                if (b != null)
+                    _host.OnBossResolved(b.bossId, b.mapId, b.respawnSec, b.level);
+                else
+                    _host.LogBossEvent("query_missing", id, "Boss not found in registry");
+            }
+            return b;
+        }
 
         public IReadOnlyList<PcBossHoangKimEntry> GetByMap(int mapId)
             => _registry != null ? _registry.GetByMap(mapId) : Array.Empty<PcBossHoangKimEntry>();
@@ -61,6 +81,14 @@ namespace VLTK.Sandbox
             _respawnTimers[bossTemplateId] = boss.respawnMinutes * 60f;
             OnBossKilled?.Invoke(boss, killerActorId);
             SubsystemLog.Info(LogTag, $"Boss {boss.nameVi} bị giết bởi actor {killerActorId}. Respawn sau {boss.respawnMinutes} phút.");
+            if (_host != null)
+            {
+                _host.OnBossKilled(boss.bossTemplateId, killerActorId, boss.respawnMinutes);
+                _host.LogBossEvent("kill", boss.bossTemplateId, $"Boss {boss.nameVi} bị giết bởi actor {killerActorId}");
+                _host.PlayBossSFX("kill", boss.bossTemplateId);
+                _host.ShowBossUI(boss.bossTemplateId, boss.nameVi, boss.mapId, 0);
+                _host.SaveBossState(boss.bossTemplateId, DateTime.UtcNow, boss.respawnMinutes * 60);
+            }
         }
 
         public void Tick(float deltaTime)
@@ -69,6 +97,8 @@ namespace VLTK.Sandbox
             foreach (var id in keys)
             {
                 _respawnTimers[id] -= deltaTime;
+                if (_host != null)
+                    _host.OnBossRespawnTicked(id, Mathf.Max(0, (int)_respawnTimers[id]));
                 if (_respawnTimers[id] <= 0)
                 {
                     _respawnTimers.Remove(id);
@@ -77,6 +107,14 @@ namespace VLTK.Sandbox
                     {
                         OnBossSpawned?.Invoke(boss);
                         SubsystemLog.Info(LogTag, $"Boss {boss.nameVi} đã hồi sinh!");
+                        if (_host != null)
+                        {
+                            _host.OnBossRespawned(boss.bossTemplateId, boss.mapId);
+                            _host.OnBossSpawned(boss.bossTemplateId, boss.mapId, (int)boss.spawnX, (int)boss.spawnY, boss.level);
+                            _host.LogBossEvent("respawn", boss.bossTemplateId, $"Boss {boss.nameVi} đã hồi sinh");
+                            _host.PlayBossSFX("respawn", boss.bossTemplateId);
+                            _host.ShowBossUI(boss.bossTemplateId, boss.nameVi, boss.mapId, 100);
+                        }
                     }
                 }
             }
@@ -98,7 +136,11 @@ namespace VLTK.Sandbox
             DateTime now,
             IReadOnlyDictionary<int, DateTime> lastDeathUtc = null)
         {
-            if (_registry == null) return Array.Empty<PcBossHoangKimEntry>();
+            if (_registry == null)
+            {
+                if (_host != null) _host.OnActiveBossesQueried(0, now);
+                return Array.Empty<PcBossHoangKimEntry>();
+            }
             var list = new List<PcBossHoangKimEntry>();
             foreach (var b in _registry.All)
             {
@@ -108,6 +150,7 @@ namespace VLTK.Sandbox
                     continue; // Chưa hồi sinh
                 list.Add(b);
             }
+            if (_host != null) _host.OnActiveBossesQueried(list.Count, now);
             return list;
         }
 

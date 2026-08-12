@@ -58,6 +58,11 @@ namespace VLTK.Sandbox
 
     public static class PcTaskDailyParser
     {
+        private static IPcTaskDailyHost _host;
+
+        /// <summary>Set/clear host để dispatch side-effects (UI, SFX, log, save).</summary>
+        public static void AttachHost(IPcTaskDailyHost host) { _host = host; }
+
         private static int TryInt(string s)
         {
             if (string.IsNullOrWhiteSpace(s)) return 0;
@@ -74,8 +79,19 @@ namespace VLTK.Sandbox
 
         public static PcTaskDailyRegistry BuildRegistry(string absoluteDir)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             var reg = new PcTaskDailyRegistry();
-            if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
+            if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir))
+            {
+                _host?.OnParseFailed(absoluteDir ?? "<null>", string.IsNullOrEmpty(absoluteDir) ? "empty dir" : "dir not found");
+                _host?.OnRegistryBuilt(0, 0, 0, 0, sw.ElapsedMilliseconds);
+                return reg;
+            }
+
+            int gBefore = reg.GetByType("gather").Count;
+            int kBefore = reg.GetByType("kill").Count;
+            int tBefore = reg.GetByType("talk").Count;
+            int pBefore = reg.GetByType("position").Count;
 
             // gather.txt: TaskId  TaskName  MapId  MapName  GatherName  G  D  P  GatherCount
             ParseGather(reg, Path.Combine(absoluteDir, "gather.txt"));
@@ -88,15 +104,34 @@ namespace VLTK.Sandbox
             ParsePosition(reg, Path.Combine(absoluteDir, "gather_pos.txt"));
             ParsePosition(reg, Path.Combine(absoluteDir, "talk_pos.txt"));
 
+            sw.Stop();
             if (reg.Count == 0)
                 SubsystemLog.Warn("TaskDaily", $"PcTaskDaily registry rỗng ({absoluteDir})");
+            _host?.OnRegistryBuilt(
+                reg.GetByType("gather").Count - gBefore,
+                reg.GetByType("kill").Count - kBefore,
+                reg.GetByType("talk").Count - tBefore,
+                reg.GetByType("position").Count - pBefore,
+                sw.ElapsedMilliseconds);
+            _host?.ShowDailyQuestUI(reg.Count);
+            _host?.SaveDailyQuestLog(
+                reg.GetByType("gather").Count,
+                reg.GetByType("kill").Count,
+                reg.GetByType("talk").Count,
+                reg.GetByType("position").Count);
             return reg;
         }
 
         private static void ParseGather(PcTaskDailyRegistry reg, string path)
         {
-            if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            if (!File.Exists(path)) {
+                _host?.OnParseFailed(System.IO.Path.GetFileName(path), "file not found");
+                return;
+            }
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            int before = reg.GetByType("gather").Count;
+            _host?.OnParseStart(System.IO.Path.GetFileName(path));
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -121,12 +156,20 @@ namespace VLTK.Sandbox
                     Count = TryInt(cols[8])
                 });
             }
+            sw.Stop();
+            _host?.OnParseComplete(System.IO.Path.GetFileName(path), reg.GetByType("gather").Count - before, sw.ElapsedMilliseconds);
         }
 
         private static void ParseKill(PcTaskDailyRegistry reg, string path)
         {
-            if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            if (!File.Exists(path)) {
+                _host?.OnParseFailed(System.IO.Path.GetFileName(path), "file not found");
+                return;
+            }
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            int before = reg.GetByType("kill").Count;
+            _host?.OnParseStart(System.IO.Path.GetFileName(path));
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -148,12 +191,20 @@ namespace VLTK.Sandbox
                     Count = TryInt(cols[5])
                 });
             }
+            sw.Stop();
+            _host?.OnParseComplete(System.IO.Path.GetFileName(path), reg.GetByType("kill").Count - before, sw.ElapsedMilliseconds);
         }
 
         private static void ParseTalk(PcTaskDailyRegistry reg, string path)
         {
-            if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            if (!File.Exists(path)) {
+                _host?.OnParseFailed(System.IO.Path.GetFileName(path), "file not found");
+                return;
+            }
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            int before = reg.GetByType("talk").Count;
+            _host?.OnParseStart(System.IO.Path.GetFileName(path));
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -174,12 +225,20 @@ namespace VLTK.Sandbox
                     NpcGender = TryInt(cols[4])
                 });
             }
+            sw.Stop();
+            _host?.OnParseComplete(System.IO.Path.GetFileName(path), reg.GetByType("talk").Count - before, sw.ElapsedMilliseconds);
         }
 
         private static void ParsePosition(PcTaskDailyRegistry reg, string path)
         {
-            if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            if (!File.Exists(path)) {
+                _host?.OnParseFailed(System.IO.Path.GetFileName(path), "file not found");
+                return;
+            }
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            int before = reg.GetByType("position").Count;
+            _host?.OnParseStart(System.IO.Path.GetFileName(path));
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -206,6 +265,8 @@ namespace VLTK.Sandbox
                     });
                 }
             }
+            sw.Stop();
+            _host?.OnParseComplete(System.IO.Path.GetFileName(path), reg.GetByType("position").Count - before, sw.ElapsedMilliseconds);
         }
     }
 }

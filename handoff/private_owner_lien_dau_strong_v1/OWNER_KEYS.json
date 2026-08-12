@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "product": "LienDauMaps.StrongPack",
+  "version": "1.0.0",
+  "createdAtUtc": "2026-06-11T12:04:47Z",
+  "payloadSha256": "c093ab03b823b5f0e39aacc37d8232d4dbd7acd6b0b0c8cee6604604e65e2d90",
+  "aes256gcmKeyBase64": "cVni6lUoexQ60GsuXfTWd8o5LKkb4irNiSgGmYrWN4E=",
+  "nonceBase64": "QHHs7cvIFlRXp4Id",
+  "aadSha256": "6c1ba546ffc9b8589e86a5ac77a3a425df14ec3b91437ff0324192d9ac84a4a6",
+  "warning": "Keep private. Do not send this file to customer unless licensing/payment complete. Key exposure allows decrypting raw PC-derived map assets."
+}

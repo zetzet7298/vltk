@@ -67,11 +67,14 @@ SKILLS={
 		skill_cost_v={{{1,25},{20,25}}}
 	},
 	huabu_liushou={ --»¬²»ÁôÊÖ
-		fastwalkrun_p={{{1,9},{20,66}},{{1,18*120},{20,18*180}}},
+		--fastwalkrun_p={{{1,9},{20,66}},{{1,18*120},{20,18*180}}},
+		fastwalkrun_p={{{1,5},{20,33}},{{1,18*120},{20,18*180}}},--½µµÍ¼ÓÅÜËÙÐ§¹û
 		skill_cost_v={{{1,24},{20,50}}}
 	},
 	dagou_zhen={ --´ò¹·Õó
-		addphysicsdamage_p={{{1,10},{20,175}},{{1,-1},{30,-1}},{{1,2},{2,2}}},
+		addphysicsdamage_p={{{1,53},{20,348},{21,369}},{{1,-1},{30,-1}},{{1,2},{2,2}}},
+		lifemax_yan_p={{{1,1},{50,50},{51,50}},{{1,-1},{30,-1}},{{1,2},{2,2}}},
+
 		--skill_cost_v={{{1,24},{20,50}}}
 	},
 	xianglong_zhang={ --½µÁúÕÆ
@@ -99,12 +102,18 @@ SKILLS={
 		skill_cost_v={{{1,28},{20,48}}}
 	},
 	zuidie_kuangwu={ --×íµú¿ñÎè
-		allres_p={{{1,1},{30,30}},{{1,18*120},{30,18*180}}},
+		allres_yan_p={{{1,1},{30,30*0.5}},{{1,18*120},{30,18*180}}},
 		addfiremagic_v={{{1,10},{30,215}},{{1,18*120},{30,18*180}}},
 		addfiredamage_v={{{1,10},{30,175}},{{1,18*120},{30,18*180}}},
 		deadlystrikeenhance_p={{{1,5},{20,30,Conic}},{{1,18*120},{30,18*180}}},
-		lifemax_yan_p={{{1,21},{35,20},{36,20}},{{1,-1},{30,-1}}},
-		skill_cost_v={{{1,50},{20,100}}}
+		--lifemax_yan_p={{{1,21},{35,20},{36,20}},{{1,-1},{30,-1}}},
+		lifemax_yan_p={{{1,21},{35,60},{36,60}},{{1,18*120},{30,18*180}}},--¼ÓÇ¿ÉúÃü×î´óÖµ£¨Ñô£©
+		me2metaldamage_p={{{1,1},{30,20},{31,20}},{{1,18*120},{30,18*180}}},--¶Ô½ðÏµÉËº¦Ôö¼Ó£º15%
+		metal2medamage_p={{{1,1},{30,20},{31,20}},{{1,18*120},{30,18*180}}},--¼õÉÙÀ´×Ô½ðÏµµÄÉËº¦£º15%
+		returnres_p={{{1,1},{39,20},{40,20}},{{1,18*120},{30,18*180}}},--Ôö¼Ó¶Ô·´µ¯ÉËº¦µÄ¿¹ÐÔ£¬Ã¿¼¶1%£¬ÉÏÏÞ40%
+		skill_cost_v={{{1,50},{20,100}}},
+		anti_do_hurt_p={{{1,0},{29,0},{30,10},{40,20},{41,20}},{{1,18*120},{30,18*180}}},
+		physicsres_yan_p={{{1,1},{30,30},{31,30}},{{1,18*120},{30,18*180}}},
 	},
 	kanglong_youhui={ --¿ºÁúÓÐ»Ú//Î´Íê£¬´ýÐø
 		seriesdamage_p={{{1,10},{20,50},{21,52}}},
@@ -132,12 +141,17 @@ SKILLS={
 		skill_cost_v={{{1,10},{20,50}}}
 	},
 	huaxian_weiyi={ --»¯ÏÕÎªÒÄ
-		meleedamagereturn_p={{{1,4},{20,46}},{{1,-1},{20,-1}}},
+		meleedamagereturn_p={{{1,1},{30,55},{31,55}},{{1,-1},{20,-1}}},
 		adddefense_v={{{1,48},{20,800}},{{1,-1},{20,-1}}},
+		anti_block_rate={{{1,1},{30,30},{31,30}},{{1,-1},{20,-1}}},
+		--anti_block_rate={{{1,1},{30,10}},{{1,-1},{2,-1}}},
 	},
 	xiaoyao_gong={ --åÐÒ£¹¦
 		attackspeed_v={{{1,6},{20,65},{25,90},{31,108},{32,118},{33,121}},{{1,-1},{20,-1}}},
 		castspeed_v={{{1,6},{20,65},{25,90},{31,108},{32,118},{33,121}},{{1,-1},{2,-1}}},
+		--Ôö¼ÓÍâ¹¦ÏµÆÕ¹¥ÉËº¦ºÍ¹¥»÷»áÐÄÒ»»÷ÂÊ
+		addphysicsdamage_p={{{1,10},{20,120}},{{1,-1},{2,-1}},{{1,2},{2,2}}},
+		deadlystrikeenhance_p={{{1,1},{20,20,Conic}},{{1,18*120},{20,18*180}}},
 	},
 	feilong_zaitian={ --·ÉÁúÔÚÌì
 		seriesdamage_p={{{1,20},{15,20},{20,60},{21,62}}},
@@ -195,14 +209,15 @@ SKILLS={
 	zhanggaibang150={ --ÕÆØ¤°ï150
 		seriesdamage_p={{{1,40},{15,40},{20,80},{21,82}}},
 		firedamage_v={
-			[1]={{1,24},{15,720},{20,1800},{23,3096},{26,3744}},
-			[3]={{1,24},{15,720},{20,1800},{23,3096},{26,3744}}
+			[1]={{1,275},{50,13750},{51,13750}},
+			[3]={{1,275},{50,13750},{51,13750}}
 		},
 		missle_speed_v={{{1,24},{20,40},{21,40}}},
 		skill_misslenum_v={{{1,1},{11,1},{12,2},{15,2},{16,2},{20,3},{21,3}}},
 		skill_attackradius={{{1,448},{20,512},{21,512}}},
 		skill_cost_v={{{1,12},{20,78},{23,98}}},
 		skill_eventskilllevel={{{1,1},{20,20}}},
+		fatallystrike_p={{{1,1},{30,30},{31,30}}},
 --		skill_flyevent={
 --			[1]={{1,0},{10,0},{10,1},{20,1}},
 --			[2]={{1,4},{2,4}},
@@ -232,7 +247,13 @@ SKILLS={
 												{17,17100},
 												{18,19000},
 												{19,21400},
-												{20,24000},
+												{20,90000},
+												{21,120000},
+												{22,150000},
+												{23,200000},
+												{24,250000},
+												{25,300000},
+												{26,390000},
 												}},	
 	},
 --	qianlong_zaiyuan={ --Ç±ÁúÔÚÔ¨
@@ -336,20 +357,26 @@ SKILLS={
 												{17,17100},
 												{18,19000},
 												{19,21400},
-												{20,24000},
+												{20,90000},
+												{21,120000},
+												{22,150000},
+												{23,200000},
+												{24,250000},
+												{25,300000},
+												{26,390000},
 												}},	
 	},
 	gaibang120={ --Ø¤°ï120¼¶¼¼ÄÜ
-		autoattackskill={{{1,720*256 + 1},{20,720*256 + 20},{21,720*256 + 21}},{{1,-1},{20,-1}},{{1,12*18*256 + 1},{15,12*18*256 + 5},{20,12*18*256 + 6},{21,12*18*256 + 6}}},
+		autoattackskill={{{1,720*256 + 1},{20,720*256 + 20},{21,720*256 + 21}},{{1,-1},{20,-1}},{{1,12*18*256 + 1},{20,12*18*256 + 10},{21,12*18*256 + 10}}},
 		skill_desc=
 			function(level)
 				return "X¸c suÊt <color=orange>"..floor(Link(level,SKILLS.gaibang120.autoattackskill[3]) - 12*18*256).."%<color> g©y ho¹i th­¬ng \n"..
-				"Ho¹i th­¬ng lµm gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.physicsres_p[1]))..
-				"%<color> PTVL, gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.fireres_p[1]))..
+				"S¸t th­¬ng löa ®èt khiÕn Phßng Thñ VËt Lý (D­¬ng) gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.physicsres_yan_p[1]))..
+				"%<color>, Háa Phßng (D­¬ng) gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.fireres_yan_p[1]))..
 				"%<color>,\n ®ång thêi lµm gi¶m gi¸ trÞ phßng thñ vËt lý lín nhÊt <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.physicsresmax_p[1]))..
 				"%<color>,gi¶m gi¸ trÞ phßng háa lín nhÊt <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.fireresmax_p[1]))..
-				"%<color> kh¸ng háa \n ®ång thêi ph¶n ®ßn khi bÞ tÊn c«ng tÇm xa gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.rangedamagereturn_p[1]))..
-				"%<color> tèc ®é di chuyÓn trong <color=orange>"..floor(Link(level,SKILLS.gaibang120zuzhou.physicsres_p[2]) / 18).." gi©y<color>\n"..
+				"%<color>, gi¶m tèc ®é di chuyÓn <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.fastwalkrun_p[1])).."%<color> kh¸ng háa \n ®ång thêi ph¶n ®ßn khi bÞ tÊn c«ng tÇm xa gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.rangedamagereturn_p[1]))..
+				"%<color> tèc ®é di chuyÓn trong <color=orange>"..floor(Link(level,SKILLS.gaibang120zuzhou.physicsres_yan_p[2]) / 18).." gi©y<color>\n"..
 				"Trong vßng <color=orange>"..floor((Link(level,SKILLS.gaibang120.autoattackskill[3]) / (18*256))).." gi©y<color> sau míi cã thÓ thi triÓn tiÕp"
 			end,
 		skill_skillexp_v={{	{1,17851239},
@@ -375,12 +402,13 @@ SKILLS={
 							}},	
 	},
 	gaibang120zuzhou={ --Ø¤°ï120¼¶¼¼ÄÜ×çÖä
-		physicsres_p={{{1,-2},{15,-8},{20,-10},{21,-10}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
-		fireres_p={{{1,-3},{15,-12},{20,-15},{21,-15}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
-		physicsresmax_p={{{1,-1},{15,-1},{20,-4},{21,-4}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
-		fireresmax_p={{{1,-1},{15,-2},{20,-6},{21,-6}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
+		physicsres_yan_p={{{1,-1},{25,-20},{26,-20}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
+		fireres_yan_p={{{1,-1},{25,-20},{26,-20}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
+		physicsresmax_p={{{1,-1},{20,-10},{21,-10}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
+		fireresmax_p={{{1,-1},{20,-15},{21,-15}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
 		--meleedamagereturn_p={{{1,-4},{15,-16},{20,-20},{21,-20}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
 		rangedamagereturn_p={{{1,-4},{15,-25},{20,-30},{21,-30}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
+		fastwalkrun_p={{{1,-9},{23,-50}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},--Ôö¼Ó½µÅÜËÙ
 	},
 }
 -----------------------------------------------

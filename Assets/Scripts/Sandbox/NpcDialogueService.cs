@@ -33,16 +33,30 @@ namespace VLTK.Sandbox
     /// </summary>
     public class NpcDialogueService
     {
-        private readonly TaskFlagService _taskService;
+        private TaskFlagService _taskService; // mutable for late-attach
         private readonly Dictionary<int, List<DialogueNode>> _npcDialogues = new();
+        private INpcDialogueHost _host;
+        private int _currentNpcTemplateId = 0;
+        private int _currentPlayerLevel = 0;
 
         public event Action<DialogueNode> OnDialogueStarted;
         public event Action OnDialogueEnded;
+        public event Action<int, int> OnNpcTemplateUsed; // (npcTemplateId, playerLevel)
 
-        public NpcDialogueService(TaskFlagService taskService)
+        public NpcDialogueService() : this((TaskFlagService)null, null) { }
+        public NpcDialogueService(TaskFlagService taskService) : this(taskService, null) { }
+        public NpcDialogueService(TaskFlagService taskService, INpcDialogueHost host)
         {
-            _taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
+            _taskService = taskService; // null allowed; quest options simply won't filter
+            _host = host;
         }
+
+        public void AttachTaskService(TaskFlagService taskService) { _taskService = taskService; }
+
+        public void AttachHost(INpcDialogueHost host) { _host = host; }
+
+        public int CurrentNpcTemplateId => _currentNpcTemplateId;
+        public int CurrentPlayerLevel => _currentPlayerLevel;
 
         /// <summary>
         /// Tạo hội thoại mặc định cho NPC dựa trên templateId.
@@ -74,6 +88,17 @@ namespace VLTK.Sandbox
             }
 
             OnDialogueStarted?.Invoke(filteredNode);
+            _currentNpcTemplateId = npcTemplateId;
+            _currentPlayerLevel = playerLevel;
+            OnNpcTemplateUsed?.Invoke(npcTemplateId, playerLevel);
+            if (_host != null)
+            {
+                _host.OnDialogueOpened(npcTemplateId, playerLevel, filteredNode.npcTextVi);
+                _host.OnDialogueOptions(npcTemplateId, playerLevel, filteredNode.options.Count, filteredNode.npcTextVi);
+                _host.PlayNpcGreeting(npcTemplateId, playerLevel);
+                _host.PlayDialogueSFX(npcTemplateId, playerLevel);
+                _host.LogDialogueEvent(npcTemplateId, playerLevel, $"Bắt đầu hội thoại NPC #{npcTemplateId} (cấp {playerLevel})");
+            }
             return filteredNode;
         }
 
@@ -83,6 +108,20 @@ namespace VLTK.Sandbox
         public DialogueNode SelectOption(int npcTemplateId, int playerLevel, DialogueOption option)
         {
             option.selectAction?.Invoke();
+            if (_host != null)
+            {
+                // Dispatch quest option nếu option.textVi có chứa "nhận" / "trả" (PC quest_event)
+                if (option.textVi != null && _taskService != null)
+                {
+                    if (option.textVi.Contains("nhận", StringComparison.OrdinalIgnoreCase) ||
+                        option.textVi.Contains("trả", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Dispatch với quest id mặc định 1000 (Dã Tẩu nhiệm vụ)
+                        _host.DispatchQuestOption(npcTemplateId, playerLevel, -1, 1000);
+                    }
+                }
+                _host.PlayDialogueSFX(npcTemplateId, playerLevel);
+            }
 
             if (option.targetNodeId <= 0)
             {
@@ -106,6 +145,11 @@ namespace VLTK.Sandbox
                             filteredNode.options.Add(opt);
                     }
                     OnDialogueStarted?.Invoke(filteredNode);
+                    if (_host != null)
+                    {
+                        _host.OnDialogueOpened(npcTemplateId, playerLevel, filteredNode.npcTextVi);
+                        _host.OnDialogueOptions(npcTemplateId, playerLevel, filteredNode.options.Count, filteredNode.npcTextVi);
+                    }
                     return filteredNode;
                 }
             }
@@ -116,7 +160,11 @@ namespace VLTK.Sandbox
 
         public void CloseDialogue()
         {
+            int closingNpc = _currentNpcTemplateId;
+            _currentNpcTemplateId = 0;
+            _currentPlayerLevel = 0;
             OnDialogueEnded?.Invoke();
+            _host?.OnDialogueClosed(closingNpc);
         }
 
         // ── Dialogue Builders ──────────────────────────────────────────────

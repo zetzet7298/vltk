@@ -1,0 +1,19 @@
+{
+    "name": "VLTK.SkillPort",
+    "rootNamespace": "VLTK.SkillPort",
+    "references": [
+        "VLTK.Generated.GameV1",
+        "VLTK.Generated.ContentV1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

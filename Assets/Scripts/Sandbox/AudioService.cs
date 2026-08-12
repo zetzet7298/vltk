@@ -187,6 +187,30 @@ namespace VLTK.Sandbox
         {
             PlaySFX($"ui_{action}");
         }
+        /// <summary>
+        /// Play a skill cast sound from a PC source path (e.g. "\sound\skill\sound_k001.wav").
+        /// Resolves to StreamingAssets/sound/skill/ via existing LoadClipAsync.
+        /// </summary>
+        public void PlaySkillCast(string pcSoundPath, float volumeScale = 1f)
+        {
+            if (string.IsNullOrWhiteSpace(pcSoundPath)) return;
+            _ = PlaySkillCastAsync(pcSoundPath, volumeScale);
+        }
+
+        public async Task PlaySkillCastAsync(string pcSoundPath, float volumeScale = 1f)
+        {
+            if (!SfxEnabled) return;
+            // Convert "\sound\skill\sound_k001.wav" → "sound/skill/sound_k001.wav" (relative to StreamingAssets)
+            var relative = pcSoundPath.Replace('\\', '/').TrimStart('/');
+            var clip = await LoadClipAsync(relative);
+            if (clip == null || !SfxEnabled) return;
+
+            var src = GetNextSfxSource();
+            if (src == null) return;
+            src.volume = GetCategoryVolume(AudioCategory.Combat) * volumeScale;
+            src.loop = false;
+            src.PlayOneShot(clip, src.volume);
+        }
 
         // ── Volume Control ──────────────────────────────────────────────
 

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-06-07T18:41:23Z",
+  "phase": "phase1_visual_region_c_spr",
+  "scope": "visual maps only; NPC/trap/mission logic excluded",
+  "sourceRoot": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem",
+  "sourceMaplist": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini",
+  "pakDir": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data",
+  "isPartialRun": false,
+  "mapRowsTotal": 1005,
+  "mapRowsProcessed": 1005,
+  "uniqueVisualPathsTotal": 332,
+  "uniqueVisualPathsProcessed": 332,
+  "duplicateVisualPathGroups": 66,
+  "duplicateAliasRowsTotal": 673,
+  "discoveredGeometries": 332,
+  "failedGeometries": 0,
+  "coveredAliases": 1005,
+  "extractedGeometries": 332,
+  "extractedRegions": 95246,
+  "stagedSprites": 2785,
+  "failedSprites": 182,
+  "failedGeometryKeys": [],
+  "stagedSpriteReferences": 19304,
+  "failedSpriteUniquePaths": [
+    "\\system\\spr\\RegionTileDefault.spr",
+    "\\system\\spr\\regiontiledefault.spr",
+    "\\游戏资源\\美术图素\\d道路\\d大理府\\d道路\\s石板路_03.spr",
+    "\\游戏资源\\美术图素\\d道路\\d大理府\\d道路\\s石板路_04.spr",
+    "\\游戏资源\\美术图素\\沙漠区\\中原崖壁雕刻.spr",
+    "\\游戏资源\\美术图素\\野外\\河提\\倒影接边.spr"
+  ]
+}

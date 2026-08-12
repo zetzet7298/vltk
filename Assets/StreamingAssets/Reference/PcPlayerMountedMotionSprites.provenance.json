@@ -1,0 +1,4699 @@
+{
+  "schema_version": 1,
+  "purpose": "Exact package.ini winners for current Male/Female BuildParts mounted locomotion defaults.",
+  "catalog_defaults": {
+    "rider_variant": 19,
+    "horse_variant": 1,
+    "suffixes": [
+      "RD01",
+      "HW01",
+      "HR01"
+    ],
+    "weapons": [
+      "EmptyHand",
+      "ShortWeapon",
+      "LongWeapon",
+      "DualWeapon",
+      "HiddenWeapon"
+    ]
+  },
+  "enumeration": "Current BuildMountedParts slots for both sexes, five weapon families, Ride/RideWalk/RideMove; deduplicated by logical path.",
+  "winner_rule": "Highest readable package.ini index containing exact UID wins. No loose/historical candidate fallback.",
+  "package_resolution": {
+    "declared_package_count": 31,
+    "readable_package_count": 27,
+    "unavailable_declared_packages": [
+      {
+        "package_index": 0,
+        "package_name": "vltkcache.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      },
+      {
+        "package_index": 26,
+        "package_name": "settings.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      },
+      {
+        "package_index": 27,
+        "package_name": "ui.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      },
+      {
+        "package_index": 28,
+        "package_name": "script.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      }
+    ]
+  },
+  "items_total": 84,
+  "staged_count": 78,
+  "missing_count": 6,
+  "created_count": 41,
+  "replaced_count": 24,
+  "already_exact_count": 13,
+  "required_missing_count": 3,
+  "optional_missing_count": 3,
+  "items": [
+    {
+      "logical_path": "spr\\npcres\\man\\MA_BD_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_BD_019_HR01.spr",
+      "uid": "420a1dcd",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f42445f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "BD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/420a1dcd.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "17b710998f3f50fa3e21d06a95450ce34216177193f4d1ef5553d1939bdcdbdd",
+        "bytes": 125644,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 343566824,
+          "decompressed_size": 125644,
+          "flag": "0x010147dd"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_BD_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_BD_019_HW01.spr",
+      "uid": "e2280791",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f42445f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "BD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/e2280791.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "e04af9eb5174151a146f4958ccb8c26ba0df991329e105c362018e51d8729456",
+        "bytes": 150891,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 343650757,
+          "decompressed_size": 150891,
+          "flag": "0x01016b60"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_BD_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_BD_019_RD01.spr",
+      "uid": "58468a8d",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f42445f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "BD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/58468a8d.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "246ab2f45d3f87af98555af5d7ea8b90b32659037d67e948c3d44407ad253e4e",
+        "bytes": 178176,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 344931287,
+          "decompressed_size": 178176,
+          "flag": "0x0100cfa8"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HB_001_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HB_001_HR01.spr",
+      "uid": "4d02b185",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48425f3030315f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "all",
+          "part": "HB",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "all",
+          "part": "HB",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/4d02b185.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "3b9ad126cf57bdede235d28c1400928c356bf4dbb49383631a2ccb80a1e96e89",
+        "bytes": 88693,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 357698620,
+          "decompressed_size": 88693,
+          "flag": "0x0100e60f"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HB_001_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HB_001_HW01.spr",
+      "uid": "ed20b849",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48425f3030315f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "all",
+          "part": "HB",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "all",
+          "part": "HB",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/ed20b849.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "b8366e9e8924795a18109ff12d42ff7a059ccca83484f69f90a912133ed60d6f",
+        "bytes": 105265,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 357757515,
+          "decompressed_size": 105265,
+          "flag": "0x0100f1de"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HB_001_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HB_001_RD01.spr",
+      "uid": "4b581b6b",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48425f3030315f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "all",
+          "part": "HB",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "all",
+          "part": "HB",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/4b581b6b.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "996f378a199abbcb8fd43491e60930bab82c4f34988f5abf8c0ae9c5006f0a6f",
+        "bytes": 122878,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 357819433,
+          "decompressed_size": 122878,
+          "flag": "0x01008dae"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HD_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HD_019_HR01.spr",
+      "uid": "d6847504",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48445f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "HD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/d6847504.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "282d8071ddfea6def6194cb1270ef3f1349880486289e6e0453780c1eada92ad",
+        "bytes": 18101,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 379478981,
+          "decompressed_size": 18101,
+          "flag": "0x01002b24"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HD_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HD_019_HW01.spr",
+      "uid": "f6ba7e8d",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48445f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "HD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/f6ba7e8d.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "789a52335bbd4a5c1d3d437be2d940bb6464681b369ed86037323112405ac85a",
+        "bytes": 21544,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 379490025,
+          "decompressed_size": 21544,
+          "flag": "0x0100320d"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HD_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HD_019_RD01.spr",
+      "uid": "acd12d14",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48445f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "HD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/acd12d14.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "3c62a6358b0f440ff0740af54591da810f97062d4f24ddde31d3e4a1118c6b41",
+        "bytes": 24646,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 379645026,
+          "decompressed_size": 24646,
+          "flag": "0x01002a0f"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HH_001_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HH_001_HR01.spr",
+      "uid": "1583d953",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48485f3030315f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "all",
+          "part": "HH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "all",
+          "part": "HH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/1583d953.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "152820bb3128b628e57366c370527a49c0ab6a5c892f318c0e4cde2cc2e880f4",
+        "bytes": 195557,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 382309582,
+          "decompressed_size": 195557,
+          "flag": "0x0102023f"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HH_001_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HH_001_HW01.spr",
+      "uid": "35a1c062",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48485f3030315f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "all",
+          "part": "HH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "all",
+          "part": "HH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/35a1c062.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "27cf06bd08241d651189dc210c1dffa1c5e27b6b531a900d51f8c10cc07a266f",
+        "bytes": 239888,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 382441229,
+          "decompressed_size": 239888,
+          "flag": "0x01023ccf"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HH_001_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HH_001_RD01.spr",
+      "uid": "13d8bee9",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48485f3030315f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "all",
+          "part": "HH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "all",
+          "part": "HH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/13d8bee9.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "ca52ea5c15fa6278fe096c9dc1797ea245660e2fbbe27c7ae441854cbec81e3d",
+        "bytes": 280508,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 382587868,
+          "decompressed_size": 280508,
+          "flag": "0x0101946c"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HR_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HR_019_HR01.spr",
+      "uid": "a20132e0",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48525f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "HR",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/a20132e0.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "88b774d5376edec8d678066237da79c94e91ee6985b2953f2022e4aea032f170",
+        "bytes": 23163,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 397006606,
+          "decompressed_size": 23163,
+          "flag": "0x0100374c"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HR_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HR_019_HW01.spr",
+      "uid": "42273cb4",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48525f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "HR",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/42273cb4.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "f3fb58aac2975ea7bb3b0e004915312e86cfe5e78b5c76260b106b90bfa88b19",
+        "bytes": 29882,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 397020762,
+          "decompressed_size": 29882,
+          "flag": "0x01003e75"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HR_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HR_019_RD01.spr",
+      "uid": "b85e9fd6",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48525f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "HR",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/b85e9fd6.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "95dc1538310fd02ddfdfc2829b6c86036a9eb04989152f231bb04f991b1003c8",
+        "bytes": 34612,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 397224730,
+          "decompressed_size": 34612,
+          "flag": "0x0100442b"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HT_001_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HT_001_HR01.spr",
+      "uid": "cafd983a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48545f3030315f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "all",
+          "part": "HT",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "all",
+          "part": "HT",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/cafd983a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "e63a23be0be580710b1c2e14cbc90356d2ff045cb6f5c55e8558704662451f2b",
+        "bytes": 186796,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 398117231,
+          "decompressed_size": 186796,
+          "flag": "0x0101e229"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HT_001_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HT_001_HW01.spr",
+      "uid": "6a93820e",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48545f3030315f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "all",
+          "part": "HT",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "all",
+          "part": "HT",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/6a93820e.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "c4428d888d0b9cb83e7bc94ee2febca0b4df20c7f979139431c4bf8a65d802bb",
+        "bytes": 231044,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 398240664,
+          "decompressed_size": 231044,
+          "flag": "0x010219d2"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_HT_001_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_HT_001_RD01.spr",
+      "uid": "c0cb704a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f48545f3030315f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "all",
+          "part": "HT",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "all",
+          "part": "HT",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/c0cb704a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "d083a3fbc66b94c5fbbd5520f1c34f949b8b779f043e1ee4ff56a46b0bf7c07e",
+        "bytes": 264673,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 398378346,
+          "decompressed_size": 264673,
+          "flag": "0x010170de"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 8,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LH_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LH_019_HR01.spr",
+      "uid": "4e6aadfc",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c485f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "LH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/4e6aadfc.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "761f2e3da82b570adf00bd6cbbf9e2b5a8222f1d67d23b169415b39566ddff84",
+        "bytes": 27122,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 437844084,
+          "decompressed_size": 27122,
+          "flag": "0x01004cf8"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LH_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LH_019_HW01.spr",
+      "uid": "ee0957c0",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c485f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "LH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/ee0957c0.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "6d5b6c7d628662aebc0c21dd804e7c2654dd857202b0cca6fc94c7a29b5f21ab",
+        "bytes": 35825,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 437863788,
+          "decompressed_size": 35825,
+          "flag": "0x010059ab"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LH_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LH_019_RD01.spr",
+      "uid": "44a036e2",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c485f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "LH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/44a036e2.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "59059a556264ce0143a910b9e97917a8619a2946862b42f73bb9fe9a4c666cb7",
+        "bytes": 41706,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 438133294,
+          "decompressed_size": 41706,
+          "flag": "0x010059dd"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LW_000_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LW_000_HR01.spr",
+      "uid": "cbecbc2a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c575f3030305f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/cbecbc2a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "528f691e311fdfc538ee8cbf2a2246f2006658c49d67bc2a2bd5eeb7b319a2d7",
+        "bytes": 7928,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 441070899,
+          "decompressed_size": 7928,
+          "flag": "0x010012c9"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LW_000_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LW_000_HW01.spr",
+      "uid": "eb82b263",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c575f3030305f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/eb82b263.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "6819c1329fba91519a154fdd96ec9c8a1628ba7bed87a59f791898285c724106",
+        "bytes": 9580,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 441075708,
+          "decompressed_size": 9580,
+          "flag": "0x010015bd"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LW_000_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LW_000_RD01.spr",
+      "uid": "c63a143a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c575f3030305f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/c63a143a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "e71ff943753a4a4bec8577b937adac3038a5d19de4410e680d6d73f7be034399",
+        "bytes": 11164,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 441117457,
+          "decompressed_size": 11164,
+          "flag": "0x010017b3"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LW_013_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LW_013_HR01.spr",
+      "uid": "85c56627",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c575f3031335f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/85c56627.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "9dfc4c9036d9d73c94e35bfb1fe5d50cc87f77378cd96e47420e7c800ddcf4cf",
+        "bytes": 44568,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 441505659,
+          "decompressed_size": 44568,
+          "flag": "0x01007c8b"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LW_013_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LW_013_HW01.spr",
+      "uid": "25fb60eb",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c575f3031335f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/25fb60eb.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "3c88e11ea6b62144dcfa7d8916340a518c028408190fae8f300fd5310a8ea035",
+        "bytes": 49290,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 441537542,
+          "decompressed_size": 49290,
+          "flag": "0x01008424"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_LW_013_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_LW_013_RD01.spr",
+      "uid": "8012f75d",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f4c575f3031335f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/8012f75d.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "4d6bd754918a5a04c1e0d7d4c91da63be3d23c778bc80e6a7600399d15927a36",
+        "bytes": 57363,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 441658702,
+          "decompressed_size": 57363,
+          "flag": "0x01009156"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RH_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RH_019_HR01.spr",
+      "uid": "60cdb7eb",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52485f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "RH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/60cdb7eb.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "faee7df8691c743d38e67c67586a51bd58515552021f8e35c30131a6083648dc",
+        "bytes": 27801,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 476718764,
+          "decompressed_size": 27801,
+          "flag": "0x01004e12"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RH_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RH_019_HW01.spr",
+      "uid": "80e3a24a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52485f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "RH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/80e3a24a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "464bf775a5beac209e7451ea9f98dc1001c3b597a4289dcf7ee1b6a558b87c78",
+        "bytes": 35598,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 476738750,
+          "decompressed_size": 35598,
+          "flag": "0x01005869"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RH_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RH_019_RD01.spr",
+      "uid": "7f1b0421",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52485f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "RH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/7f1b0421.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "352c5039ad5a2680cbff7b22a3794e5cd85843bddba03f11aa093c0034745981",
+        "bytes": 40798,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 477002180,
+          "decompressed_size": 40798,
+          "flag": "0x010055e1"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_000_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_000_HR01.spr",
+      "uid": "e81db4a2",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3030305f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "RW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/e81db4a2.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "6587caf0471287b3ee6de5b5727debe9d2bc73fd74e9a17450679153e5fed556",
+        "bytes": 8458,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 479921288,
+          "decompressed_size": 8458,
+          "flag": "0x010014d2"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_000_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_000_HW01.spr",
+      "uid": "0833bfb1",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3030305f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "RW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/0833bfb1.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "cce361f31f8c34900b2e4a01b40bd77234ceb2e00cb9ddf234080fb972755946",
+        "bytes": 9882,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 479926618,
+          "decompressed_size": 9882,
+          "flag": "0x01001821"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_000_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_000_RD01.spr",
+      "uid": "e66b036e",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3030305f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "RW",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/e66b036e.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "904a196ba59283cd953807372001ca11eea54c5118e7b4e75e11a81e574e3dcc",
+        "bytes": 11406,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 479960523,
+          "decompressed_size": 11406,
+          "flag": "0x0100198e"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_001_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_001_HR01.spr",
+      "uid": "0918fcd6",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3030315f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/0918fcd6.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "b95a0fb9ff64c6dc781643e6d93905d1a494ec29172c43a8d1b52ff65789b43e",
+        "bytes": 37328,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 480237964,
+          "decompressed_size": 37328,
+          "flag": "0x01005a6a"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_001_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_001_HW01.spr",
+      "uid": "a93ee69a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3030315f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/a93ee69a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "db41b9135aad1eef2747e340951ffc02e3975d6c13bde4517ab826adb95d2ae3",
+        "bytes": 43907,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 480261110,
+          "decompressed_size": 43907,
+          "flag": "0x01006632"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_001_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_001_RD01.spr",
+      "uid": "07564a92",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3030315f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/07564a92.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "dbdd96776ce709aea408ab9f70906762cec592e91e43192be6ab7bf5f6758216",
+        "bytes": 50585,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 480331361,
+          "decompressed_size": 50585,
+          "flag": "0x01006aa4"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_010_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_010_HR01.spr",
+      "uid": "c71baeea",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3031305f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/c71baeea.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "0fa11b340159cddf7847ac6d03f48039d1457a62afa57982027e2f2899695f8b",
+        "bytes": 74180,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 488080982,
+          "decompressed_size": 74180,
+          "flag": "0x0100c456"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_010_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_010_HW01.spr",
+      "uid": "6739a8be",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3031305f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/6739a8be.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "760fecdf139156e67bb101d0697df5257cf6a8f17b2181444bf8145ffcba4be7",
+        "bytes": 81815,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 488131244,
+          "decompressed_size": 81815,
+          "flag": "0x0100da99"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_010_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_010_RD01.spr",
+      "uid": "dd510bd0",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3031305f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "already_exact",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/dd510bd0.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "04107d4e7b72e396ac8110ed3d9e994a872f713ff4b323779ec05091e0ffc733",
+        "bytes": 93631,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 488285301,
+          "decompressed_size": 93631,
+          "flag": "0x0100f1d4"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_013_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_013_HR01.spr",
+      "uid": "2a775f50",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3031335f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/2a775f50.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "96b54a6a9e79ee2409160e45bb37f47ead50f5415a8a4dbbe26f71dc03446cb7",
+        "bytes": 40110,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 491768724,
+          "decompressed_size": 40110,
+          "flag": "0x010071d6"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_013_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_013_HW01.spr",
+      "uid": "4a1558d9",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3031335f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/4a1558d9.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "b1e2e8c380514591433a4df20f4ea05bc51bea83ae2dce799dcb8b045469638e",
+        "bytes": 48468,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 491797866,
+          "decompressed_size": 48468,
+          "flag": "0x010086b0"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_RW_013_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_RW_013_RD01.spr",
+      "uid": "204c2f96",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f52575f3031335f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/204c2f96.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "eb3208ff6a95afeec60268a547a394708482e789b8ec5e6278b62c60efddc1a0",
+        "bytes": 55845,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 491919482,
+          "decompressed_size": 55845,
+          "flag": "0x01009044"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_SH_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_SH_019_HR01.spr",
+      "uid": "16e0826c",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f53485f3031395f485230312e737072",
+      "required": false,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "SH",
+          "required": false
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": "UID absent from every readable package.ini package entry in supplied PC client data; no fallback staged.",
+      "status": "missing"
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_SH_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_SH_019_HW01.spr",
+      "uid": "b686b380",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f53485f3031395f485730312e737072",
+      "required": false,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "SH",
+          "required": false
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": "UID absent from every readable package.ini package entry in supplied PC client data; no fallback staged.",
+      "status": "missing"
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_SH_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_SH_019_RD01.spr",
+      "uid": "ed3f5df2",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f53485f3031395f524430312e737072",
+      "required": false,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "SH",
+          "required": false
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "SH",
+          "required": false
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": "UID absent from every readable package.ini package entry in supplied PC client data; no fallback staged.",
+      "status": "missing"
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_YY_999_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_YY_999_HR01.spr",
+      "uid": "157f7f0d",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f59595f3939395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "YY",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/157f7f0d.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "f7d77c461a03007eaa1a3bcc89ca8c2b4a479b30ed81943c3c0bc9598f06daf4",
+        "bytes": 220260,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 516164842,
+          "decompressed_size": 220260,
+          "flag": "0x0100c8ee"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_YY_999_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_YY_999_HW01.spr",
+      "uid": "351d7896",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f59595f3939395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "YY",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/351d7896.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "1c736d04c387f46e024d120e84f9014bde6cd3012c27e2e2f35da71758b75df6",
+        "bytes": 241316,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 516216280,
+          "decompressed_size": 241316,
+          "flag": "0x0100c418"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\man\\MA_YY_999_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\man\\MA_YY_999_RD01.spr",
+      "uid": "13b4d71d",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c6d616e5c4d415f59595f3939395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "YY",
+          "required": true
+        },
+        {
+          "sex": "male",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "YY",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "replaced",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/13b4d71d.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "5a8e0730b60a9602d3d720e7f1e14fb6e4c16cbd557f04b69a50c95aa006f5cd",
+        "bytes": 282750,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 516583035,
+          "decompressed_size": 282750,
+          "flag": "0x01009535"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_BD_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_BD_019_HR01.spr",
+      "uid": "6aed7dfc",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f42445f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "BD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/6aed7dfc.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "4c647da55c6f5609fe61c5bc5a207d36f883e40854634788065740a881bcadcd",
+        "bytes": 103260,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 617381461,
+          "decompressed_size": 103260,
+          "flag": "0x0100faee"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_BD_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_BD_019_HW01.spr",
+      "uid": "b6162ceb",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f42445f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "BD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/b6162ceb.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "554778e56751b7b62c9f92b13ac5e10082157bd85577a41c781d64c1891bbf6f",
+        "bytes": 123501,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 617445699,
+          "decompressed_size": 123501,
+          "flag": "0x01010c86"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_BD_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_BD_019_RD01.spr",
+      "uid": "89963572",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f42445f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "BD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "BD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/89963572.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "7ee645716f1e984f7cb9b4ce1e1d9e983d7d7ade6956d05acc4e68668765d37c",
+        "bytes": 144210,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 618184839,
+          "decompressed_size": 144210,
+          "flag": "0x0100944c"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_HD_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_HD_019_HR01.spr",
+      "uid": "24054d67",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f48445f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "HD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/24054d67.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "9f63dddf9621cf30b909ab28bce90b73d2f8d3fe87f4c47e86259fb8e244a563",
+        "bytes": 21580,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 636299249,
+          "decompressed_size": 21580,
+          "flag": "0x0100365c"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_HD_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_HD_019_HW01.spr",
+      "uid": "f34e3c91",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f48445f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "HD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/f34e3c91.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "6eeef2edf9e4f6916edca7a557e8c880caec416b791e386fa8a1924ac3b5d7c1",
+        "bytes": 25757,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 636313165,
+          "decompressed_size": 25757,
+          "flag": "0x01003e78"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_HD_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_HD_019_RD01.spr",
+      "uid": "4ace082d",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f48445f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "HD",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "HD",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/4ace082d.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "186448dcf76fa43e14768a0ee86b587087af9fca794f6979b15c537d81daa27d",
+        "bytes": 29785,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 636460151,
+          "decompressed_size": 29785,
+          "flag": "0x01003c9f"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_HR_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_HR_019_HR01.spr",
+      "uid": "7b23be4e",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f48525f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "HR",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": "UID absent from every readable package.ini package entry in supplied PC client data; no fallback staged.",
+      "status": "missing"
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_HR_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_HR_019_HW01.spr",
+      "uid": "06556e78",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f48525f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "HR",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": "UID absent from every readable package.ini package entry in supplied PC client data; no fallback staged.",
+      "status": "missing"
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_HR_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_HR_019_RD01.spr",
+      "uid": "99d54274",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f48525f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "HR",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "HR",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": "UID absent from every readable package.ini package entry in supplied PC client data; no fallback staged.",
+      "status": "missing"
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LH_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LH_019_HR01.spr",
+      "uid": "d2e6095a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c485f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "LH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/d2e6095a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "aad7118faba9744b8d7a5ac4a8c0f8dc57ccc63749fdfcb17ab55efdf824bc8d",
+        "bytes": 22738,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 658013972,
+          "decompressed_size": 22738,
+          "flag": "0x01003c07"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LH_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LH_019_HW01.spr",
+      "uid": "7e2ff894",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c485f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "LH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/7e2ff894.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "8a79e017cdf832931af8dddbf95d908a8e3e2dc69bdbce4f3f38e93e5efe3441",
+        "bytes": 29086,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 658029339,
+          "decompressed_size": 29086,
+          "flag": "0x01004311"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LH_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LH_019_RD01.spr",
+      "uid": "f1a83c06",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c485f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "LH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "LH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/f1a83c06.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "8af47470298ddb6056092a0edb7ebb62b9ec7131d25e14560a3f88b74375843b",
+        "bytes": 34563,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 658186467,
+          "decompressed_size": 34563,
+          "flag": "0x01004108"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LW_000_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LW_000_HR01.spr",
+      "uid": "73461df5",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c575f3030305f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "LW",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/73461df5.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "6e6fcc3641322e87d4b658b41aeef673cf89614dce19a2e8610c8e9d4919b76e",
+        "bytes": 6420,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 659845962,
+          "decompressed_size": 6420,
+          "flag": "0x01000f48"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LW_000_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LW_000_HW01.spr",
+      "uid": "9e8fca6a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c575f3030305f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "LW",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/9e8fca6a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "e05fce36a7882875a42ea5ce3ac225f3e8e39d1ecba6d28aa76f2e677ba86dc3",
+        "bytes": 7782,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 659849874,
+          "decompressed_size": 7782,
+          "flag": "0x01001179"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LW_000_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LW_000_RD01.spr",
+      "uid": "960f211b",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c575f3030305f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "LW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "LW",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/960f211b.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "3dcccea8f93d15fe5abdea604166162b8097242e681720e950b98e2790722a90",
+        "bytes": 8820,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 659878017,
+          "decompressed_size": 8820,
+          "flag": "0x01001287"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LW_013_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LW_013_HR01.spr",
+      "uid": "c7e8af97",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c575f3031335f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/c7e8af97.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "cf8fabaf56f0bccefb4a49164f4e65343764053cc8669ca39b0544a1ed67e399",
+        "bytes": 37242,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 660172716,
+          "decompressed_size": 37242,
+          "flag": "0x010068a4"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LW_013_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LW_013_HW01.spr",
+      "uid": "13121c0c",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c575f3031335f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/13121c0c.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "b1f85176fc1a38d37f622314e194cfe4dfe71b59aa7662b4b60a4c9bd8313f7b",
+        "bytes": 41503,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 660199504,
+          "decompressed_size": 41503,
+          "flag": "0x010071fe"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_LW_013_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_LW_013_RD01.spr",
+      "uid": "ea9273bd",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f4c575f3031335f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "LW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/ea9273bd.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "1a002910715f7fae9c1228a0d9584cd90b764491daf356975b6de9d79535fd50",
+        "bytes": 47747,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 660272121,
+          "decompressed_size": 47747,
+          "flag": "0x010079d3"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RH_019_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RH_019_HR01.spr",
+      "uid": "1221807c",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52485f3031395f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "RH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/1221807c.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "03e9e5ce06dd3c478940dc88048091943d9b092729f14fda1b09b5651accf476",
+        "bytes": 23067,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 681054490,
+          "decompressed_size": 23067,
+          "flag": "0x01003bd9"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RH_019_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RH_019_HW01.spr",
+      "uid": "396b70f1",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52485f3031395f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "RH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/396b70f1.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "edd1d9592fabe29b9b248479984f31c3ffeb05fc05cbea1f5ba0ea39bdbdc18d",
+        "bytes": 29394,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 681069811,
+          "decompressed_size": 29394,
+          "flag": "0x01004403"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RH_019_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RH_019_RD01.spr",
+      "uid": "b0eb583d",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52485f3031395f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "RH",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "RH",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/b0eb583d.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "ce663c67454d5e48228161155470579c9108a9ca64b9d2e2a6cf3e2d23b74ee4",
+        "bytes": 34103,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 681223358,
+          "decompressed_size": 34103,
+          "flag": "0x01004008"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_000_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_000_HR01.spr",
+      "uid": "3ee53bf2",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3030305f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "RW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/3ee53bf2.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "76ef7930ab27034368dab44caf0741018ac60874688d823e3f20807172510a95",
+        "bytes": 6550,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 682868852,
+          "decompressed_size": 6550,
+          "flag": "0x01000f3e"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_000_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_000_HW01.spr",
+      "uid": "ca2eeb2c",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3030305f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "RW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/ca2eeb2c.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "83cc7576effafe208f2f66a278968352089021432c22727a4b45263c3ca1ebd7",
+        "bytes": 7867,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 682872754,
+          "decompressed_size": 7867,
+          "flag": "0x010011c4"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_000_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_000_RD01.spr",
+      "uid": "5daef368",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3030305f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "RW",
+          "required": true
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/5daef368.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "0cdfa3e25b7817f71c06714076f6207568477e8db0f2773e0daa582fbabc156e",
+        "bytes": 8908,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 682911743,
+          "decompressed_size": 8908,
+          "flag": "0x010012d0"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_001_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_001_HR01.spr",
+      "uid": "00ccfdec",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3030315f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/00ccfdec.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "6f1e4eba61086b2ec71cb976ab33517cad4fe7dcabe1e7a4c5b3111e017aeef2",
+        "bytes": 32192,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 683167905,
+          "decompressed_size": 32192,
+          "flag": "0x01004d4a"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_001_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_001_HW01.spr",
+      "uid": "ac75ad26",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3030315f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/ac75ad26.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "76befcb27167f68faecbe5527258c81b11c4c8c6806fa33b7ba51d77f3dc72c2",
+        "bytes": 35890,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 683187691,
+          "decompressed_size": 35890,
+          "flag": "0x0100555d"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_001_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_001_RD01.spr",
+      "uid": "27f546c2",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3030315f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/27f546c2.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "16343b049435fdcb27a25aa3f86471a1df679945b5317c924704795a8e19e02d",
+        "bytes": 41272,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 683239491,
+          "decompressed_size": 41272,
+          "flag": "0x01005a1f"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_010_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_010_HR01.spr",
+      "uid": "fd4ff3e8",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3031305f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/fd4ff3e8.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "e708f2da40c0b450ce2ab43a8869c0df14ca7f060ea8e5e0b48af60fae28ec3c",
+        "bytes": 76674,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 690099317,
+          "decompressed_size": 76674,
+          "flag": "0x0100c610"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_010_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_010_HW01.spr",
+      "uid": "88f0a322",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3031305f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/88f0a322.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "115b48a877c6f4af85fdda32d8c159d0480c5f84b6aa2a073670e37af83ed5b1",
+        "bytes": 82394,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 690150021,
+          "decompressed_size": 82394,
+          "flag": "0x0100dad1"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_010_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_010_RD01.spr",
+      "uid": "00708b6e",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3031305f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/00708b6e.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "2c7aee6f9d641da8d6d00a2c4498483089221debc23543d09d73dedb1a6c104a",
+        "bytes": 94977,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 690294301,
+          "decompressed_size": 94977,
+          "flag": "0x0100f025"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_013_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_013_HR01.spr",
+      "uid": "b02e941e",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3031335f485230312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/b02e941e.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "85b9ddfa1d1c769c09afd529cdb8cacc478937c444ad471bfb4ca7d0ea7e974d",
+        "bytes": 37533,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 693250629,
+          "decompressed_size": 37533,
+          "flag": "0x0100699d"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_013_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_013_HW01.spr",
+      "uid": "5f504448",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3031335f485730312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/5f504448.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "719f8cf9a09a3808e4e6f070902c2d19a11fe47341bfd510cd36f5687ee1fb3f",
+        "bytes": 44023,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 693277666,
+          "decompressed_size": 44023,
+          "flag": "0x01007762"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_RW_013_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_RW_013_RD01.spr",
+      "uid": "d6d7af94",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f52575f3031335f524430312e737072",
+      "required": true,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "RW",
+          "required": true
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/d6d7af94.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "18f7fc3d24c4c43570203116b7c7817cc5a6fe919d7c8cab356b8af90c5ccb8d",
+        "bytes": 51049,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 693357467,
+          "decompressed_size": 51049,
+          "flag": "0x01007fa4"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_YY_999_HR01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_YY_999_HR01.spr",
+      "uid": "25a01020",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f59595f3939395f485230312e737072",
+      "required": false,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "EmptyHand",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "ShortWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "LongWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "DualWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideMove",
+          "weapon": "HiddenWeapon",
+          "part": "YY",
+          "required": false
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/25a01020.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "028433396c394b05a85f2cd63ad1c1fc7d9742ba4fd5ded2243b4977eb3fba4b",
+        "bytes": 208425,
+        "frames": 80,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 713471795,
+          "decompressed_size": 208425,
+          "flag": "0x0100c09a"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 10
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_YY_999_HW01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_YY_999_HW01.spr",
+      "uid": "f0e9c05a",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f59595f3939395f485730312e737072",
+      "required": false,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "EmptyHand",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "ShortWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "LongWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "DualWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "RideWalk",
+          "weapon": "HiddenWeapon",
+          "part": "YY",
+          "required": false
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/f0e9c05a.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "561974a4e9fdeb0f155cab22f6f372865d698c5e9f6caa69938d450e47d58e81",
+        "bytes": 229833,
+        "frames": 96,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 713521101,
+          "decompressed_size": 229833,
+          "flag": "0x0100bba6"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 12
+      }
+    },
+    {
+      "logical_path": "spr\\npcres\\woman\\FM_YY_999_RD01.spr",
+      "normalized_path": "\\spr\\npcres\\woman\\FM_YY_999_RD01.spr",
+      "uid": "486926c0",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6e70637265735c776f6d616e5c464d5f59595f3939395f524430312e737072",
+      "required": false,
+      "requested_by": [
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "EmptyHand",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "ShortWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "LongWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "DualWeapon",
+          "part": "YY",
+          "required": false
+        },
+        {
+          "sex": "female",
+          "action": "Ride",
+          "weapon": "HiddenWeapon",
+          "part": "YY",
+          "required": false
+        }
+      ],
+      "shadowed_candidates": [],
+      "missing_reason": null,
+      "status": "created",
+      "package_winner": {
+        "package_ini": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-pc/pak_unpacked/spr/unknown/486926c0.spr",
+        "source_extraction_exists_and_matches": true,
+        "sha256": "56520337fcd7d959be5a592ae76ddb2bdb4d298381277ce744c0171c129dc129",
+        "bytes": 270824,
+        "frames": 112,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 713762229,
+          "decompressed_size": 270824,
+          "flag": "0x01008b46"
+        },
+        "source_extraction_resolution": "hash-reversed logical path; exact winner bytes extracted under unknown UID filename",
+        "header_directions": 8,
+        "expected_directions": 0,
+        "runtime_directions": 8,
+        "frames_per_runtime_direction": 14
+      }
+    }
+  ]
+}

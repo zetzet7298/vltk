@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcWharfRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public WharfService() : this(null) { }
+
         public WharfService(PcWharfRegistry reg) { _reg = reg ?? new PcWharfRegistry(); }
 
         public static WharfService LoadFromStreamingAssets(string subDir = "Reference/PcMap")

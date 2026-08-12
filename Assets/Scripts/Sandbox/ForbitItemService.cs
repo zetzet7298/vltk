@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcForbitItemRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public ForbitItemService() : this(null) { }
+
         public ForbitItemService(PcForbitItemRegistry reg) { _reg = reg ?? new PcForbitItemRegistry(); }
 
         public static ForbitItemService LoadFromStreamingAssets(string subDir = "Reference")

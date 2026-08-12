@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcProgressConfigRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public ProgressConfigService() : this(null) { }
+
         public ProgressConfigService(PcProgressConfigRegistry reg) { _reg = reg ?? new PcProgressConfigRegistry(); }
 
         public static ProgressConfigService LoadFromStreamingAssets(string subDir = "Reference")

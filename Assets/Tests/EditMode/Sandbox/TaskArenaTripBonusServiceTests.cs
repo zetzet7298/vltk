@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------
 
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VLTK.Sandbox;
@@ -31,13 +32,18 @@ namespace VLTK.Tests.Sandbox
             reg.Register(new PcRandomTaskEntry { taskId = 3, taskType = 0, minLevel = 1, maxLevel = 0, targetId = 300, targetCount = 1 });
             var svc = new RandomTaskService(reg);
 
+            // task3 has maxLevel=0 (open-range) so it matches EVERY level by design
+            // (see at5 assertion below). Level filter must therefore return the
+            // in-range task plus the open-range task.
             var at15 = svc.GetTasksForLevel(15);
-            Assert.AreEqual(1, at15.Count, "Cấp 15 phải match task 10-20");
-            Assert.AreEqual(1, at15[0].taskId);
+            Assert.AreEqual(2, at15.Count, "Cấp 15: task 10-20 + task open-range");
+            Assert.IsTrue(at15.Any(t => t.taskId == 1), "task1 (10-20) phải match cấp 15");
+            Assert.IsTrue(at15.Any(t => t.taskId == 3), "task3 (open-range) phải match mọi cấp");
 
             var at40 = svc.GetTasksForLevel(40);
-            Assert.AreEqual(1, at40.Count, "Cấp 40 phải match task 30-50");
-            Assert.AreEqual(2, at40[0].taskId);
+            Assert.AreEqual(2, at40.Count, "Cấp 40: task 30-50 + task open-range");
+            Assert.IsTrue(at40.Any(t => t.taskId == 2), "task2 (30-50) phải match cấp 40");
+            Assert.IsTrue(at40.Any(t => t.taskId == 3), "task3 (open-range) phải match mọi cấp");
 
             var at5 = svc.GetTasksForLevel(5);
             // Task id=3 có minLevel=1 maxLevel=0 (không giới hạn trên) → match

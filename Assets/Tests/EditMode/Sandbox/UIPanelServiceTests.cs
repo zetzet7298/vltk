@@ -52,6 +52,59 @@ namespace VLTK.Tests.EditMode.Sandbox
             Assert.AreEqual(order.Count, set.Count);
         }
 
+        [Test]
+        public void TitlePanelService_BuildSnapshot_SurfacesRealPcTitles()
+        {
+            // Dựng TitleService thật từ PC playertitle.txt (363 danh hiệu).
+            var dir = System.IO.Path.Combine(
+                System.IO.Directory.GetCurrentDirectory(),
+                "Assets/StreamingAssets/Reference/PcTitle");
+            var player = PcPlayerTitleParser.BuildRegistry(dir);
+            var faction = PcFactionTitleParser.BuildRegistry(dir);
+            var svc = new TitleService(player, faction);
+
+            var snap = TitlePanelService.BuildSnapshot(svc, playerLevel: 80);
+            Assert.IsNotNull(snap);
+            Assert.AreEqual(363, snap.totalTitles, "Panel phải surface đủ 363 danh hiệu PC");
+            Assert.AreEqual(363, snap.rows.Count);
+            Assert.AreEqual(0, snap.unlockedTitles);
+            // Chưa trang bị → equippedTitleId = 0.
+            Assert.AreEqual(0, snap.equippedTitleId);
+
+            // Mở khóa + trang bị danh hiệu #1, panel phải phản ánh.
+            Assert.IsTrue(svc.UnlockPlayerTitle(1));
+            Assert.IsTrue(TitlePanelService.TryEquip(svc, 0, 1));
+            var snap2 = TitlePanelService.BuildSnapshot(svc, playerLevel: 80, selectedTitleId: 1);
+            Assert.AreEqual(1, snap2.equippedTitleId);
+            Assert.IsFalse(string.IsNullOrEmpty(snap2.equippedTitleName));
+            Assert.AreEqual(1, snap2.unlockedTitles);
+            Assert.IsTrue(snap2.selectedRow.HasValue);
+            Assert.AreEqual(1, snap2.selectedRow.Value.titleId);
+            Assert.IsTrue(snap2.selectedRow.Value.isEquipped);
+            Assert.IsTrue(snap2.selectedRow.Value.isUnlocked);
+
+            // Gỡ trang bị.
+            Assert.IsTrue(TitlePanelService.TryUnEquip(svc, 0));
+            Assert.AreEqual(0, svc.ActivePlayerTitleId);
+        }
+
+        [Test]
+        public void TitlePanelService_TryEquip_RejectsLockedAndInvalid()
+        {
+            Assert.IsFalse(TitlePanelService.TryEquip(null, 0, 1));
+            var svc = new TitleService(new PcPlayerTitleRegistry(), new PcFactionTitleRegistry());
+            // Chưa mở khóa → không trang bị được.
+            Assert.IsFalse(TitlePanelService.TryEquip(svc, 0, 1));
+            Assert.IsFalse(TitlePanelService.TryEquip(svc, 0, 0));
+        }
+
+        [Test]
+        public void TitlePanelService_RarityName_NonEmpty()
+        {
+            Assert.IsFalse(string.IsNullOrEmpty(TitlePanelService.RarityName(TitlePanelService.RarityWhite)));
+            Assert.IsFalse(string.IsNullOrEmpty(TitlePanelService.RarityName(TitlePanelService.RarityGold)));
+        }
+
         // ───── MeridianPanelService ─────
         [Test]
         public void MeridianPanelService_BuildSnapshot_DoesNotThrow_WithNullService()
@@ -92,6 +145,26 @@ namespace VLTK.Tests.EditMode.Sandbox
             foreach (var r in ranks) Assert.Greater(r, 0);
         }
 
+
+        [Test]
+        public void GuildPanelService_BuildSnapshot_UsesGuildStateAndDonate()
+        {
+            var reg = new PcTongLevelRegistry();
+            reg.Register(new PcTongLevelEntry { level = 1, requiredFunds = 0, requiredBuild = 0 });
+            var svc = new GuildService(reg) { GuildName = "Thiên Hạ" };
+            svc.Donate(1200);
+
+            var snap = GuildPanelService.BuildSnapshot(svc, 1);
+
+            Assert.AreEqual("Thiên Hạ", snap.guildName);
+            Assert.AreEqual(1, snap.level);
+            Assert.AreEqual(1200, snap.fund);
+            Assert.AreEqual(1, snap.memberCount);
+            Assert.AreEqual("Bang chủ", GuildPanelService.RankName(GuildPanelService.RankLeader));
+            Assert.IsTrue(GuildPanelService.TryDonate(svc, 1, 300, 0));
+            Assert.AreEqual(1500, svc.GuildFunds);
+        }
+
         [Test]
         public void GuildPanelService_TryDonate_RejectsNegativeAmount()
         {
@@ -106,6 +179,35 @@ namespace VLTK.Tests.EditMode.Sandbox
             Assert.IsFalse(GuildPanelService.TryKick(null, 0, -1));
         }
 
+        // ───── ChatRoomPanelService ─────
+        [Test]
+        public void ChatRoomPanel_MatchesPcChannelsList()
+        {
+            var snap = ChatRoomPanelService.BuildSnapshot(null, 8);
+            Assert.AreEqual("CH_SYSTEM", snap.defaultChannel);
+            Assert.AreEqual("Nhắc nhở", snap.defaultSendNameVi);
+            Assert.AreEqual(15, snap.channels.Count, "PC 7e20a7ac/c9c8a750 [Channels] has Channel0..Channel14.");
+            Assert.AreEqual("CH_NEARBY", snap.channels[0].pcName);
+            Assert.AreEqual("CH_SYSTEM", snap.channels[4].pcName);
+            Assert.AreEqual("CH_CHATROOM", snap.channels[8].pcName);
+            Assert.AreEqual("CH_CUSTOM", snap.channels[14].pcName);
+            Assert.AreEqual(60000, snap.channels[2].sendIntervalMs);
+            Assert.AreEqual(0, snap.channels[4].sendMsgNum);
+        }
+
+        // ───── QuestTaskPanelService ─────
+        [Test]
+        public void QuestTaskPanel_UsesPcQuestRuntimeBeforeDailyTasks()
+        {
+            var quest = new QuestService();
+            var snap = QuestTaskPanelService.BuildSnapshot(quest, 1, 0, 0);
+            Assert.GreaterOrEqual(snap.availableCount, 1);
+            StringAssert.Contains("player_task_def.txt", snap.rows[0]);
+            foreach (var row in snap.rows)
+                StringAssert.DoesNotContain("Tập Luyện Cơ Bản", row,
+                    "Sample-only quests must not be labelled as PC Player_Task proof by default.");
+        }
+
         // ───── DailyTaskPanelService ─────
         [Test]
         public void DailyTaskPanelService_BuildSnapshot_DoesNotThrow_WithNullService()
@@ -113,6 +215,36 @@ namespace VLTK.Tests.EditMode.Sandbox
             var snap = DailyTaskPanelService.BuildSnapshot(null, 0);
             Assert.IsNotNull(snap);
             Assert.AreEqual(0, snap.totalCount);
+        }
+
+
+        [Test]
+        public void DailyTaskPanelService_BuildSnapshot_UsesPcTaskEntries()
+        {
+            var reg = new PcDailyTaskRegistry();
+            reg.Register(new PcDailyTaskEntry
+            {
+                taskId = 7,
+                taskType = 0,
+                targetId = 101,
+                targetCount = 3,
+                minLevel = 1,
+                maxLevel = 200,
+                rewardExp = 500,
+                rewardSilver = 20,
+                rewardItem = 99,
+            });
+            var svc = new DailyTaskService(reg);
+
+            var snap = DailyTaskPanelService.BuildSnapshot(svc, 1);
+
+            Assert.AreEqual(1, snap.totalCount);
+            Assert.AreEqual(7, snap.rows[0].taskId);
+            Assert.AreEqual(3, snap.rows[0].target);
+            StringAssert.Contains("Diệt quái", snap.rows[0].taskDesc);
+            Assert.AreEqual(50, DailyTaskPanelService.GetProgressPercent(1, 2));
+            Assert.IsTrue(DailyTaskPanelService.TryAccept(svc, 1, 7));
+            Assert.IsTrue(DailyTaskPanelService.TryComplete(svc, 1, 7));
         }
 
         [Test]

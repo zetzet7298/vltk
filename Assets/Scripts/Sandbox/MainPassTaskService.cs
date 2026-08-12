@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcMainPassTaskRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public MainPassTaskService() : this(null) { }
+
         public MainPassTaskService(PcMainPassTaskRegistry reg) { _reg = reg ?? new PcMainPassTaskRegistry(); }
 
         public static MainPassTaskService LoadFromStreamingAssets(string subDir = "Reference/PcTask/newtask/mastertask")

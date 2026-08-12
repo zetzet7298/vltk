@@ -14,7 +14,7 @@ namespace VLTK.Sandbox
     /// <summary>
     /// Spawns 5 training NPCs (2 bao cát, 2 cọc gỗ, 1 mộc nhân) in a pentagon formation
     /// around a center point with maximum HP.
-    /// PC source: template IDs 413 (木桩/Cọc gỗ), 414 (木人/Mộc nhân), 415 (沙袋/Bao cát)
+    /// PC source: template IDs 413 (Cọc gỗ), 414 (Mộc nhân), 415 (Bao cát)
     /// from NpcS.txt and Region_S.dat.
     /// </summary>
     public sealed class TrainingNpcSpawner : MonoBehaviour
@@ -33,31 +33,24 @@ namespace VLTK.Sandbox
         private const int TEMPLATE_MOC_NHAN = 414;
         private const int TEMPLATE_BAO_CAT = 415;
 
-        private const int MAX_HP = 9999;
+        private const int MAX_HP = 999999;
 
         private Transform _npcRoot;
 
         public void Spawn()
         {
-            if (_npcRoot != null)
-                Destroy(_npcRoot.gameObject);
+            DestroyExistingChild(_npcRoot, "TrainingNpcs");
 
             _npcRoot = new GameObject("TrainingNpcs").transform;
             _npcRoot.SetParent(transform, false);
 
             Vector2 center = usePlayerPosition ? GetPlayerCenter() : new Vector2(centerX, centerY);
 
-            // Pentagon: 5 vertices, start from top (angle = 90°), evenly spaced 72° apart
-            // Order: Bao cát, Cọc gỗ, Mộc nhân, Cọc gỗ, Bao cát
-            int[] templateIds = { TEMPLATE_BAO_CAT, TEMPLATE_COC_GOC, TEMPLATE_MOC_NHAN, TEMPLATE_COC_GOC, TEMPLATE_BAO_CAT };
-            string[] vietnameseNames = { "Bao cát", "Cọc gỗ", "Mộc nhân", "Cọc gỗ", "Bao cát" };
-            Color[] colors = {
-                new Color(0.50f, 0.45f, 0.35f, 1f), // Bao cát - sandbag
-                new Color(0.55f, 0.40f, 0.25f, 1f), // Cọc gỗ - wood
-                new Color(0.60f, 0.45f, 0.30f, 1f), // Mộc nhân - wood dummy
-                new Color(0.55f, 0.40f, 0.25f, 1f), // Cọc gỗ - wood
-                new Color(0.50f, 0.45f, 0.35f, 1f), // Bao cát - sandbag
-            };
+            // PC source (NpcS.txt): templates 413 (Cọc gỗ → enemy178), 414 (Mộc nhân → enemy179),
+            // 415 (Bao cát → enemy180). Each template's NpcResType drives the SPR path via
+            // MapEnemyDatabase.GetTemplate(...).spriteClipRef — no more hardcoded enemy170 fallback.
+            int[] templateIds = { TEMPLATE_BAO_CAT, TEMPLATE_BAO_CAT, TEMPLATE_COC_GOC, TEMPLATE_COC_GOC, TEMPLATE_MOC_NHAN };
+            string[] vietnameseNames = { "Bao cát", "Bao cát", "Cọc gỗ", "Cọc gỗ", "Mộc nhân" };
 
             for (int i = 0; i < 5; i++)
             {
@@ -66,11 +59,74 @@ namespace VLTK.Sandbox
                 float x = center.x + radius * Mathf.Cos(angleRad);
                 float y = center.y + radius * Mathf.Sin(angleRad);
 
-                SpawnSingleNpc(i, templateIds[i], vietnameseNames[i], colors[i], new Vector2(x, y));
+                SpawnSingleNpc(i, templateIds[i], vietnameseNames[i], new Vector2(x, y));
             }
 
             SubsystemLog.Info("TrainingNpcSpawner",
                 $"Spawned 5 training NPCs in pentagon at center={center}, radius={radius}");
+        }
+
+        /// <summary>
+        /// Destroys all spawned training NPCs (the "TrainingNpcs" child). Used when
+        /// switching to a non-Ba-Lăng map so the training dummies do not leak into
+        /// other maps.
+        /// </summary>
+        public void Clear()
+        {
+            DestroyExistingChild(_npcRoot, "TrainingNpcs");
+            _npcRoot = null;
+        }
+
+        public List<EnemyRuntimeInfo> GetActiveEnemies()
+        {
+            var result = new List<EnemyRuntimeInfo>();
+            if (_npcRoot == null) return result;
+
+            foreach (var ai in _npcRoot.GetComponentsInChildren<BaLangEnemyAi>())
+            {
+                if (ai == null || ai.instance?.template == null) continue;
+                result.Add(new EnemyRuntimeInfo
+                {
+                    enemyId = ai.instance.instanceId,
+                    displayName = ai.instance.template.DisplayName,
+                    position = (Vector2)ai.transform.position,
+                    alive = ai.CurrentLife > 0,
+                    currentLife = ai.CurrentLife,
+                    maxLife = ai.MaxLife,
+                    enemyBehaviour = ai,
+                });
+            }
+
+            return result;
+        }
+
+
+        private void DestroyExistingChild(Transform cachedRoot, string childName)
+        {
+            if (cachedRoot != null)
+            {
+                cachedRoot.name = "__DESTROYING_" + cachedRoot.name;
+                if (Application.isPlaying)
+                    Destroy(cachedRoot.gameObject);
+                else
+                    DestroyImmediate(cachedRoot.gameObject);
+            }
+
+            var root = transform.Find(childName);
+            while (root != null)
+            {
+                root.name = "__DESTROYING_" + root.name;
+                if (Application.isPlaying)
+                {
+                    Destroy(root.gameObject);
+                    break; // Destroy is async at end of frame, break to prevent infinite loop
+                }
+                else
+                {
+                    DestroyImmediate(root.gameObject);
+                }
+                root = transform.Find(childName);
+            }
         }
 
         private Vector2 GetPlayerCenter()
@@ -81,26 +137,20 @@ namespace VLTK.Sandbox
             return new Vector2(centerX, centerY);
         }
 
-        private void SpawnSingleNpc(int index, int templateId, string vietnameseName, Color bodyColor, Vector2 worldPos)
+        private void SpawnSingleNpc(int index, int templateId, string vietnameseName, Vector2 worldPos)
         {
             var go = new GameObject($"TrainingNPC_{index}_{vietnameseName}");
             go.transform.SetParent(_npcRoot, false);
             go.transform.position = new Vector3(worldPos.x, worldPos.y, 0f);
 
-            // Body visual — shaped sprite per NPC type (PC training objects have no SPRs)
-            var bodyGo = new GameObject("Body");
-            bodyGo.transform.SetParent(go.transform, false);
-            var sr = bodyGo.AddComponent<SpriteRenderer>();
-            sr.sprite = LoadTrainingSprite(templateId);
-            sr.sortingOrder = MapRenderer.PlayerSortingOrder - 10;
+            // PC source: each template's NpcResType (enemy178/179/180) drives the SPR path.
+            // Mirrors MapEnemySpawnRuntime.SpawnTrainerMarkers pattern (PcNpcVisual + spriteClipRef).
+            string clipRef = ResolveClipRef(templateId);
+            string standPath = $@"spr\npcres\enemy\{clipRef}\{clipRef}_st.spr";
+            var visual = go.AddComponent<PcNpcVisual>();
+            visual.Configure(standPath, standPath, new Vector2(160f, 192f));
+            var sr = go.transform.Find("NpcSprite")?.GetComponent<SpriteRenderer>();
 
-            // Shadow below body
-            var shadowGo = new GameObject("Shadow");
-            shadowGo.transform.SetParent(go.transform, false);
-            var shadowSr = shadowGo.AddComponent<SpriteRenderer>();
-            shadowSr.sprite = MakeColoredSprite(96, new Color(0f, 0f, 0f, 0.3f));
-            shadowSr.transform.localPosition = new Vector3(0f, -4f, 0.1f);
-            shadowSr.sortingOrder = MapRenderer.PlayerSortingOrder - 20;
 
             // Nameplate with HP bar
             var plate = CreateNameplate(go.transform, vietnameseName, MAX_HP);
@@ -126,7 +176,7 @@ namespace VLTK.Sandbox
                 activeRadius = 0,
                 aiMode = 0,
                 aiParams = new int[0],
-                spriteClipRef = "",
+                spriteClipRef = clipRef,
                 spriteResolved = false,
             };
             var npcInstance = new NpcInstance
@@ -146,6 +196,23 @@ namespace VLTK.Sandbox
             };
             var ai = go.AddComponent<BaLangEnemyAi>();
             ai.Initialize(npcInstance, plate);
+        }
+
+        // Resolve the PC NpcResType (spriteClipRef) for a training template. Reads from
+        // MapEnemyDatabase (PC npcs.txt); falls back to the canonical Ba Lăng mapping
+        // (413→enemy178, 414→enemy179, 415→enemy180) if the catalog entry is missing.
+        private static string ResolveClipRef(int templateId)
+        {
+            var srcTemplate = MapEnemyDatabase.GetTemplate(templateId);
+            if (!string.IsNullOrEmpty(srcTemplate?.spriteClipRef))
+                return srcTemplate.spriteClipRef;
+            return BaLangEnemyDatabase.VietnameseTrainerName(templateId, null) switch
+            {
+                "Cọc gỗ" => "enemy178",
+                "Mộc nhân" => "enemy179",
+                "Bao cát" => "enemy180",
+                _ => "enemy178",
+            };
         }
 
         private static EnemyHealthBar CreateNameplate(Transform parent, string displayName, int maxLife)
@@ -196,35 +263,6 @@ namespace VLTK.Sandbox
             return sr;
         }
 
-        private static readonly Dictionary<int, Sprite> SpriteCache = new Dictionary<int, Sprite>();
-
-        private static Sprite LoadTrainingSprite(int templateId)
-        {
-            if (SpriteCache.TryGetValue(templateId, out var cached))
-                return cached;
-
-            string filename = templateId switch
-            {
-                TEMPLATE_COC_GOC => "coc_go",
-                TEMPLATE_MOC_NHAN => "moc_nhan",
-                TEMPLATE_BAO_CAT => "bao_cat",
-                _ => null
-            };
-
-            if (filename == null)
-                return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
-
-            string path = System.IO.Path.Combine(Application.streamingAssetsPath, "TrainingSprites", filename + ".png");
-            if (!System.IO.File.Exists(path))
-                return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
-
-            var data = System.IO.File.ReadAllBytes(path);
-            var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
-            tex.LoadImage(data);
-            var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1f, 0, SpriteMeshType.FullRect);
-            SpriteCache[templateId] = sprite;
-            return sprite;
-        }
         private static Sprite MakeColoredSprite(int size, Color color)
         {
             var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);

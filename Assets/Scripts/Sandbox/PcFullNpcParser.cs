@@ -157,7 +157,9 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
                 return new List<NpcTemplate>();
-            var lines = ReadLines(absolutePath, encoding);
+            var lines = encoding == null
+                ? ReadNpcLinesWithLegacyVietnameseNames(absolutePath)
+                : ReadLines(absolutePath, encoding);
             return ParseLines(lines);
         }
 
@@ -309,9 +311,9 @@ namespace VLTK.Sandbox
                 templateId = templateId,
                 nameRaw = row.nameRaw?.Trim() ?? string.Empty,
                 nameNormalized = NormalizeName(templateId, row.nameRaw),
-                maxLife = row.lifeParam1,
-                attack = row.arParam1,
-                defense = row.defenseParam1,
+                maxLife = row.lifeParam > 0 ? row.lifeParam : row.lifeParam1,
+                attack = row.arParam > 0 ? row.arParam : row.arParam1,
+                defense = row.defenseParam > 0 ? row.defenseParam : row.defenseParam1,
                 kind = row.kind,
                 series = row.series,
                 walkSpeed = row.walkSpeed,
@@ -338,6 +340,155 @@ namespace VLTK.Sandbox
                 return vname;
             return trimmed;
         }
+
+
+        // PC server settings/npcs.txt in 00.src-tinh-kiem is a mixed legacy file:
+        // tab/numeric columns are ASCII-compatible, most NPC names are TCVN3
+        // Vietnamese bytes, and a small tail still uses GB2312 Chinese names.
+        // Decode per name field instead of applying one whole-file codec.
+        private static string[] ReadNpcLinesWithLegacyVietnameseNames(string path)
+        {
+            var raw = File.ReadAllBytes(path);
+            var strictUtf8 = new UTF8Encoding(false, true);
+            try { return SplitLines(strictUtf8.GetString(raw)); }
+            catch { /* legacy file, continue below */ }
+
+            var rawLines = SplitRawLines(raw);
+            var lines = new string[rawLines.Count];
+            for (int i = 0; i < rawLines.Count; i++)
+            {
+                var fields = SplitRawTabs(rawLines[i]);
+                if (fields.Count == 0) { lines[i] = string.Empty; continue; }
+                if (i == 0)
+                {
+                    lines[i] = DecodeAsciiCompatible(rawLines[i]);
+                    continue;
+                }
+
+                var decoded = new string[fields.Count];
+                decoded[0] = DecodeLegacyNpcName(fields[0]);
+                for (int f = 1; f < fields.Count; f++)
+                    decoded[f] = DecodeAsciiCompatible(fields[f]);
+                lines[i] = string.Join("\t", decoded);
+            }
+            return lines;
+        }
+
+        private static List<byte[]> SplitRawLines(byte[] raw)
+        {
+            var result = new List<byte[]>();
+            int start = 0;
+            for (int i = 0; i <= raw.Length; i++)
+            {
+                if (i != raw.Length && raw[i] != (byte)'\n') continue;
+                int len = i - start;
+                if (len > 0 && raw[start + len - 1] == (byte)'\r') len--;
+                var line = new byte[len];
+                Buffer.BlockCopy(raw, start, line, 0, len);
+                result.Add(line);
+                start = i + 1;
+            }
+            return result;
+        }
+
+        private static List<byte[]> SplitRawTabs(byte[] rawLine)
+        {
+            var result = new List<byte[]>();
+            int start = 0;
+            for (int i = 0; i <= rawLine.Length; i++)
+            {
+                if (i != rawLine.Length && rawLine[i] != (byte)'\t') continue;
+                int len = i - start;
+                var field = new byte[len];
+                Buffer.BlockCopy(rawLine, start, field, 0, len);
+                result.Add(field);
+                start = i + 1;
+            }
+            return result;
+        }
+
+        private static string DecodeLegacyNpcName(byte[] rawName)
+        {
+            if (rawName == null || rawName.Length == 0) return string.Empty;
+            string vietnamese = Tcvn3ToUnicode(rawName).Trim();
+            string gbStrict = DecodeGb2312(rawName, strict: true).Trim();
+            bool preferGb = !string.IsNullOrEmpty(gbStrict)
+                && CountCjk(gbStrict) >= 2
+                && (ContainsLegacyArtifacts(vietnamese) || CountAsciiLetters(vietnamese) == 0);
+            return preferGb ? gbStrict : vietnamese;
+        }
+
+        private static string DecodeAsciiCompatible(byte[] raw)
+        {
+            if (raw == null || raw.Length == 0) return string.Empty;
+            return Encoding.ASCII.GetString(raw).Trim();
+        }
+
+        private static string DecodeGb2312(byte[] raw, bool strict)
+        {
+            try
+            {
+                var enc = strict
+                    ? Encoding.GetEncoding("GB2312", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback)
+                    : Encoding.GetEncoding("GB2312");
+                return enc.GetString(raw);
+            }
+            catch { return string.Empty; }
+        }
+
+        private static string Tcvn3ToUnicode(byte[] raw)
+        {
+            var sb = new StringBuilder(raw.Length);
+            foreach (byte b in raw)
+                sb.Append(char.ConvertFromUtf32(Tcvn3Table[b]));
+            return sb.ToString();
+        }
+
+        private static int CountCjk(string text)
+        {
+            int count = 0;
+            if (string.IsNullOrEmpty(text)) return 0;
+            foreach (char ch in text)
+                if (ch >= '\u4e00' && ch <= '\u9fff') count++;
+            return count;
+        }
+
+        private static int CountAsciiLetters(string text)
+        {
+            int count = 0;
+            if (string.IsNullOrEmpty(text)) return 0;
+            foreach (char ch in text)
+                if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) count++;
+            return count;
+        }
+
+        private static bool ContainsLegacyArtifacts(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            const string bad = "ÅÆÇÐÑÒÓÕÖ×ØÙÚÛÜÝÞß¶·¸¹º»¼½¾¿±²³¤¥¦§¨©ª«¬®¯°µ";
+            foreach (char ch in text)
+                if (ch == '\ufffd' || ch == '?' || bad.IndexOf(ch) >= 0) return true;
+            return false;
+        }
+
+        private static string[] SplitLines(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return Array.Empty<string>();
+            if (text.Length > 0 && text[0] == '\ufeff') text = text.Substring(1);
+            return text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+        }
+
+        private static readonly int[] Tcvn3Table = new[]
+        {
+            0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,
+            32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,
+            64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,
+            96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,
+            128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,
+            160,258,194,202,212,416,431,272,259,226,234,244,417,432,273,175,176,177,178,179,180,224,7843,227,225,7841,186,7857,7859,7861,7855,191,
+            192,193,194,195,196,197,7863,7847,7849,7851,7845,7853,232,205,7867,7869,233,7865,7873,7875,7877,7871,7879,236,7881,217,218,219,
+            297,237,7883,242,224,7887,245,243,7885,7891,7893,7895,7889,7897,7901,7903,7905,7899,7907,249,240,7911,361,250,7909,7915,7917,7919,7913,7921,7923,7927,7929,253,7925,255
+        };
 
         private static string[] ReadLines(string path, Encoding encoding)
         {

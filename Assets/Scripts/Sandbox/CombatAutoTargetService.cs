@@ -15,6 +15,33 @@ namespace VLTK.Sandbox
         public float RangeWorldPerPcUnit { get; set; } = 1f;
 
         /// <summary>
+        /// Mobile skill-slot behavior: target selection is an intent resolver, not a PC mouse selection.
+        /// A tap picks the nearest valid enemy even when it is outside cast range, then computes the
+        /// closest approach point that lets the player move into range before casting.
+        /// </summary>
+        public MobileSkillTapTargetPlan ResolveSkillTapTarget(
+            Vector2 casterPos,
+            SkillDefinition skill,
+            IReadOnlyList<EnemyRuntimeInfo> enemies,
+            int skillLevel = 0)
+        {
+            if (skill == null || enemies == null || enemies.Count == 0)
+                return MobileSkillTapTargetPlan.NoTarget();
+
+            int attackRadius = ResolveAttackRadius(skill, skillLevel);
+            float maxRange = ResolveWorldRange(attackRadius);
+            var inRange = FindNearestEnemy(casterPos, skill, enemies, skillLevel);
+            if (inRange != null)
+                return MobileSkillTapTargetPlan.Cast(inRange, maxRange);
+
+            var nearest = FindNearestAliveEnemy(casterPos, enemies);
+            if (nearest == null)
+                return MobileSkillTapTargetPlan.NoTarget();
+
+            return MobileSkillTapTargetPlan.Approach(nearest, ComputeApproachPosition(casterPos, nearest.position, maxRange), maxRange);
+        }
+
+        /// <summary>
         /// Find the nearest enemy within skill range from caster position.
         /// Returns null if no enemy in range.
         /// </summary>
@@ -27,15 +54,8 @@ namespace VLTK.Sandbox
             if (skill == null || enemies == null || enemies.Count == 0)
                 return null;
 
-            int attackRadius;
-            if (PcKangLongYouHuiTuning.Applies(skill.skillId) && skillLevel > 0)
-                attackRadius = PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
-            else if (PcCaiBangSkillTuning.Applies(skill.skillId) && skillLevel > 0)
-                attackRadius = PcCaiBangSkillTuning.AtLevel(skill.skillId, skillLevel).attackRadius;
-            else
-                attackRadius = skill.attackRadius;
-            float maxRange = attackRadius * RangeWorldPerPcUnit;
-            if (maxRange <= 0) maxRange = 500f; // PC default melee range fallback
+            int attackRadius = ResolveAttackRadius(skill, skillLevel);
+            float maxRange = ResolveWorldRange(attackRadius);
 
             CombatTargetInfo best = null;
             float bestDist = float.MaxValue;
@@ -66,6 +86,77 @@ namespace VLTK.Sandbox
             }
 
             return best;
+        }
+
+        /// <summary>Find the nearest alive enemy, ignoring skill cast range.</summary>
+        public CombatTargetInfo FindNearestAliveEnemy(Vector2 casterPos, IReadOnlyList<EnemyRuntimeInfo> enemies)
+        {
+            if (enemies == null || enemies.Count == 0)
+                return null;
+
+            CombatTargetInfo best = null;
+            float bestDist = float.MaxValue;
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var enemy = enemies[i];
+                if (enemy == null || !enemy.alive) continue;
+
+                float dist = Vector2.Distance(casterPos, enemy.position);
+                if (dist < bestDist)
+                {
+                    bestDist = dist;
+                    best = new CombatTargetInfo
+                    {
+                        enemyIndex = i,
+                        position = enemy.position,
+                        distance = dist,
+                        enemyId = enemy.enemyId,
+                        name = enemy.displayName,
+                        currentLife = enemy.currentLife,
+                        maxLife = enemy.maxLife,
+                        enemyBehaviour = enemy.enemyBehaviour,
+                    };
+                }
+            }
+
+            return best;
+        }
+
+        /// <summary>
+        /// Compute the nearest movement destination that leaves the caster inside skill range.
+        /// Uses a small inner padding so the later cast is not rejected by floating point/map sync drift.
+        /// </summary>
+        public static Vector2 ComputeApproachPosition(Vector2 casterPos, Vector2 targetPos, float maxRange)
+        {
+            float safeRange = Mathf.Max(0f, maxRange - Mathf.Max(8f, maxRange * 0.05f));
+            Vector2 toTarget = targetPos - casterPos;
+            if (toTarget.sqrMagnitude <= 0.0001f)
+                return casterPos;
+
+            float distance = toTarget.magnitude;
+            if (distance <= safeRange)
+                return casterPos;
+
+            return targetPos - toTarget.normalized * safeRange;
+        }
+
+        private int ResolveAttackRadius(SkillDefinition skill, int skillLevel)
+        {
+            if (PcKangLongYouHuiTuning.Applies(skill.skillId) && skillLevel > 0)
+                return PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
+            if (PcCaiBangLuaLevelService.Applies(skill.skillId) && skillLevel > 0)
+            {
+                int luaRadius = PcCaiBangLuaLevelService.GetAttackRadius(skill.skillId, skillLevel);
+                return luaRadius > 0 ? luaRadius : skill.attackRadius;
+            }
+            return skill.attackRadius;
+        }
+
+        private float ResolveWorldRange(int attackRadius)
+        {
+            float maxRange = attackRadius * RangeWorldPerPcUnit;
+            return maxRange > 0f ? maxRange : 500f; // PC default melee range fallback
         }
 
         /// <summary>
@@ -116,6 +207,39 @@ namespace VLTK.Sandbox
         public int currentLife = 100;
         public int maxLife = 100;
         public BaLangEnemyAi enemyBehaviour;
+    }
+
+    /// <summary>Mobile skill-slot tap resolution result.</summary>
+    public class MobileSkillTapTargetPlan
+    {
+        public CombatTargetInfo target;
+        public Vector2 approachPosition;
+        public float maxRange;
+        public bool hasTarget;
+        public bool canCastNow;
+        public bool shouldApproach;
+
+        public static MobileSkillTapTargetPlan NoTarget() => new() { hasTarget = false };
+
+        public static MobileSkillTapTargetPlan Cast(CombatTargetInfo target, float maxRange) => new()
+        {
+            target = target,
+            maxRange = maxRange,
+            hasTarget = true,
+            canCastNow = true,
+            shouldApproach = false,
+            approachPosition = target != null ? target.position : Vector2.zero,
+        };
+
+        public static MobileSkillTapTargetPlan Approach(CombatTargetInfo target, Vector2 approachPosition, float maxRange) => new()
+        {
+            target = target,
+            approachPosition = approachPosition,
+            maxRange = maxRange,
+            hasTarget = target != null,
+            canCastNow = false,
+            shouldApproach = target != null,
+        };
     }
 
     /// <summary>Result of auto-target search.</summary>

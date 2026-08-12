@@ -144,5 +144,237 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(player.RequestMoveTo(new Vector2(100, 100), null));
             Assert.AreEqual(MoveStepResult.Moving, player.Step(1f, null));
         }
+
+        [Test]
+        public void SandboxController_MoveTo_ClampsMinimapTargetToActiveMapBounds()
+        {
+            var go = new GameObject("player-controller-clamp-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.SetMapBounds(new RectDef
+                {
+                    x = 39424f,
+                    y = -56320f,
+                    width = 14848f,
+                    height = 7168f,
+                });
+
+                controller.MoveTo(new Vector2(999999f, -999999f));
+
+                Assert.AreEqual(new Vector2(54272f, -56320f), controller.MoveTarget);
+                Assert.IsTrue(controller.HasMoveTarget);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_SetMapBounds_ReclampsPendingTarget()
+        {
+            var go = new GameObject("player-controller-reclamp-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.MoveTo(new Vector2(60000f, -60000f));
+
+                controller.SetMapBounds(new RectDef
+                {
+                    x = 39424f,
+                    y = -56320f,
+                    width = 14848f,
+                    height = 7168f,
+                });
+
+                Assert.AreEqual(new Vector2(54272f, -56320f), controller.MoveTarget);
+                Assert.IsTrue(controller.HasMoveTarget);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_WalkRunToggle_ChangesMovementDistance()
+        {
+            var go = new GameObject("player-controller-walk-run-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.startMounted = false;
+                controller.moveSpeed = 100f;
+                controller.mountedSpeedMultiplier = 1f;
+                controller.walkSpeedMultiplier = 0.5f;
+
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                var runX = go.transform.position.x;
+
+                go.transform.position = Vector3.zero;
+                controller.ToggleWalkRun();
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                var walkX = go.transform.position.x;
+
+                Assert.IsFalse(controller.IsRunning);
+                Assert.AreEqual(100f, runX, 0.001f);
+                Assert.AreEqual(50f, walkX, 0.001f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_Meditation_MovementInputCancelsAndMovesImmediately()
+        {
+            var go = new GameObject("player-controller-meditation-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.startMounted = false;
+                controller.moveSpeed = 100f;
+                controller.mountedSpeedMultiplier = 1f;
+
+                controller.MoveTo(new Vector2(100f, 0f));
+                Assert.IsTrue(controller.HasMoveTarget);
+
+                controller.ToggleMeditation();
+                Assert.IsTrue(controller.IsMeditating);
+                Assert.IsFalse(controller.HasMoveTarget);
+
+                // PC: issuing movement while meditating exits do_sit and transitions to movement.
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                Assert.IsFalse(controller.IsMeditating);
+                Assert.AreEqual(100f, go.transform.position.x, 0.001f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_MountedMovement_PreservesWalkRunToggle()
+        {
+            var go = new GameObject("player-controller-mounted-walk-run-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.startMounted = false;
+                controller.moveSpeed = 100f;
+                controller.mountedSpeedMultiplier = 2f;
+                controller.walkSpeedMultiplier = 0.5f;
+                controller.defaultHorseId = 1;
+
+                controller.ToggleWalkRun(); // walk mode before mounting
+                Assert.IsFalse(controller.IsRunning);
+
+                controller.ToggleMount();
+                controller.Mount.Tick(1f); // finish the PC mount transition for deterministic speed assertions
+                Assert.IsTrue(controller.Mount.IsMounted);
+                Assert.IsFalse(controller.IsRunning, "Mounting must not reset walk/run button state.");
+
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                Assert.AreEqual(50f, go.transform.position.x, 0.001f); // mounted walk selects horse walk pace: 100 * walk 0.5
+
+                go.transform.position = Vector3.zero;
+                controller.ToggleWalkRun(); // mounted run
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                Assert.IsTrue(controller.IsRunning);
+                Assert.AreEqual(200f, go.transform.position.x, 0.001f); // mounted run: 100 * mounted run 2
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_Lightness_UsesAndPreservesLiveMoveInput()
+        {
+            var go = new GameObject("player-controller-lightness-moving-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.startMounted = false;
+
+                controller.SetFacing(4); // north, should be ignored while moving right
+                controller.SetMoveInput(Vector2.right);
+
+                var leapTarget = controller.GetLeapTarget(240f);
+                Assert.AreEqual(new Vector2(240f, 0f), leapTarget);
+
+                controller.BeginLeap(leapTarget, 0.45f);
+                Assert.AreEqual(Vector2.right, controller.MoveInput, "Holding joystick during Khinh Công should continue after landing.");
+
+                controller.CancelDash();
+                controller.SetMoveInput(Vector2.zero);
+                controller.MoveTo(new Vector2(0f, 240f));
+                var targetLeap = controller.GetLeapTarget(240f);
+                Assert.AreEqual(new Vector2(0f, 240f), targetLeap);
+                controller.BeginLeap(targetLeap, 0.45f);
+                Assert.IsTrue(controller.HasMoveTarget, "Click-to-move target should resume after Khinh Công lands.");
+                Assert.AreEqual(new Vector2(0f, 240f), controller.MoveTarget);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_OutOfBoundsTarget_ArrivesAtClampedMap907Edge()
+        {
+            var go = new GameObject("player-controller-edge-arrival-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.SetMapBounds(new RectDef
+                {
+                    x = 39424f,
+                    y = -56320f,
+                    width = 14848f,
+                    height = 7168f,
+                });
+                go.transform.position = new Vector3(54264f, -56320f, 0f);
+
+                controller.MoveTo(new Vector2(999999f, -999999f));
+                controller.SimulateMove(0.016f);
+
+                Assert.IsFalse(controller.HasMoveTarget);
+                Assert.AreEqual(new Vector2(54272f, -56320f), (Vector2)go.transform.position);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
     }
 }

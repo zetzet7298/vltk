@@ -176,7 +176,7 @@ namespace VLTK.Tests.Sandbox
         public void GetByBattleType_FiltersCorrectly()
         {
             var svc = new BattleMapConfigService(new PcBattleMapConfigRegistry());
-            var entries = svc.GetByBattleType(BattleType.SongJin);
+            var entries = svc.GetByBattleType((int)BattleType.TongKim);
             Assert.That(entries, Is.Not.Null);
         }
 
@@ -186,7 +186,7 @@ namespace VLTK.Tests.Sandbox
             var reg = new PcBattleMapConfigRegistry();
             reg.Register(new PcBattleMapConfigEntry
             {
-                battleMapId = 1, battleType = BattleType.SongJin,
+                battleMapId = 1, battleType = (int)BattleType.TongKim,
                 minLevel = 50, maxLevel = 100,
             });
             var svc = new BattleMapConfigService(reg);
@@ -198,7 +198,7 @@ namespace VLTK.Tests.Sandbox
         public void GetBattleTypeName_NonEmpty()
         {
             var svc = new BattleMapConfigService(new PcBattleMapConfigRegistry());
-            Assert.That(svc.GetBattleTypeName(BattleType.SongJin), Is.Not.Empty);
+            Assert.That(svc.GetBattleTypeName((int)BattleType.TongKim), Is.Not.Empty);
             Assert.That(svc.GetBattleTypeName(99), Is.Not.Empty);
         }
     }
@@ -224,11 +224,11 @@ namespace VLTK.Tests.Sandbox
             var reg = new PcBattleRewardConfigRegistry();
             reg.Register(new PcBattleRewardConfigEntry
             {
-                rewardId = 1, battleType = BattleType.SongJin, requiredRank = 1, winGold = 1000,
+                rewardId = 1, battleType = (int)BattleType.TongKim, requiredRank = 1, winGold = 1000,
             });
             reg.Register(new PcBattleRewardConfigEntry
             {
-                rewardId = 2, battleType = BattleType.SongJin, requiredRank = 2, winGold = 5000,
+                rewardId = 2, battleType = (int)BattleType.TongKim, requiredRank = 2, winGold = 5000,
             });
             var svc = new BattleRewardConfigService(reg);
             var rank1 = svc.GetForRank(1);
@@ -250,11 +250,11 @@ namespace VLTK.Tests.Sandbox
             var reg = new PcBattleHonorRegistry();
             reg.Register(new PcBattleHonorEntry
             {
-                honorId = 1, battleType = BattleType.SongJin, name = "Chiến Thần",
+                honorId = 1, battleType = (int)BattleType.TongKim, name = "Chiến Thần",
                 requiredScore = 1000,
             });
             var svc = new BattleHonorService(reg);
-            var entries = svc.GetByBattleType(BattleType.SongJin);
+            var entries = svc.GetByBattleType((int)BattleType.TongKim);
             Assert.That(entries.Count, Is.EqualTo(1));
         }
 
@@ -262,7 +262,7 @@ namespace VLTK.Tests.Sandbox
         public void GetHonorForScore_NullForZero()
         {
             var svc = new BattleHonorService(new PcBattleHonorRegistry());
-            Assert.That(svc.GetHonorForScore(BattleType.SongJin, 0), Is.Null);
+            Assert.That(svc.GetHonorForScore((int)BattleType.TongKim, 0), Is.Null);
         }
     }
 
@@ -297,7 +297,10 @@ namespace VLTK.Tests.Sandbox
                 tierId = 1, tier = SongJinTier.Cao, minLevel = 90, maxLevel = 150,
             });
             var svc = new SjBattleService(reg);
-            Assert.That(svc.CanJoinTier(SongJinTier.Cao, 30), Is.True); // fallback threshold
+            // Cao tier requires minLevel=90; player level 30 is below it and below the
+            // fallback threshold (30 + Cao*30 = 90), so a low-level player is rejected.
+            Assert.That(svc.CanJoinTier(SongJinTier.Cao, 30), Is.False, "Cấp 30 < ngưỡng Cao (90) → bị từ chối");
+            // So tier has no registered entry; fallback threshold = 30 + So*30 = 30, so level 30 qualifies.
             Assert.That(svc.CanJoinTier(SongJinTier.So, 30), Is.True);
         }
 

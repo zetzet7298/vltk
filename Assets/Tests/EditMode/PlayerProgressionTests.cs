@@ -145,5 +145,55 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, prog.GetSkillLevel(117));
             Assert.AreEqual(5, levelService.SkillPoints); // Reclaimed point
         }
+
+        [Test]
+        public void LevelUpScriptRule_RequiresPrerequisiteSkillsAndSpendsFightPoint()
+        {
+            var catalog = SkillLevelUpScriptCatalog.CreateDefault();
+            var skill = new SkillDefinition
+            {
+                skillId = 332,
+                nameRaw = "Phổ Độ Chúng Sinh",
+                reqLevel = 80,
+                maxLevel = 20,
+                levelUpScript = @"\script\skill\lvlup_pudu_zhongsheng.lua"
+            };
+            var prog = new PlayerProgressionState { level = 95, fightSkillPoints = 2 };
+            prog.knownSkills.Add(332);
+            prog.skillLevels[332] = 1;
+            foreach (int req in new[] { 93, 89, 86, 92, 282 })
+                prog.skillLevels[req] = 5;
+
+            Assert.IsFalse(prog.TryUpgradeSkill(skill, catalog), "PC requires prereqs >= current main skill level + 5 before level 16");
+
+            foreach (int req in new[] { 93, 89, 86, 92, 282 })
+                prog.skillLevels[req] = 6;
+
+            Assert.IsTrue(prog.TryUpgradeSkill(skill, catalog));
+            Assert.AreEqual(2, prog.GetSkillLevel(332));
+            Assert.AreEqual(1, prog.fightSkillPoints);
+        }
+
+        [Test]
+        public void Translife4Rule_UsesSeparatePointPool()
+        {
+            var catalog = SkillLevelUpScriptCatalog.CreateDefault();
+            var skill = new SkillDefinition
+            {
+                skillId = 1123,
+                nameRaw = "Vô Uy Thuẫn",
+                reqLevel = 0,
+                maxLevel = 20,
+                levelUpScript = @"\script\skill\translife_4\lvlup_waigong.lua"
+            };
+            var prog = new PlayerProgressionState { level = 1, fightSkillPoints = 0, translife4SkillPoints = 1 };
+            prog.knownSkills.Add(1123);
+
+            Assert.IsTrue(prog.TryUpgradeSkill(skill, catalog));
+            Assert.AreEqual(1, prog.GetSkillLevel(1123));
+            Assert.AreEqual(0, prog.translife4SkillPoints);
+            Assert.AreEqual(1, prog.translife4UsedSkillPoints);
+            Assert.AreEqual(0, prog.fightSkillPoints);
+        }
     }
 }

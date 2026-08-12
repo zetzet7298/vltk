@@ -1,0 +1,187 @@
+// -----------------------------------------------------------------------------
+// VLTK.Tests.EditMode.Survivor — SurvivorRuntimeWiringTests
+// Ticket 43 boot smoke: chống tái phạm dead-wiring (council FAIL) — sau
+// SurvivorGameDirector.OnInit, mọi feature P2 phải được nối vào game loop thật:
+//   - Player.Cast (SkillCastRuntime) khác null
+//   - Overlay.SkillService (SkillChoiceService) khác null — levelup không còn
+//     chạy P1 flat-card path
+//   - Supply (SurvivorSupplyMgr) + SupplyBar khác null — heal/bomb/magnet/full-clear
+//   - BossSkillPool không rỗng (catalog boss/npc pool thật)
+//   - HUD.WaveIndexSource != null — banner wave số thật
+//   - SettingsPanel != null — settings boot được (persist + language)
+//   - Pause != null (SurvivorPause chung)
+// + Catalog smoke: đọc StreamingAssets thật → ≥ 1000 skill, player pool ≥ 400
+//   (spec D2: ~452), supply defs ≥ 1 heal + ≥ 1 bomb (nếu data PC có tag).
+//
+// Scene thật (EditMode — AddComponent chạy Awake ngay): tạo director → boot →
+// assert → destroy + reset Time.timeScale (fail-safe cho suite khác).
+// -----------------------------------------------------------------------------
+
+using NUnit.Framework;
+using UnityEngine;
+using VLTK.Survivor;
+
+namespace VLTK.Tests.Survivor
+{
+    public class SurvivorRuntimeWiringTests
+    {
+        // EditMode: AddComponent KHÔNG chạy Awake (Unity 6) → boot qua OnInit
+        // protected — test subclass gọi trực tiếp (đúng contract boot thật).
+        private sealed class TestDirector : SurvivorGameDirector
+        {
+            public void Boot() => OnInit();
+        }
+
+        private GameObject _directorGo;
+        private TestDirector _director;
+
+        [SetUp]
+        public void SetUp()
+        {
+            Time.timeScale = 1f;
+            _directorGo = new GameObject("director_test");
+            _director = _directorGo.AddComponent<TestDirector>();
+            _director.Boot(); // OnInit — boot wiring thật (không skip bước nào)
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Time.timeScale = 1f;
+            if (_directorGo != null) Object.DestroyImmediate(_directorGo);
+            // dọn singleton/UI khác boot tạo — tránh rò rỉ sang test kế
+            foreach (var o in Object.FindObjectsByType<MonoBehaviour>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (o is OverlayPanel || o is SurvivorHud || o is SupplyBar ||
+                    o is SurvivorAudioSettingsPanel || o is SurvivorAudioMgr ||
+                    o is UnityEngine.EventSystems.EventSystem)
+                    Object.DestroyImmediate(o.gameObject);
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // boot smoke (chặn tái phạm dead-wiring)
+        // ------------------------------------------------------------------
+
+        [Test]
+        public void OnInit_Wires_AllP2Systems()
+        {
+            Assert.IsNotNull(_director.Pause, "SurvivorPause chung phải boot");
+            Assert.IsNotNull(_director.Player, "player spawn");
+            Assert.IsNotNull(_director.Player.Cast, "SkillCastRuntime gán Player.Cast (roster cast thật)");
+            Assert.IsNotNull(_director.Overlay, "overlay boot");
+            Assert.IsNotNull(_director.Overlay.SkillService, "SkillChoiceService gán overlay — levelup skill thật");
+            Assert.IsNotNull(_director.Supply, "SurvivorSupplyMgr boot");
+            Assert.IsNotNull(_director.SupplyBar, "SupplyBar boot — slot UI hiện");
+            Assert.IsNotNull(_director.SettingsPanel, "settings panel boot (persist + language)");
+            Assert.Greater(_director.BossSkillPool.Count, 0, "BossSkillPool fill từ catalog boss/npc");
+            // EditMode: Awake không chạy → Instance static null; HUD object tồn tại thật
+            var hud = SurvivorHud.Instance;
+            if (hud == null) hud = Object.FindAnyObjectByType<SurvivorHud>();
+            Assert.IsNotNull(hud, "HUD boot (OverlayPanel.Build hook)");
+            Assert.IsNotNull(hud.WaveIndexSource, "WaveIndexSource wire — banner wave số thật");
+        }
+
+        [Test]
+        public void OnInit_LevelUp_Flow_UsesSkillService_NotLegacy()
+        {
+            // service path hoạt động: Request → event có card (pool thật không rỗng)
+            var svc = _director.Overlay.SkillService;
+            Assert.IsNotNull(svc);
+            svc.Tick(0f);
+            Assert.IsTrue(svc.Request(1, SkillChoiceMode.LevelUp), "levelup request trigger ngay (rảnh)");
+            var ev = svc.Current(1);
+            Assert.IsNotNull(ev, "event mở modal");
+            // PORT_CAIBANG: pool scope 4 skill active + depend unlock → roster rỗng
+            // chỉ 2 candidate tier1 (128/125) → 2 card, KHÔNG phải 3 (spec Phase 1
+            // validation: levelup đầu tiên chỉ hiện 2 card 128/125).
+            Assert.AreEqual(2, ev.Cards.Length, "levelup roster rỗng → 2 card tier1 (128/125)");
+            var ids = new System.Collections.Generic.HashSet<int>();
+            for (int i = 0; i < ev.Cards.Length; i++) ids.Add(ev.Cards[i].Def.Id);
+            Assert.IsTrue(ids.Contains(128) && ids.Contains(125), "2 card đầu = 128 + 125");
+            Assert.IsFalse(ids.Contains(1073) && ids.Contains(1074), "1073/1074 chưa đủ prereq → không xuất hiện");
+            Assert.IsNotNull(ev.Cards[0].Def, "card là SkillDef thật (không phải P1 flat-card)");
+            Assert.AreEqual(1, _director.Pause.Count, "modal mở → pause acquire (scope LevelUp/CardChoice)");
+        }
+
+        // ------------------------------------------------------------------
+        // ticket 44: waiting-window auto-close — Tick khi paused + scope release
+        // đầy đủ (CardChoice + LevelUp), timescale 1 sau close; pick không regression
+        // ------------------------------------------------------------------
+
+        [Test]
+        public void LevelUp_AutoClose_ReleasesBothScopes_TimescaleRestored()
+        {
+            var svc = _director.Overlay.SkillService;
+            svc.Tick(0f);
+            _director.OnLevelUp(null); // levelup service path: LevelUp + CardChoice scope, modal hiện
+            Assert.IsTrue(_director.Overlay.IsVisible, "modal skill mở");
+            Assert.AreEqual(2, _director.Pause.Count, "LevelUp + CardChoice đều giữ pause");
+            Assert.AreEqual(0f, Time.timeScale, "paused → timescale 0");
+
+            // Tick khi paused (EditMode: gọi trực tiếp — director.Update dời Tick
+            // lên trước early-return nên PlayMode chạy được chính xác path này)
+            svc.Tick(31f); // quá WaitingLearnWindow 30s → service auto-close
+            Assert.IsNull(svc.Current(1), "event đóng (không auto-learn — fail-closed)");
+            Assert.AreEqual(1, _director.Pause.Count, "CardChoice release — LevelUp còn giữ (chờ onClosed)");
+            Assert.AreEqual(0, _director.Pause.ScopeCount(SurvivorPause.CardChoiceScope), "CardChoice scope hết");
+            Assert.AreEqual(1, _director.Pause.ScopeCount(SurvivorPause.LevelUpScope), "LevelUp chưa release — đây là leak ticket 44 nếu thiếu poll");
+            Assert.AreEqual(0f, Time.timeScale, "vẫn kẹt pause (LevelUp còn giữ)");
+
+            _director.Overlay.PollSkillChoiceAutoClose(); // Overlay.Update poll (PlayMode chạy tự động)
+            Assert.IsFalse(_director.Overlay.IsVisible, "modal tự đóng (canvas hide)");
+            Assert.AreEqual(0, _director.Pause.Count, "LevelUp release qua onClosed hook — không leak scope");
+            Assert.AreEqual(0, _director.Pause.ScopeCount(SurvivorPause.LevelUpScope), "LevelUp scope hết");
+            Assert.IsFalse(_director.Pause.IsPaused);
+            Assert.AreEqual(1f, Time.timeScale, "timescale về 1 sau auto-close");
+        }
+
+        [Test]
+        public void LevelUp_PickCard_Closes_NoLeak_PollNoFalseClose()
+        {
+            var svc = _director.Overlay.SkillService;
+            svc.Tick(0f);
+            _director.OnLevelUp(null);
+            Assert.IsTrue(_director.Overlay.IsVisible, "modal mở bình thường");
+            Assert.AreEqual(2, _director.Pause.Count);
+
+            // poll khi modal còn mở (chưa timeout) → KHÔNG đóng nhầm
+            _director.Overlay.PollSkillChoiceAutoClose();
+            Assert.IsTrue(_director.Overlay.IsVisible, "modal còn mở → poll không fire");
+            Assert.AreEqual(2, _director.Pause.Count, "poll không đụng pause khi modal còn mở");
+
+            var card = svc.Current(1).Cards[0];
+            Assert.IsTrue(svc.Select(1, card), "pick card (như button listener)");
+            Assert.AreEqual(1, _director.Player.Cast.GetLevel(card.Def.Id), "pick → Learn vào roster thật");
+            Assert.AreEqual(1, _director.Pause.Count, "service Close release CardChoice");
+
+            _director.Overlay.PollSkillChoiceAutoClose(); // listener path hide + onClosed (tương đương EditMode)
+            Assert.IsFalse(_director.Overlay.IsVisible, "modal đóng sau pick");
+            Assert.AreEqual(0, _director.Pause.Count, "LevelUp release — không leak");
+            Assert.AreEqual(1f, Time.timeScale, "timescale về 1");
+        }
+
+        // ------------------------------------------------------------------
+        // catalog smoke — StreamingAssets thật (repo committed)
+        // ------------------------------------------------------------------
+
+        [Test]
+        public void Catalog_FromStreamingAssets_RealSizes()
+        {
+            var catalog = SurvivorSkillCatalogService.LoadFromStreamingAssets();
+            Assert.GreaterOrEqual(catalog.Skills.Count, 1000, "PcSkills.txt ~1216 row");
+            Assert.GreaterOrEqual(catalog.PlayerPoolCount, 400, "player pool ~452 (spec D2)");
+            Assert.Greater(catalog.MissileRows, 0, "missles.txt ~441 row");
+            var boss = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.BossNpc);
+            Assert.Greater(boss.Count, 0, "boss/npc pool không rỗng");
+            // ticket 29: player pool = Cái Bang — 33 skill thật (khớp PcCaiBangSkills.txt)
+            var gaibang = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player, "gaibang");
+            Assert.AreEqual(33, gaibang.Count, "gaibang pool đủ 33 skill (cross-check PcCaiBangSkills.txt)");
+            var gaibangAll = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player);
+            Assert.Greater(gaibangAll.Count, gaibang.Count, "faction filter thu hẹp đúng (452 → 33)");
+            var supply = SurvivorSkillCatalogService.SupplyDefs(catalog);
+            Assert.GreaterOrEqual(supply.Count, 1, "có ≥1 supply skill (heal/bomb tag)");
+        }
+    }
+}

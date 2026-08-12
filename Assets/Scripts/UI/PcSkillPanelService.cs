@@ -47,14 +47,28 @@ namespace VLTK.UI
     {
         public const int PcFightSkillSlotsPerPage = 30;
         public const int PcFightSkillPageCount = 1;
+        public const int PcFightSkillColumns = 5;
+        public const int PcFightSkillRowsPerPcPanel = 5;
+        public const int PcFightSkillSlotsPerPcPanel = PcFightSkillColumns * PcFightSkillRowsPerPcPanel;
 
+        // UiSkillsFightSub.ini physically contains five rows of five 36px slots.
+        // TangMen's 23 canonical player roots fit that authentic PC footprint.  The
+        // legacy 30-slot mobile catalog remains for other factions until each of
+        // their larger catalogs is reconciled against its PC pagination behavior.
+        public static int GetDisplaySlotCount(CombatFaction faction) =>
+            faction == CombatFaction.TangMen ? PcFightSkillSlotsPerPcPanel : PcFightSkillSlotsPerPage;
+
+        // PC source: bin/client/script/skill/gaibang.lua + newest checked skills.txt rows.
+        // 115-116 passive mastery, 117-130 active combat skills, 274/357/358/359/360 high-tier.
+        // 358 is Tiềm Long Tại Uyên in newest PC rows; its qianlong_zaiyuan Lua table is commented out,
+        // so catalog uses row/default missile data instead of borrowing Kháng Long (128) tuning.
         public static readonly int[] PcCaiBangSkillOrder =
         {
             115, 116, 117, 118, 119,
             120, 121, 122, 123, 124,
             125, 126, 127, 128, 129,
-            130, 274, 277, 357, 359,
-            360, 714, 1073, 1074,
+            130, 274, 277, 357, 358,
+            359, 360, 714, 720, 1073, 1074,
         };
 
         public static readonly int[] PcWuDangSkillOrder =
@@ -70,14 +84,22 @@ namespace VLTK.UI
             3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
         };
 
+        // Canonical learned roots from PcTangMenOracle.json.  The static oracle does
+        // not prove a separate PC UI ordering (uiOrder is null), so preserve the
+        // source membership order rather than retaining the old 10-row Unity view.
+        // 51/55/57 are explicitly unresolved display-only residuals: they must not
+        // be promoted into a player-facing learned/cast/equip list.
         public static readonly int[] PcTangMenSkillOrder =
         {
-            43, 45, 47, 48, 50, 51, 54, 55, 57, 58
+            43, 45, 47, 48, 50, 54, 58,
+            249, 302, 303, 339, 341, 342, 343, 345, 347, 349, 351,
+            710, 1069, 1070, 1071, 1110,
         };
 
         public static readonly int[] PcEMeiSkillOrder =
         {
-            77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93
+            // PC EMei has 15 core skills (skill 90 reassigned to KunLun per PC emei.lua/kunlun.lua)
+            77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93
         };
 
         public static readonly int[] PcTianWangSkillOrder =
@@ -105,7 +127,9 @@ namespace VLTK.UI
             167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184
         };
 
-        public const int NpcVariantSkillId = 1539;
+        // NPC variant filter: delegate to PlayerProgressionState.IsNpcVariant (single source of truth).
+        public const int NpcVariantSkillId = 1539; // kept for external callers in CombatSkillSlotController
+        public static bool IsNpcVariant(int skillId) => PlayerProgressionState.IsNpcVariant(skillId);
 
         public static IReadOnlyList<int> GetPcSkillOrder(CombatFaction faction)
         {
@@ -151,7 +175,7 @@ namespace VLTK.UI
             {
                 foreach (var skillId in skillOrder)
                 {
-                    if (skillId == NpcVariantSkillId)
+                    if (IsNpcVariant(skillId))
                         continue;
                     var skill = catalog.Resolve(skillId);
                     if (skill == null)

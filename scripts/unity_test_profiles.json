@@ -1,0 +1,75 @@
+{
+  "schema": "vltk-unity-test-profiles/v1",
+  "fast_commands": [
+    [
+      "python3",
+      "-m",
+      "unittest",
+      "scripts.test_check_unity_assembly_boundaries",
+      "scripts.test_measure_unity_debug_compile",
+      "scripts.test_run_unity_test_profile"
+    ],
+    [
+      "python3",
+      "scripts/check_unity_assembly_boundaries.py",
+      "--root",
+      "."
+    ]
+  ],
+  "focused_smoke": "VLTK.Tests.PlayMode.SandboxBootE2ETests.E2E_DefaultMap_IsBaLangHuyen",
+  "boundary_smoke": "VLTK.Tests.PlayMode.SandboxBootE2ETests",
+  "path_rules": [
+    {
+      "prefix": "Assets/Scripts/PortData/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.PortData.EditMode"]
+    },
+    {
+      "prefix": "Assets/Scripts/Gameplay/Domain/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.Gameplay.Domain.EditMode"]
+    },
+    {
+      "prefix": "Assets/Scripts/World/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.World.EditMode"]
+    },
+    {
+      "prefix": "Assets/Scripts/Combat/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.EditMode"]
+    },
+    {
+      "prefix": "Assets/Tests/PortData/EditMode/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.PortData.EditMode"]
+    },
+    {
+      "prefix": "Assets/Tests/GameplayDomain/EditMode/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.Gameplay.Domain.EditMode"]
+    },
+    {
+      "prefix": "Assets/Tests/World/EditMode/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.World.EditMode"]
+    },
+    {
+      "prefix": "Assets/Tests/EditMode/",
+      "profile": "focused",
+      "editmode_assemblies": ["VLTK.Tests.EditMode"]
+    },
+    {
+      "prefix": "harness/",
+      "profile": "fast"
+    }
+  ],
+  "fast_paths": [
+    "scripts/check_unity_assembly_boundaries.py",
+    "scripts/test_check_unity_assembly_boundaries.py",
+    "scripts/measure_unity_debug_compile.py",
+    "scripts/test_measure_unity_debug_compile.py",
+    "scripts/test_run_unity_test_profile.py",
+    "scripts/unity_test_profiles.json"
+  ]
+}

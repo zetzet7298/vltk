@@ -214,6 +214,7 @@ namespace VLTK.Sandbox
                 cost = row.costValue,
                 skillCostType = row.skillCostType,
                 timePerCast = row.timePerCast,
+                timePerCastOnHorse = row.timePerCastOnHorse,
                 waitTime = row.waitTime,
                 attackRadius = row.attackRadius,
                 isPhysical = row.isPhysical,
@@ -332,6 +333,9 @@ namespace VLTK.Sandbox
             {
                 case "physicsdamage_v": kind = MagicAttributeKind.PhysicsDamageV; return true;
                 case "firedamage_v": kind = MagicAttributeKind.FireDamageV; return true;
+                // [CaiBang-FirePool 2026-07-17] PC add-pool names map 1:1 to the split Add enums.
+                case "addfiredamage_v": kind = MagicAttributeKind.AddFireDamageV; return true;
+                case "addfiremagic_v": kind = MagicAttributeKind.AddFireMagicV; return true;
                 case "colddamage_v": kind = MagicAttributeKind.ColdDamageV; return true;
                 case "lightingdamage_v": kind = MagicAttributeKind.LightingDamageV; return true;
                 case "poisondamage_v": kind = MagicAttributeKind.PoisonDamageV; return true;

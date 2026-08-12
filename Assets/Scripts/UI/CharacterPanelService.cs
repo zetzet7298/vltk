@@ -71,6 +71,51 @@ namespace VLTK.UI
         public const string LabelBlock = "Đỡ Đòn";
         public const string LabelPower = "Sức Mạnh";
 
+
+
+        public readonly struct PcCharacterControl
+        {
+            public readonly string pcFile;
+            public readonly string pcSection;
+            public readonly string labelVi;
+            public readonly string actionVi;
+            public readonly string spr;
+
+            public PcCharacterControl(string pcFile, string pcSection, string labelVi, string actionVi, string spr)
+            {
+                this.pcFile = pcFile;
+                this.pcSection = pcSection;
+                this.labelVi = labelVi;
+                this.actionVi = actionVi;
+                this.spr = spr;
+            }
+        }
+
+        public static readonly IReadOnlyList<PcCharacterControl> PcControls = new[]
+        {
+            new PcCharacterControl("2711122c", "BtnAttribPage", "Thuộc tính", "mở trang chỉ số thuộc tính", @"\Spr\UI3\状态与装备\分页.spr"),
+            new PcCharacterControl("2711122c", "BtnEquipPage", "Trang bị", "mở trang trang bị nhân vật", @"\Spr\UI3\状态与装备\分页.spr"),
+            new PcCharacterControl("2711122c", "BtnJudgePage", "Đánh giá", "mở trang đánh giá/uy danh", @"\Spr\UI3\状态与装备\分页.spr"),
+            new PcCharacterControl("2711122c", "BtnMeridianPage", "Kinh mạch", "mở trang kinh mạch", @"\Spr\UI3\状态与装备\分页.spr"),
+            new PcCharacterControl("2711122c", "Item", "Vật phẩm đang mặc", "mở dòng vật phẩm/trang bị đang chọn", @"\spr\Ui3\状态与装备\装备和属性－物品.spr"),
+            new PcCharacterControl("2711122c", "Close", "Đóng", "đóng cửa sổ nhân vật", @"\spr\UI3\主界面\关闭_vn.spr"),
+            new PcCharacterControl("11da85ea", "AddStrength", "Cộng sức mạnh", "cộng 1 điểm sức mạnh", @"\Spr\Ui3\状态与装备\状态加点按钮改.spr"),
+            new PcCharacterControl("11da85ea", "AddVitality", "Cộng sinh khí", "cộng 1 điểm sinh khí", @"\Spr\Ui3\状态与装备\状态加点按钮改.spr"),
+            new PcCharacterControl("11da85ea", "AddDexterity", "Cộng thân pháp", "cộng 1 điểm thân pháp", @"\Spr\Ui3\状态与装备\状态加点按钮改.spr"),
+            new PcCharacterControl("11da85ea", "AddEnergy", "Cộng nội công", "cộng 1 điểm nội công", @"\Spr\Ui3\状态与装备\状态加点按钮改.spr"),
+            new PcCharacterControl("11da85ea", "SummitSign", "Lưu mô tả", "lưu mô tả/phát biểu nhân vật", @"\Spr\UI3\状态与装备\2字按钮.spr"),
+            new PcCharacterControl("11da85ea", "DelSignButton", "Xóa mô tả", "xóa dòng mô tả nhân vật", @"\Spr\UI3\状态与装备\描述关闭.spr"),
+        };
+
+        public static readonly IReadOnlyDictionary<string, string> PassivePcCharacterControls =
+            new Dictionary<string, string>
+            {
+                ["SignInput"] = "11da85ea [SignInput] is a text input field for character signature; SummitSign/DelSignButton are commands.",
+                ["InputBack"] = "11da85ea [InputBack] is the signature input background art.",
+                ["AttribListScroll"] = "3d62c429 [AttribListScroll] is scroll track art for opponent/player attribute list.",
+                ["AttribListScroll_Btn"] = "3d62c429 [AttribListScroll_Btn] is a drag thumb; mobile ScrollView supplies drag/momentum.",
+            };
+
         // 15 chỉ số chính theo PC: hp/mp/stamina + 12 chỉ số chiến đấu
         public static readonly int[] PcMainStatOrder =
         {

@@ -1,0 +1,124 @@
+{
+  "schema": "vltk.shaolin.static-catalog-proof/v1",
+  "membership_source": "harness/docs/stories/SKL-S-PROOF-001/membership-classification.json",
+  "membership_sha256": "73bf4f791e37b2b63d276740ad5886b05c22286c2941cb521cdfc839f5e517a6",
+  "slice_source": "harness/docs/stories/SKL-S-PROOF-001/PcShaolinSkills.txt",
+  "slice_sha256": "b6978c108ac0dc521e143e5f45d192babf2a818c75128983f2f3157b69e3c5c6",
+  "provenance_source": "harness/docs/stories/SKL-S-PROOF-001/PcShaolinSkills.provenance.json",
+  "provenance_sha256": "e8920fdd977127651cea6d584a9e0823f21ac438b036ed8ab536fd2ea834a9a1",
+  "pc_learned_skill_ids": [
+    4,
+    6,
+    8,
+    10,
+    11,
+    14,
+    15,
+    16,
+    19,
+    20,
+    21,
+    271,
+    273,
+    318,
+    319,
+    321,
+    709,
+    1055,
+    1056,
+    1057
+  ],
+  "observed_unity_display_ids": [
+    3,
+    4,
+    6,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "shared_ids": [
+    4,
+    6,
+    8,
+    10,
+    11,
+    14,
+    15,
+    16,
+    19,
+    20,
+    21
+  ],
+  "pc_learned_only_ids": [
+    271,
+    273,
+    318,
+    319,
+    321,
+    709,
+    1055,
+    1056,
+    1057
+  ],
+  "unity_only_unresolved_ids": [
+    3,
+    9,
+    12,
+    13,
+    17,
+    18
+  ],
+  "learned_relationship_target_ids": [
+    22,
+    61,
+    66,
+    76,
+    77,
+    86,
+    135,
+    136,
+    186,
+    202,
+    216,
+    272,
+    317,
+    318,
+    319,
+    1083,
+    1085
+  ],
+  "relationship_self_reference_learned_ids": [
+    318,
+    319
+  ],
+  "unity_only_relationship_target_ids": [],
+  "ui_order": null,
+  "canonical_sources": {
+    "static_rows": {
+      "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+      "sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c",
+      "provides": "canonical static skill rows (parsed only via the exact-byte slice)"
+    },
+    "progression": {
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
+      "sha256": "7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3",
+      "provides": "PC active-category progression membership (skills_table.lua)"
+    },
+    "skillbook": {
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
+      "sha256": "4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9",
+      "provides": "level 90/120/150 skillbook grants (skillbook.lua)"
+    }
+  }
+}

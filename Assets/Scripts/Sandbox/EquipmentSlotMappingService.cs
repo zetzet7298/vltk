@@ -26,6 +26,10 @@ namespace VLTK.Sandbox
         Book = 10,        // Mật tịch / Võ công thư
         TaskItem = 11,    // Nhiệm vụ vật phẩm
         Currency = 12,    // Tiền tệ (Bạc, Kim Bảo)
+        // PR-1 bind-accessory-equipment-slots — append-only (values 13–15)
+        Mask = 13,         // Mặt Nạ (PC mask.txt, equip_mask D11)
+        Pendant = 14,      // Hộ Thân Phù (PC pendant.txt, equip_pendant D9)
+        Trinket = 15,      // Bội Kiện / Ngọc Bội (PC shipin.txt, equip_shipin D14)
     }
 
     /// <summary>PC weapon sub-types.</summary>
@@ -79,6 +83,10 @@ namespace VLTK.Sandbox
             { PcItemCategory.Book, new EquipmentSlotMapping { category = PcItemCategory.Book, slotNameVi = "Mật Tịch", isEquippable = false, maxStackSize = 1 } },
             { PcItemCategory.TaskItem, new EquipmentSlotMapping { category = PcItemCategory.TaskItem, slotNameVi = "Vật Phẩm Nhiệm Vụ", isEquippable = false, maxStackSize = 99 } },
             { PcItemCategory.Currency, new EquipmentSlotMapping { category = PcItemCategory.Currency, slotNameVi = "Tiền Tệ", isEquippable = false, maxStackSize = 999999 } },
+            // PR-1 — accessory categories (equippable, stack 1)
+            { PcItemCategory.Mask, new EquipmentSlotMapping { category = PcItemCategory.Mask, slotNameVi = "Mặt Nạ", isEquippable = true, maxStackSize = 1 } },
+            { PcItemCategory.Pendant, new EquipmentSlotMapping { category = PcItemCategory.Pendant, slotNameVi = "Hộ Thân Phù", isEquippable = true, maxStackSize = 1 } },
+            { PcItemCategory.Trinket, new EquipmentSlotMapping { category = PcItemCategory.Trinket, slotNameVi = "Bội Kiện", isEquippable = true, maxStackSize = 1 } },
         };
 
         public static EquipmentSlotMapping GetMapping(PcItemCategory category)
@@ -90,7 +98,10 @@ namespace VLTK.Sandbox
         public static int GetMaxStack(PcItemCategory category)
             => Mappings.TryGetValue(category, out var m) ? m.maxStackSize : 1;
 
-        /// <summary>Map PC ItemType code to PcItemCategory.</summary>
+        /// <summary>
+        /// Map PC ItemType code (1–12, from ItemList.txt ItemType column) to PcItemCategory.
+        /// This axis is distinct from EQUIPDETAILTYPE (0–16); see DetailTypeToCategory.
+        /// </summary>
         public static PcItemCategory ItemTypeToCategory(int itemType) => itemType switch
         {
             1 => PcItemCategory.Weapon,
@@ -106,6 +117,22 @@ namespace VLTK.Sandbox
             11 => PcItemCategory.TaskItem,
             12 => PcItemCategory.Currency,
             _ => PcItemCategory.Material,
+        };
+
+        /// <summary>
+        /// Map PC EQUIPDETAILTYPE code (0–16, from GameDataDef.h) to PcItemCategory.
+        /// This is the single source of truth for equipment-slot classification.
+        /// Distinct axis from ItemTypeToCategory (which maps ItemType 1–12).
+        /// PC EQUIPDETAILTYPE: ring=3, amulet(necklace)=4, pendant=9, mask=11, shipin=14.
+        /// </summary>
+        public static PcItemCategory DetailTypeToCategory(int detailType) => detailType switch
+        {
+            3 => PcItemCategory.Ring,       // equip_ring
+            4 => PcItemCategory.Necklace,   // equip_amulet (PC amulet.txt IS necklace "Liên")
+            9 => PcItemCategory.Pendant,    // equip_pendant
+            11 => PcItemCategory.Mask,      // equip_mask
+            14 => PcItemCategory.Trinket,   // equip_shipin
+            _ => PcItemCategory.Material,   // fallback (same default as ItemTypeToCategory)
         };
 
         /// <summary>Get all magic attribute codes for an item's stat deltas.</summary>

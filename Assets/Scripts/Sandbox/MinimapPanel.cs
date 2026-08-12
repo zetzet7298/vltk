@@ -131,6 +131,8 @@ namespace VLTK.Sandbox
             var mapRt = mapGo.AddComponent<RectTransform>();
             mapRt.anchorMin = new Vector2(0.04f, 0.08f);
             mapRt.anchorMax = new Vector2(0.96f, 0.92f);
+            mapRt.offsetMin = Vector2.zero;
+            mapRt.offsetMax = Vector2.zero;
             _mapImage = mapGo.AddComponent<Image>();
             _mapImage.color = new Color(0.15f, 0.18f, 0.12f, 0.9f);
 
@@ -140,6 +142,8 @@ namespace VLTK.Sandbox
             var gridRt = gridGo.AddComponent<RectTransform>();
             gridRt.anchorMin = Vector2.zero;
             gridRt.anchorMax = Vector2.one;
+            gridRt.offsetMin = Vector2.zero;
+            gridRt.offsetMax = Vector2.zero;
             var gridImg = gridGo.AddComponent<Image>();
             gridImg.color = new Color(0.2f, 0.25f, 0.15f, 0.3f);
 
@@ -178,6 +182,8 @@ namespace VLTK.Sandbox
             var btnRt = btnGo.AddComponent<RectTransform>();
             btnRt.anchorMin = Vector2.zero;
             btnRt.anchorMax = Vector2.one;
+            btnRt.offsetMin = Vector2.zero;
+            btnRt.offsetMax = Vector2.zero;
             var btnImg = btnGo.AddComponent<Image>();
             btnImg.color = Color.clear;
             btnImg.raycastTarget = true;

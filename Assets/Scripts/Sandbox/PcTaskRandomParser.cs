@@ -68,6 +68,11 @@ namespace VLTK.Sandbox
             return int.TryParse(s.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int v) ? v : 0;
         }
 
+        // Bounds-safe column access: rows with fewer columns than the full schema
+        // (common in coll/talk/next entity.txt) must not throw IndexOutOfRange.
+        private static int TryInt(string[] cols, int idx)
+            => (idx >= 0 && idx < cols.Length) ? TryInt(cols[idx]) : 0;
+
         private static string TryStr(string[] cols, int idx)
             => (idx < cols.Length) ? (cols[idx] ?? string.Empty).Trim() : string.Empty;
 
@@ -89,7 +94,7 @@ namespace VLTK.Sandbox
         private static void ParseEntityFile(PcTaskRandomRegistry reg, string path, string source)
         {
             if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -108,15 +113,15 @@ namespace VLTK.Sandbox
                     TaskType = TryStr(cols, 1),
                     Genre = TryStr(cols, 2),
                     Detail = TryStr(cols, 3),
-                    Level = TryInt(cols[5]),
-                    GoodsFive = TryInt(cols[6]),
-                    Quality = TryInt(cols[7]),
-                    GoodsNum = TryInt(cols[8]),
-                    DelGoods = TryInt(cols[9]),
-                    RecordSeed = source == "kill" ? TryInt(cols[10]) : 0,
-                    Money = TryInt(source == "kill" ? cols[11] : cols[10]),
+                    Level = TryInt(cols, 5),
+                    GoodsFive = TryInt(cols, 6),
+                    Quality = TryInt(cols, 7),
+                    GoodsNum = TryInt(cols, 8),
+                    DelGoods = TryInt(cols, 9),
+                    RecordSeed = source == "kill" ? TryInt(cols, 10) : 0,
+                    Money = TryInt(cols, source == "kill" ? 11 : 10),
                     KillNpcName = TryStr(cols, source == "kill" ? 12 : 11),
-                    DropRate = source == "kill" ? TryInt(cols[13]) : 0,
+                    DropRate = source == "kill" ? TryInt(cols, 13) : 0,
                     TalkNpcName = TryStr(cols, source == "kill" ? 14 : 12),
                     TalkNpcMap = TryStr(cols, source == "kill" ? 15 : 13),
                     TaskText = TryStr(cols, source == "kill" ? 16 : 14),

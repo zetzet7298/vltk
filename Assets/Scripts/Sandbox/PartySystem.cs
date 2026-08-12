@@ -136,6 +136,32 @@ namespace VLTK.Sandbox
             RemoveMember(memberId);
         }
 
+        /// <summary>Transfer party leadership to an existing member.</summary>
+        public bool TransferLeadership(int memberId)
+        {
+            var nextLeader = _members.Find(m => m.memberId == memberId);
+            if (nextLeader == null)
+                return false;
+
+            foreach (var member in _members)
+                member.isLeader = false;
+            nextLeader.isLeader = true;
+            _leaderId = memberId;
+            SubsystemLog.Info("Party", $"{nextLeader.nameVi} trở thành trưởng đội");
+            return true;
+        }
+
+        /// <summary>Disband the whole party, matching the PC Dismiss command.</summary>
+        public void DisbandParty()
+        {
+            if (_members.Count == 0)
+                return;
+            _members.Clear();
+            _leaderId = 0;
+            OnPartyDisbanded?.Invoke();
+            SubsystemLog.Info("Party", "Đội đã giải tán");
+        }
+
         /// <summary>Distribute EXP among party members.</summary>
         public Dictionary<int, int> DistributeExp(int totalExp)
         {
@@ -286,7 +312,14 @@ namespace VLTK.Sandbox
             tRt.anchorMax = new Vector2(1f, 1f);
             var tBg = titleBar.AddComponent<Image>();
             tBg.color = new Color(0.15f, 0.2f, 0.35f, 0.95f);
-            var tTxt = titleBar.AddComponent<Text>();
+
+            var titleTextGo = new GameObject("TitleText");
+            titleTextGo.transform.SetParent(titleBar.transform, false);
+            var ttRt = titleTextGo.AddComponent<RectTransform>();
+            ttRt.anchorMin = Vector2.zero;
+            ttRt.anchorMax = Vector2.one;
+            ttRt.sizeDelta = Vector2.zero;
+            var tTxt = titleTextGo.AddComponent<Text>();
             tTxt.text = "Đội";
             tTxt.font = _font;
             tTxt.fontSize = 28;
@@ -304,7 +337,14 @@ namespace VLTK.Sandbox
             var cBtn = closeGo.AddComponent<Button>();
             cBtn.targetGraphic = cImg;
             cBtn.onClick.AddListener(() => Toggle());
-            var cTxt = closeGo.AddComponent<Text>();
+
+            var closeTextGo = new GameObject("CloseText");
+            closeTextGo.transform.SetParent(closeGo.transform, false);
+            var ctRt = closeTextGo.AddComponent<RectTransform>();
+            ctRt.anchorMin = Vector2.zero;
+            ctRt.anchorMax = Vector2.one;
+            ctRt.sizeDelta = Vector2.zero;
+            var cTxt = closeTextGo.AddComponent<Text>();
             cTxt.text = "✕";
             cTxt.font = _font;
             cTxt.fontSize = 22;

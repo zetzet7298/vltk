@@ -42,6 +42,7 @@ namespace VLTK.Sandbox
         public const string LogTag = "Battlefield";
 
         private PcBattlefieldRegistry _registry;
+        private IBattlefieldHost _host;
         private readonly Dictionary<int, BattlefieldState> _states = new();
 
         /// <summary>Sự kiện khi người chơi vào chiến trường. (mapId, playerCount)</summary>
@@ -51,12 +52,17 @@ namespace VLTK.Sandbox
 
         public int Count => _registry != null ? _registry.Count : 0;
 
-        public BattlefieldService() { }
+        public BattlefieldService() : this(null, null) { }
 
-        public BattlefieldService(PcBattlefieldRegistry registry)
+        public BattlefieldService(PcBattlefieldRegistry registry) : this(registry, null) { }
+
+        public BattlefieldService(PcBattlefieldRegistry registry, IBattlefieldHost host)
         {
+            _host = host;
             AttachRegistry(registry);
         }
+
+        public void AttachHost(IBattlefieldHost host) { _host = host; }
 
         public void AttachRegistry(PcBattlefieldRegistry registry)
         {
@@ -122,8 +128,18 @@ namespace VLTK.Sandbox
                 state.startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 state.endTimestamp = state.startTimestamp + entry.duration;
                 state.isActive = true;
+                if (_host != null)
+                {
+                    _host.OnBattlefieldOpening(mapId, entry.minLevel, entry.maxLevel, entry.duration);
+                    _host.LogBattlefieldEvent(mapId, $"Chiến trường {entry.nameVi} mở (cấp {entry.minLevel}-{entry.maxLevel})");
+                }
             }
             OnPlayerJoined?.Invoke(mapId, state.currentPlayers);
+            if (_host != null)
+            {
+                int playerTeam = _host.AssignPlayerTeam(mapId, 0, 0);
+                _host.OnPlayerJoinedBattlefield(mapId, 0, playerTeam, state.currentPlayers);
+            }
             SubsystemLog.Info(LogTag, $"Player vào {entry.nameVi}: tổng {state.currentPlayers}/{entry.maxPlayers}");
             return true;
         }
@@ -134,8 +150,20 @@ namespace VLTK.Sandbox
             if (state == null) return false;
             state.isActive = false;
             state.winningTeam = winningTeam;
+            int previousPlayers = state.currentPlayers;
             state.currentPlayers = 0;
             OnBattleEnded?.Invoke(mapId, winningTeam);
+            if (_host != null)
+            {
+                // Phần thưởng theo phe (simplified: tất cả players nhận reward 1 lần khi kết thúc)
+                for (int team = 1; team <= 2; team++)
+                {
+                    int reward = (team == winningTeam) ? previousPlayers * 100 : 0;
+                    _host.GrantBattlefieldReward(0, team, winningTeam, reward);
+                }
+                _host.OnBattlefieldEnded(mapId, winningTeam, 0, 0);
+                _host.LogBattlefieldEvent(mapId, $"Kết thúc chiến trường, phe thắng: {winningTeam}");
+            }
             SubsystemLog.Info(LogTag, $"Kết thúc chiến trường {state.nameVi}: phe thắng = {winningTeam}");
             return true;
         }

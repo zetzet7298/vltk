@@ -1,0 +1,18 @@
+{
+    "name": "VLTK.Survivor.Editor",
+    "rootNamespace": "VLTK.Survivor.Editor",
+    "references": [
+        "VLTK.Survivor.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -38,7 +38,7 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
                 return new List<PcModMissileRow>();
-            return ParseLines(File.ReadAllLines(absolutePath), minMissileId);
+            return ParseLines(PcText.ReadLinesTcvn3(absolutePath), minMissileId);
         }
 
         public static List<PcModMissileRow> ParseLines(IEnumerable<string> lines, int minMissileId = 0)
@@ -110,16 +110,37 @@ namespace VLTK.Sandbox
     {
         private static readonly Dictionary<int, PcMissileEntry> _missiles = new();
         private static bool _initialized;
+        public static int Count => _missiles.Count;
+
+        /// <summary>
+        /// Load runtime missile rows from the full slistcache.pak missles payload when
+        /// staged under Reference/PcAttrib/missles1.txt. The current 513-row source has
+        /// unique ids; sequential dictionary insertion still defines last-row-wins if
+        /// a future canonical source reintroduces duplicates. Legacy PcMissles/ModMissles
+        /// remain fallbacks for environments without the audited PcAttrib copy.
+        /// </summary>
 
         public static void Initialize(string streamingAssetsPath)
         {
             if (_initialized) return;
 
             string refPath = Path.Combine(streamingAssetsPath, "Reference");
+            string missles1File = Path.Combine(refPath, "PcAttrib", "missles1.txt");
             string pcFile = Path.Combine(refPath, "PcMissles.txt");
             string modFile = Path.Combine(refPath, "ModMissles.txt");
 
-            if (File.Exists(pcFile))
+            if (File.Exists(missles1File))
+            {
+                // missles1.txt is TCVN3 Vietnamese (Western ANSI bytes + TCVN3 glyph codes).
+                // DecodeBest picks GBK (the names form clean-ish hanzi) which consumes the
+                // tab separators around high bytes, shifting columns right by one (Speed col11
+                // reads col12 -> garbage like -40960). Read it on the explicit TCVN3 path so
+                // tabs stay intact and names render as real Vietnamese.
+                var rows = PcModMissileParser.ParseLines(PcText.ReadLinesTcvn3(missles1File));
+                var list = PcModMissileParser.ToMissileEntries(rows);
+                foreach (var m in list) _missiles[m.missileId] = m;
+            }
+            else if (File.Exists(pcFile))
             {
                 var list = PcConfigParser.ParseMissiles(pcFile);
                 foreach (var m in list) _missiles[m.missileId] = m;

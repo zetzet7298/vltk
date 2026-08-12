@@ -13,7 +13,7 @@ namespace VLTK.Sandbox
     public class ItemScriptService
     {
         public const string LogTag = "ItemScript";
-        public const string DefaultStreamingDir = "Reference/PcItem";
+        public const string DefaultStreamingDir = "Reference/PcItemFull";
 
         private PcItemScriptRegistry _registry;
 

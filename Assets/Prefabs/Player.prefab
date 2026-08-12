@@ -91,7 +91,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,10 +127,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e0f30d95fee254188c117853496cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: VLTK.Sandbox::VLTK.Sandbox.SandboxPlayerController
-  moveSpeed: 900
+  moveSpeed: 1800
   allowKeyboardFallback: 1
-  visual: {fileID: 0}
+  isFemale: 0
   joystick: {fileID: 0}
+  horse: {fileID: 0}
+  defaultHorseId: 5
+  startMounted: 1
+  mountedSpeedMultiplier: 1.8
   followCamera: {fileID: 0}
   followCameraEnabled: 1
   followOrthoSize: 480
@@ -152,14 +156,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b176dd1ce2f0dfd7faaaaa795fb40faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: VLTK.Sandbox::VLTK.Sandbox.MalePlayerVisual
-  currentAction: 0
-  currentWeapon: 0
-  direction: 0
   idleFrameRate: 6
   moveFrameRate: 12
   magicFrameRate: 14.4
   attackFrameRate: 14.4
-  playAutomatically: 1
   referencePixel: {x: 160, y: 200}
   pixelsPerUnit: 1
   spritesRootOverride: 

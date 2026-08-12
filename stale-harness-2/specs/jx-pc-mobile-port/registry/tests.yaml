@@ -1,0 +1,750 @@
+schema_version: 1
+tests:
+- id: TEST-SPEC-001
+  dri: qa-spec
+  reviewer: domain-owner-review
+  phase: ALL
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G0
+  layer: spec
+  gate: G0
+  title: CNPM heading va table signature.
+- id: TEST-SPEC-002
+  dri: qa-spec
+  reviewer: domain-owner-review
+  phase: ALL
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G0
+  layer: spec
+  gate: G0
+  title: ID uniqueness va traceability closure.
+- id: TEST-SOURCE-001
+  dri: qa-source
+  reviewer: domain-owner-review
+  phase: P0
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G1
+  layer: source
+  gate: G1
+  title: package.ini winner va artifact provenance.
+- id: TEST-CATALOG-001
+  dri: qa-catalog
+  reviewer: domain-owner-review
+  phase: P0
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G1
+  layer: catalog
+  gate: G1
+  title: Census coverage va reference closure 100 phan tram.
+- id: TEST-CONTRACT-001
+  dri: qa-contract
+  reviewer: domain-owner-review
+  phase: P1
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G2
+  layer: contract
+  gate: G2
+  title: OpenAPI schema examples va error cases.
+- id: TEST-CONTRACT-002
+  dri: qa-contract
+  reviewer: domain-owner-review
+  phase: P1
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G2
+  layer: contract
+  gate: G2
+  title: Protobuf lint breaking golden va malformed frame.
+- id: TEST-SIM-001
+  dri: qa-simulation
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: simulation
+  gate: G3
+  title: Cung seed intent thi state hash giong nhau.
+- id: TEST-TGT-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Auto-acquire target, lock, hard leash va pending cast mobile.
+- id: TEST-VISUAL-001
+  dri: qa-visual
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: visual
+  gate: G3
+  title: Skill frame sequence SSIM tung case toi thieu 0.99.
+- id: TEST-HUD-001
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: HUD rect anchor z-order hash khong doi.
+- id: TEST-UI-001
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: Safe Area transform toan HUD root khong doi geometry.
+- id: TEST-MAP-001
+  dri: qa-map
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: map
+  gate: G3
+  title: Ba Lang canonical mapId 53 khong alias 79.
+- id: TEST-ECON-001
+  dri: qa-data
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: data
+  gate: G4
+  title: Retry crash commit khong double-spend.
+- id: TEST-RECONNECT-001
+  dri: qa-e2e
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: e2e
+  gate: G4
+  title: Avatar ton tai va full snapshot trong grace 15 giay.
+- id: TEST-CHANNEL-001
+  dri: qa-e2e
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: e2e
+  gate: G4
+  title: Dynamic channel party affinity va transfer epoch.
+- id: TEST-LUA-001
+  dri: qa-security
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: security
+  gate: G4
+  title: Lua forbidden API timeout memory va deterministic RNG.
+- id: TEST-LOAD-001
+  dri: qa-performance
+  reviewer: domain-owner-review
+  phase: ALL
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G5
+  layer: performance
+  gate: G5
+  title: 1000 WSS CCU latency AOI checkpoint.
+- id: TEST-DEVICE-001
+  dri: qa-performance
+  reviewer: domain-owner-review
+  phase: ALL
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G5
+  layer: performance
+  gate: G5
+  title: Android 4GB 30 FPS va mid-tier 60 FPS target.
+- id: TEST-RESTORE-001
+  dri: qa-operations
+  reviewer: domain-owner-review
+  phase: ALL
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G6
+  layer: operations
+  gate: G6
+  title: PITR restore RPO 5 phut RTO 60 phut.
+- id: TEST-RELEASE-001
+  dri: qa-release
+  reviewer: domain-owner-review
+  phase: ALL
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G6
+  layer: release
+  gate: G6
+  title: N va N-1 compatibility rollback content.
+- id: TEST-ACS-001
+  dri: qa-e2e
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: e2e
+  gate: G4
+  title: Account character session happy path.
+- id: TEST-ACS-002
+  dri: qa-security
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: security
+  gate: G4
+  title: Session replay va duplicate login.
+- id: TEST-ACS-003
+  dri: qa-recovery
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: recovery
+  gate: G4
+  title: Resume va snapshot authoritative.
+- id: TEST-AUDIO-001
+  dri: qa-parity
+  reviewer: product-parity-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: parity
+  gate: G3
+  title: Audio cue va PCM provenance.
+- id: TEST-AUTO-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Auto combat leash target cooldown.
+- id: TEST-AUTO-002
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Loot heal va bag full stop.
+- id: TEST-AUTO-003
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Auto path no route va transfer.
+- id: TEST-AVATAR-001
+  dri: qa-parity
+  reviewer: product-parity-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: parity
+  gate: G3
+  title: Avatar layer action direction coverage.
+- id: TEST-BUNDLE-001
+  dri: qa-content
+  reviewer: domain-owner-review
+  phase: P0
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G1
+  layer: content
+  gate: G1
+  title: Immutable bundle exact digest hash signature va N/N-1 negotiation.
+- id: TEST-CBT-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Combat deterministic replay.
+- id: TEST-CBT-002
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Target range LOS command fuzz.
+- id: TEST-CBT-003
+  dri: qa-parity
+  reviewer: product-parity-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: parity
+  gate: G3
+  title: Live PC combat golden.
+- id: TEST-CONTENT-001
+  dri: qa-content
+  reviewer: domain-owner-review
+  phase: P0
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G1
+  layer: content
+  gate: G1
+  title: Package first-match winner qua vltktool, khong filesystem fallback.
+- id: TEST-CONTENT-002
+  dri: qa-content
+  reviewer: domain-owner-review
+  phase: P0
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G1
+  layer: content
+  gate: G1
+  title: Encoding UID va hash provenance.
+- id: TEST-CONTENT-003
+  dri: qa-parity
+  reviewer: product-parity-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: parity
+  gate: G3
+  title: Visual content golden.
+- id: TEST-COVERAGE-001
+  dri: qa-content
+  reviewer: domain-owner-review
+  phase: P0
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G1
+  layer: content
+  gate: G1
+  title: Catalog coverage, 242-row skill union va reference closure.
+- id: TEST-IIEL-001
+  dri: qa-economy
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: economy
+  gate: G4
+  title: Inventory 60 slot va one-slot item.
+- id: TEST-IIEL-002
+  dri: qa-economy
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: economy
+  gate: G4
+  title: Equip loot idempotency va concurrency.
+- id: TEST-IIEL-003
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: Inventory tap action khong drag drop.
+- id: TEST-MAP-053
+  dri: qa-parity
+  reviewer: product-parity-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: parity
+  gate: G3
+  title: Ba Lang canonical map 53.
+- id: TEST-MP-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Mount state va movement.
+- id: TEST-MP-002
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Pet lifecycle va authority.
+- id: TEST-NQ-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: gameplay
+  gate: G4
+  title: NPC quest state va reward atomic.
+- id: TEST-NQ-002
+  dri: qa-security
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: security
+  gate: G4
+  title: Lua quest sandbox va determinism.
+- id: TEST-PRG-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Progression level 1 den 200.
+- id: TEST-PRG-002
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Faction join va skill grant.
+- id: TEST-PRG-003
+  dri: qa-recovery
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: recovery
+  gate: G4
+  title: Progression reconnect va migration.
+- id: TEST-SKL-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Skill catalog shared novice 10 phai 242-row union.
+- id: TEST-SKL-002
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: Skill branch missile buff deterministic.
+- id: TEST-SKL-003
+  dri: qa-visual
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: visual
+  gate: G3
+  title: Skill visual SSIM tung case.
+- id: TEST-STGPE-001
+  dri: qa-social
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: social
+  gate: G4
+  title: Party friend chat moderation.
+- id: TEST-STGPE-002
+  dri: qa-economy
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: economy
+  gate: G4
+  title: Trade stall atomic.
+- id: TEST-STGPE-003
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: gameplay
+  gate: G4
+  title: Guild PvP event.
+- id: TEST-STGPE-004
+  dri: qa-recovery
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: recovery
+  gate: G4
+  title: Endgame event rollback.
+- id: TEST-UI-002
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: Mot primary panel va mot bottom sheet.
+- id: TEST-UI-003
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: Panel delta gap reconnect state.
+- id: TEST-UI-004
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: Inventory panel 60 slot.
+- id: TEST-UI-005
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: Skill tap hold-drag cancel.
+- id: TEST-UI-006
+  dri: qa-ui
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: ui
+  gate: G3
+  title: Accessibility text scale va reduced motion.
+- id: TEST-UI-007
+  dri: qa-visual
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: visual
+  gate: G3
+  title: SPR PC provenance và đầu ra tiếng Việt.
+- id: TEST-UI-008
+  dri: qa-ui
+  reviewer: qa-parity-review
+  phase: P1
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/migration-plan.md
+  - GATE-G3
+  layer: ui-rollout
+  gate: G3
+  title: Mọi panel stale có v2; bootstrap flag ký/pin, rollout/rollback và retirement legacy không fallback.
+- id: TEST-WMM-001
+  dri: qa-gameplay
+  reviewer: domain-owner-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: gameplay
+  gate: G3
+  title: World movement reconcile.
+- id: TEST-WMM-002
+  dri: qa-parity
+  reviewer: product-parity-review
+  phase: P0-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G3
+  layer: parity
+  gate: G3
+  title: Map collision coordinate parity.
+- id: TEST-WMM-003
+  dri: qa-e2e
+  reviewer: domain-owner-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: e2e
+  gate: G4
+  title: Channel transfer epoch.
+- id: TEST-CHECKPOINT-001
+  dri: qa-recovery
+  reviewer: sre-release-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: recovery
+  gate: G4
+  title: PostgreSQL checkpoint restore preserves authoritative state and revision.
+- id: TEST-MIGRATION-001
+  dri: qa-data
+  reviewer: database-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: data
+  gate: G4
+  title: Schema migration forward and rollback preserve invariants without partial state.
+- id: TEST-PROTOFUZZ-001
+  dri: qa-contract
+  reviewer: security-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G2
+  layer: contract
+  gate: G2
+  title: Protobuf game.v1 malformed frame, additive lifecycle tags va boundary fuzz fails closed without state mutation.
+- id: TEST-SQLNEG-001
+  dri: qa-data
+  reviewer: database-review
+  phase: P1-P4
+  status: NOT_RUN
+  acceptance_evidence:
+  - delivery/test-strategy.md
+  - GATE-G4
+  layer: data
+  gate: G4
+  title: PostgreSQL negative invariant suite rejects invalid realm bag Lua ledger provenance and admission writes.

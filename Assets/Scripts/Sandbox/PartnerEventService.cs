@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcPartnerEventRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public PartnerEventService() : this(null) { }
+
         public PartnerEventService(PcPartnerEventRegistry reg) { _reg = reg ?? new PcPartnerEventRegistry(); }
 
         public static PartnerEventService LoadFromStreamingAssets(string subDir = "Reference/PcPartner")

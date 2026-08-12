@@ -1,0 +1,179 @@
+/* =============================================================================
+   VLTK Mobile — PC Hành Trang popup (UiItem 05ea8560.dat)
+   Panel/buttons are exact SPR exports. Unity overlays only slots and live values.
+   ========================================================================== */
+
+.inv-body {
+    width: 214px;
+    height: 454px;
+    padding: 0;
+    margin: 0;
+}
+
+.inv-panel {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 214px;
+    height: 454px;
+    background-image: url("Art/panel.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+/* [ItemBox] Left=24 Top=72 Width=168 Height=280 HUnits=6 VUnits=10 UnitBorder=1 */
+.inv-grid-host,
+.inv-grid {
+    position: absolute;
+    left: 24px;
+    top: 72px;
+    width: 168px;
+    height: 280px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+}
+
+.inv-cell {
+    width: 27px;
+    height: 27px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    align-items: center;
+    justify-content: center;
+}
+.inv-cell.filled {
+    background-color: rgba(80, 58, 24, 0.35);
+}
+.inv-cell.empty {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.inv-cell-icon {
+    width: 24px;
+    height: 24px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.inv-cell-fallback {
+    width: 24px;
+    height: 24px;
+    color: rgb(235, 221, 180);
+    font-size: 8px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+.inv-cell-count {
+    position: absolute;
+    right: 0px;
+    bottom: -1px;
+    min-width: 10px;
+    color: rgb(255, 245, 160);
+    background-color: rgba(0, 0, 0, 0.72);
+    font-size: 8px;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+/* [Money] Left=53 Top=353 Width=138 Height=14. Shows used/capacity until money backend lands. */
+.inv-slot-count {
+    position: absolute;
+    left: 53px;
+    top: 353px;
+    width: 138px;
+    height: 14px;
+    color: rgb(255, 217, 78);
+    font-size: 14px;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+.inv-action-btn,
+.inv-stall-btn {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+/* Disabled backend buttons still show exact PC art; only input is blocked in C#. */
+.inv-action-btn:disabled,
+.inv-stall-btn:disabled {
+    opacity: 1;
+}
+
+/* [MakeAdvBtn] Left=6 Top=370 Width=64 Height=20 */
+.inv-stall-adv {
+    left: 6px;
+    top: 370px;
+    width: 64px;
+    height: 20px;
+    background-image: url("Art/btn_make_adv_up.png");
+}
+.inv-stall-adv:hover { background-image: url("Art/btn_make_adv_over.png"); }
+.inv-stall-adv:active { background-image: url("Art/btn_make_adv_down.png"); }
+
+/* [MarkPriceBtn] Left=75 Top=370 Width=64 Height=20 */
+.inv-stall-price {
+    left: 75px;
+    top: 370px;
+    width: 64px;
+    height: 20px;
+    background-image: url("Art/btn_mark_price_up.png");
+}
+.inv-stall-price:hover { background-image: url("Art/btn_mark_price_over.png"); }
+.inv-stall-price:active { background-image: url("Art/btn_mark_price_down.png"); }
+
+/* [MakeStallBtn] Left=144 Top=370 Width=64 Height=20 */
+.inv-stall-toggle {
+    left: 144px;
+    top: 370px;
+    width: 64px;
+    height: 20px;
+    background-image: url("Art/btn_make_stall_up.png");
+}
+.inv-stall-toggle:active { background-image: url("Art/btn_make_stall_down.png"); }
+
+/* [GetMoneyBtn] Left=7 Top=394 Width=64 Height=28 */
+.inv-money-btn {
+    left: 7px;
+    top: 394px;
+    width: 64px;
+    height: 28px;
+    background-image: url("Art/btn_money_up.png");
+}
+.inv-money-btn:hover { background-image: url("Art/btn_money_over.png"); }
+.inv-money-btn:active { background-image: url("Art/btn_money_down.png"); }
+
+/* [OpenStatus] Left=70 Top=394 Width=72 Height=28 */
+.inv-status-btn {
+    left: 70px;
+    top: 394px;
+    width: 72px;
+    height: 28px;
+    background-image: url("Art/btn_status_up.png");
+}
+.inv-status-btn:hover { background-image: url("Art/btn_status_over.png"); }
+.inv-status-btn:active { background-image: url("Art/btn_status_down.png"); }
+
+/* [CloseBtn] Left=142 Top=394 Width=65 Height=28 */
+.inv-close-btn {
+    left: 142px;
+    top: 394px;
+    width: 65px;
+    height: 28px;
+    background-image: url("Art/btn_close_up.png");
+}
+.inv-close-btn:hover { background-image: url("Art/btn_close_over.png"); }
+.inv-close-btn:active { background-image: url("Art/btn_close_down.png"); }

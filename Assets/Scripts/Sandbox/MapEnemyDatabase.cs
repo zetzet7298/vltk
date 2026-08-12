@@ -3,9 +3,12 @@
 // Replaces BaLangEnemyDatabase for all maps.
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using VLTK.Model;
+using VLTK.Sprites;
 
 namespace VLTK.Sandbox
 {
@@ -30,7 +33,10 @@ namespace VLTK.Sandbox
                 System.IO.Path.Combine(npcDir, "npcs.txt"));
             foreach (var t in templates)
             {
-                if (t != null && t.templateId > 0)
+                if (t == null || t.templateId <= 0) continue;
+                if (_templateLookup.TryGetValue(t.templateId, out var existing) && IsCuratedTemplate(t.templateId))
+                    MergePcTemplateIntoCurated(existing, t);
+                else
                     _templateLookup[t.templateId] = t;
             }
         }
@@ -73,6 +79,18 @@ namespace VLTK.Sandbox
             MakeTemplate(70, "水牛", "Trâu nước", "ani090", 0, 3, 250, 3, 3, 350, 600, 4, 60, 20, 10, 0, 0, 0, 20, 0, 0),
             MakeTemplate(71, "毒蛙", "Ếch độc", "ani091", 0, 2, 130, 5, 5, 300, 500, 2, 45, 15, 10, 0, 0, 0, 15, 0, 0),
             MakeTemplate(72, "猛虎", "Hổ dữ", "ani092", 0, 0, 500, 6, 8, 550, 1000, 3, 90, 40, 20, 0, 0, 0, 50, 0, 0),
+
+            // Vượt ải Nhiếp Thí Trần / killbossmatch (PC script tbNpc ids 1480..1489).
+            MakeTemplate(1481, "gubo_Christmas", "Nhất quỷ", "boss018", 0, 0, 4200000, 18, 18, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1485, "tangburan_Christmas", "Nhị quỷ", "boss019", 0, 1, 4500000, 6, 6, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1488, "lanyiyi_Christmas", "Tam quỷ", "boss008", 0, 1, 3600000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1483, "helianpiao_Christmas", "Tứ quỷ", "boss002", 0, 2, 3100000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1482, "zhonglingxiu_Christmas", "Ngũ quỷ", "boss005", 0, 2, 3100000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1480, "duanmurui_Christmas", "Lục quỷ", "boss015", 0, 3, 3600000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1489, "mengcanglang_Christmas", "Thất quỷ", "boss012", 0, 3, 4200000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1486, "shansinan_Christmas", "Bát quỷ", "boss022", 0, 4, 4800000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1487, "xuanjizi_Christmas", "Cửu quỷ", "boss017", 0, 4, 4800000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1484, "wangzuo_Christmas", "Thập quỷ", "boss024", 0, 0, 8000000, 15, 15, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
         };
 
         /// <summary>
@@ -88,8 +106,11 @@ namespace VLTK.Sandbox
             [MapPortManifest.DaiLyId] = new[] { 60, 61, 62 },
             [MapPortManifest.BienKinhId] = new[] { 65, 66, 67 },
             [MapPortManifest.LamAnId] = new[] { 55, 66, 67 },
-            [MapPortManifest.QuangChauId] = new[] { 70, 71, 72 },
             [MapPortManifest.PhuongTuongId] = new[] { 50, 70, 72 },
+            // PC source: global/autoexec.lua spawns Bạch Dực (822) and Dịch quan (377) on map 389.
+            [MapPortManifest.TinSuVuotAiPhongKy120Id] = new[] { 822, 377 },
+            // PC source: missions/killbossmatch/class.lua tbMapId={907..916}, tbNpc={1480..1489}.
+            [MapPortManifest.VuotAiNhiepThiTranId] = new[] { 1481, 1485, 1488, 1483, 1482, 1480, 1489, 1486, 1487, 1484 },
         };
 
         /// <summary>Default spawn points per map (training area or town center from PC data).</summary>
@@ -111,10 +132,16 @@ namespace VLTK.Sandbox
             [MapPortManifest.BienKinhId] = new Vector2(53000f, -51000f),
             // Lâm An lakeside
             [MapPortManifest.LamAnId] = new Vector2(49000f, -47000f),
-            // Quảng Châu port
-            [MapPortManifest.QuangChauId] = new Vector2(51000f, -49000f),
             // Phượng Tường town
             [MapPortManifest.PhuongTuongId] = new Vector2(50000f, -48000f),
+            // Tín sứ vượt ải / Phong Kỳ 120+: wagoner.lua NewWorld(389,1582,3137).
+            [MapPortManifest.TinSuVuotAiPhongKy120Id] = new Vector2(50624f, -50208f),
+            // Vượt ải Nhiếp Thí Trần: killbossmatch/class.lua NewWorld(907,1476,3274).
+            [MapPortManifest.VuotAiNhiepThiTranId] = new Vector2(47232f, -52544f),
+            // Đấu trường liên đấu Kiệt xuất: Center of the map geometry
+            [MapPortManifest.DauTruongLienDauId] = new Vector2(53248f, -55296f),
+            // Lâm Du Quan default spawn point
+            [MapPortManifest.LamDuQuanId] = new Vector2(50500f, -12400f),
         };
 
         private static readonly Dictionary<int, NpcTemplate> _templateLookup;
@@ -126,10 +153,44 @@ namespace VLTK.Sandbox
                 _templateLookup[t.templateId] = t;
         }
 
+        private static bool IsCuratedTemplate(int templateId)
+        {
+            foreach (var template in SharedTemplates)
+                if (template.templateId == templateId)
+                    return true;
+            return false;
+        }
+
+        private static void MergePcTemplateIntoCurated(NpcTemplate curated, NpcTemplate pc)
+        {
+            if (curated == null || pc == null) return;
+            curated.kind = pc.kind;
+            curated.series = pc.series;
+            curated.walkSpeed = pc.walkSpeed > 0 ? pc.walkSpeed : curated.walkSpeed;
+            curated.runSpeed = pc.runSpeed > 0 ? pc.runSpeed : curated.runSpeed;
+            curated.visionRadius = pc.visionRadius > 0 ? pc.visionRadius : curated.visionRadius;
+            curated.activeRadius = pc.activeRadius > 0 ? pc.activeRadius : curated.activeRadius;
+            curated.aiMode = pc.aiMode > 0 ? pc.aiMode : curated.aiMode;
+            curated.aiParams = pc.aiParams != null && pc.aiParams.Length > 0 ? pc.aiParams : curated.aiParams;
+            curated.scriptRef = string.IsNullOrEmpty(pc.scriptRef) ? curated.scriptRef : pc.scriptRef;
+            curated.levelScriptRef = string.IsNullOrEmpty(pc.levelScriptRef) ? curated.levelScriptRef : pc.levelScriptRef;
+            curated.attack = pc.attack > 0 ? pc.attack : curated.attack;
+            curated.defense = pc.defense > 0 ? pc.defense : curated.defense;
+            curated.maxLife = Mathf.Max(curated.maxLife, pc.maxLife);
+            if (string.IsNullOrEmpty(curated.spriteClipRef))
+                curated.spriteClipRef = pc.spriteClipRef;
+        }
+
         public static NpcTemplate Resolve(int templateId)
         {
+            EnsurePcNpcsLoaded();
             _templateLookup.TryGetValue(templateId, out var t);
             return t;
+        }
+        
+        public static NpcTemplate GetTemplate(int templateId)
+        {
+            return Resolve(templateId);
         }
 
         public static void RegisterAllForMap(int mapId, NpcTemplateRegistry registry)
@@ -209,8 +270,77 @@ namespace VLTK.Sandbox
         public static string BuildNpcSprPath(string resType, string action)
         {
             if (string.IsNullOrWhiteSpace(resType)) return null;
-            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase) ? "animal" : "enemy";
+            foreach (var candidate in CandidateNpcSprPaths(resType, action))
+            {
+                if (IsNpcSprAvailable(candidate))
+                    return candidate;
+            }
+            return BuildNpcSprPathExact(resType, action);
+        }
+
+        private static string BuildNpcSprPathExact(string resType, string action)
+        {
+            string folder = NpcResFolder(resType);
+            if (string.Equals(action, "base", StringComparison.OrdinalIgnoreCase))
+                return $@"spr\npcres\{folder}\{resType}\{resType}.spr";
             return $@"spr\npcres\{folder}\{resType}\{resType}_{action}.spr";
+        }
+
+        private static string NpcResFolder(string resType)
+        {
+            if (resType.StartsWith("ani", StringComparison.OrdinalIgnoreCase)) return "animal";
+            if (resType.StartsWith("boss", StringComparison.OrdinalIgnoreCase)) return "boss";
+            if (resType.StartsWith("passerby", StringComparison.OrdinalIgnoreCase)) return "passerby";
+            if (resType.StartsWith("critter", StringComparison.OrdinalIgnoreCase)) return "critter";
+            return "enemy";
+        }
+
+        private static IEnumerable<string> CandidateNpcSprPaths(string resType, string requestedAction)
+        {
+            // Training objects (enemy178/179/180) use the PC stand visual from
+            // spr\npcres\enemy\<resType>\<resType>_st.spr. In the canonical unpack tree
+            // those entries are hash-only unknown/<uid>.spr (c24f790e/874e5077/11188c82),
+            // so do not fall back to spr/obj/corpse here: corpse art is the wrong in-world visual.
+            if (!string.IsNullOrWhiteSpace(requestedAction))
+                yield return BuildNpcSprPathExact(resType, requestedAction);
+            if (resType.StartsWith("passerby", StringComparison.OrdinalIgnoreCase))
+            {
+                string folder = NpcResFolder(resType);
+                yield return $@"spr\npcres\{folder}\{resType}\{resType}z.spr";
+                yield return $@"spr\npcres\{folder}\{resType}\{resType}s.spr";
+                foreach (var action in new[] { "wlk", "st", "st01", "pst", "base", "die", "st02" })
+                {
+                    if (!string.Equals(action, requestedAction, StringComparison.OrdinalIgnoreCase))
+                        yield return BuildNpcSprPathExact(resType, action);
+                }
+            }
+            else
+            {
+                foreach (var action in new[] { "wlk", "st", "die" })
+                {
+                    if (!string.Equals(action, requestedAction, StringComparison.OrdinalIgnoreCase))
+                        yield return BuildNpcSprPathExact(resType, action);
+                }
+            }
+        }
+
+        private static bool IsNpcSprAvailable(string sourcePath)
+        {
+            if (string.IsNullOrWhiteSpace(sourcePath)) return false;
+            string uid = SprRuntimeService.ComputePathUidHex(sourcePath);
+            foreach (var root in EnumerateNpcSpriteRoots())
+            {
+                if (File.Exists(Path.Combine(root, uid + ".spr")))
+                    return true;
+            }
+            return false;
+        }
+
+        private static IEnumerable<string> EnumerateNpcSpriteRoots()
+        {
+            var root = Application.streamingAssetsPath;
+            yield return Path.Combine(root, "Sprites");
+            yield return Path.Combine(root, "Generated", "NpcSprites");
         }
 
         public static bool IsTrainerSpawn(int templateId)

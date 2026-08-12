@@ -27,23 +27,50 @@ namespace VLTK.Sandbox
         public const int CategoryCollection = 4;   // Sưu tầm
 
         private PcAchievementRegistry _reg;
+        private IAchievementServiceHost _host;
 
         public int Count => _reg?.Count ?? 0;
 
         public AchievementService() { }
         public AchievementService(PcAchievementRegistry reg) { _reg = reg; }
 
+        public void AttachHost(IAchievementServiceHost host) { _host = host; }
+
         public void RegisterRegistry(PcAchievementRegistry reg)
         {
             _reg = reg;
             if (_reg == null || _reg.Count == 0)
+            {
                 SubsystemLog.Warn(LogTag, "Achievement registry rỗng");
+            }
+            else if (_host != null)
+            {
+                _host.OnAchievementRegistryAttached(_reg.Count);
+                _host.LogAchievementEvent("load", 0, $"Loaded {_reg.Count} achievements");
+                _host.PlayAchievementSFX("load", 0);
+            }
         }
 
-        public PcAchievementEntry GetAchievement(int id) => _reg != null ? _reg.Get(id) : null;
+        public PcAchievementEntry GetAchievement(int id)
+        {
+            var a = _reg != null ? _reg.Get(id) : null;
+            if (_host != null)
+            {
+                if (a != null)
+                    _host.OnAchievementResolved(a.achievementId, a.category, a.nameRaw);
+                else
+                    _host.LogAchievementEvent("query_missing", id, "Achievement not found in registry");
+            }
+            return a;
+        }
 
         public IReadOnlyList<PcAchievementEntry> GetByCategory(int category)
-            => _reg != null ? _reg.GetByCategory(category) : Array.Empty<PcAchievementEntry>();
+        {
+            var list = _reg != null ? _reg.GetByCategory(category) : Array.Empty<PcAchievementEntry>();
+            if (_host != null)
+                _host.OnAchievementsByCategoryQueried(category, list.Count, GetCategoryName(category));
+            return list;
+        }
 
         public IReadOnlyList<PcAchievementEntry> All
             => _reg != null ? _reg.All : Array.Empty<PcAchievementEntry>();
@@ -54,12 +81,24 @@ namespace VLTK.Sandbox
         public bool CanEarn(int achievementId, int playerLevel, long progress)
         {
             var ach = GetAchievement(achievementId);
-            if (ach == null) return false;
+            if (ach == null)
+            {
+                if (_host != null) _host.OnCanEarnEvaluated(achievementId, false, playerLevel, progress);
+                return false;
+            }
+            bool result;
             // conditionType=0 là yêu cầu level
-            if (ach.conditionType == 0 && playerLevel < ach.conditionValue) return false;
+            if (ach.conditionType == 0 && playerLevel < ach.conditionValue) result = false;
             // các loại khác dùng progress (so với conditionValue)
-            if (ach.conditionType != 0 && progress < ach.conditionValue) return false;
-            return true;
+            else if (ach.conditionType != 0 && progress < ach.conditionValue) result = false;
+            else result = true;
+            if (_host != null)
+            {
+                _host.OnCanEarnEvaluated(achievementId, result, playerLevel, progress);
+                _host.LogAchievementEvent(result ? "can_earn" : "cannot_earn", achievementId, result ? "ok" : "blocked");
+                _host.PlayAchievementSFX(result ? "unlock" : "block", achievementId);
+            }
+            return result;
         }
 
         /// <summary>
@@ -68,13 +107,27 @@ namespace VLTK.Sandbox
         public bool TryComplete(int achievementId, ref long progress)
         {
             var ach = GetAchievement(achievementId);
-            if (ach == null || ach.conditionValue <= 0) return false;
+            if (ach == null || ach.conditionValue <= 0)
+            {
+                if (_host != null) _host.OnTryCompleteDispatched(achievementId, false, progress);
+                return false;
+            }
+            bool result;
             if (progress < ach.conditionValue)
             {
                 progress = ach.conditionValue;
-                return true;
+                result = true;
             }
-            return false;
+            else result = false;
+            if (_host != null)
+            {
+                _host.OnTryCompleteDispatched(achievementId, result, progress);
+                _host.LogAchievementEvent(result ? "complete" : "already_complete", achievementId, result ? $"Progress set to {progress}" : $"Already at {progress}");
+                _host.PlayAchievementSFX(result ? "complete" : "progress", achievementId);
+                _host.SaveAchievementState(achievementId, progress, ach.category);
+                if (result) _host.ShowAchievementUI(achievementId, ach.nameRaw, ach.category);
+            }
+            return result;
         }
 
         /// <summary>
@@ -83,22 +136,28 @@ namespace VLTK.Sandbox
         public float GetProgressPercent(int achievementId, long progress)
         {
             var ach = GetAchievement(achievementId);
-            if (ach == null || ach.conditionValue <= 0) return 0f;
-            float pct = (float)progress / ach.conditionValue * 100f;
-            return pct > 100f ? 100f : pct;
+            float pct = 0f;
+            if (ach != null && ach.conditionValue > 0)
+            {
+                pct = (float)progress / ach.conditionValue * 100f;
+                if (pct > 100f) pct = 100f;
+            }
+            if (_host != null) _host.OnProgressQueried(achievementId, pct, progress);
+            return pct;
         }
 
         public string GetCategoryName(int category)
         {
-            switch (category)
+            string name = category switch
             {
-                case CategoryCombat: return "Chiến đấu";
-                case CategoryQuest: return "Nhiệm vụ";
-                case CategorySkill: return "Kỹ năng";
-                case CategoryInteraction: return "Tương tác";
-                case CategoryCollection: return "Sưu tầm";
-                default: return "Khác";
-            }
+                CategoryCombat => "Chiến đấu",
+                CategoryQuest => "Nhiệm vụ",
+                CategorySkill => "Kỹ năng",
+                CategoryInteraction => "Tương tác",
+                CategoryCollection => "Sưu tầm",
+                _ => "Khác",
+            };
+            return name;
         }
 
         public static AchievementService LoadFromStreamingAssets()

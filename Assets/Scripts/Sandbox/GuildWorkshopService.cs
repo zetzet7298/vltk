@@ -22,7 +22,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry != null ? _registry.Count : 0;
 
-        public GuildWorkshopService(PcGuildWorkshopRegistry registry) { AttachRegistry(registry); }
+public GuildWorkshopService() : this(null) { }
+                public GuildWorkshopService(PcGuildWorkshopRegistry registry) { AttachRegistry(registry); }
 
         public void AttachRegistry(PcGuildWorkshopRegistry registry)
         {

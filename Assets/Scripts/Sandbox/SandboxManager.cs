@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Stopwatch = System.Diagnostics.Stopwatch;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Unity.Profiling;
 using VLTK.Core;
 using VLTK.Sprites;
 using VLTK.Model;
 using VLTK.Sandbox.ItemData;
+using VLTK.SkillPort;
 
 namespace VLTK.Sandbox
 {
@@ -21,14 +25,52 @@ namespace VLTK.Sandbox
         Services,
     }
 
+    public enum SandboxBootProfile
+    {
+        Full,
+        FastEditor,
+    }
+
     public sealed class SandboxBootReport
     {
         public readonly List<(SubsystemKind kind, bool ok, string message)> Entries
             = new();
+        public readonly List<(string stepName, long milliseconds)> Timings
+            = new();
+
+        public SandboxBootProfile BootProfile { get; private set; } = SandboxBootProfile.Full;
+        public long TotalMilliseconds { get; private set; }
+        /// <summary>
+        /// Number of timings recorded during the synchronous boot phase (before
+        /// Complete()). Timings beyond this index are deferred/async (e.g. item
+        /// table lazy-loaded after the map is shown) and are reported separately
+        /// so the synchronous-boot summary is not polluted.
+        /// </summary>
+        public int SynchronousTimingCount { get; private set; }
+
+        public void Start(SandboxBootProfile bootProfile)
+        {
+            BootProfile = bootProfile;
+            Entries.Clear();
+            Timings.Clear();
+            TotalMilliseconds = 0;
+            SynchronousTimingCount = 0;
+        }
 
         public void Record(SubsystemKind kind, bool ok, string message)
         {
             Entries.Add((kind, ok, message));
+        }
+
+        public void RecordTiming(string stepName, long milliseconds)
+        {
+            Timings.Add((stepName, milliseconds));
+        }
+
+        public void Complete(long totalMilliseconds)
+        {
+            TotalMilliseconds = totalMilliseconds;
+            SynchronousTimingCount = Timings.Count;
         }
     }
 
@@ -38,6 +80,7 @@ namespace VLTK.Sandbox
         Loaded,
         MissingData,
         Unavailable,
+        SkippedForFastBoot,
         Error,
     }
 
@@ -51,12 +94,62 @@ namespace VLTK.Sandbox
 
         public bool IsLoaded => status == SandboxServiceDataStatus.Loaded;
         public bool IsMissingData => status == SandboxServiceDataStatus.MissingData;
+        public bool IsSkipped => status == SandboxServiceDataStatus.SkippedForFastBoot;
     }
 
-    public class SandboxManager : MonoBehaviour
+    /// <summary>
+    /// VLTK Mobile — Sandbox runtime owner. Bootstraps the world, the
+    /// HUD, services, and the active map. Holds a <see cref="SandboxBootProfile"/>
+    /// that decides how much of the PC parity surface is brought up at
+    /// editor play time.
+    /// <para>
+    /// ── Dev workflow (the "skip map for fast iteration" pattern) ──
+    /// </para>
+    /// <para>
+    /// For most dev work (HUD, input, services, networking, gameplay
+    /// systems, UI) you do NOT need the BLH pentagon terrain, 618
+    /// region files, or 812 enemy spawns loaded. The default scene
+    /// here uses <c>useFastEditorBoot=true</c> + <c>skipMapVisualsInFastEditorBoot=true</c>
+    /// so PlayMode boots in ~2-3s (sandbox skeleton + UI + active
+    /// map metadata, no region/enemy load).
+    /// </para>
+    /// <para>
+    /// When you need to see the actual BLH terrain / verify a region
+    /// file / screenshot the visual / test enemy spawn rendering,
+    /// un-tick <c>useFastEditorBoot</c> in the Inspector and re-enter
+    /// PlayMode. Boot will take ~30s (618 regions + 812 enemies) but
+    /// the Full profile runs the real pipeline. Re-tick the flag
+    /// when you are done to keep subsequent dev iterations fast.
+    /// </para>
+    /// <para>
+    /// This is intentionally serialized to the scene so the
+    /// setting is shared across the team — keep it on FastEditor
+    /// for everyday dev. The visual-load-balh and coord-scene-pos
+    /// commits left both Full-profile boot artifacts in the scene
+    /// after a one-off verification pass; this class documents the
+    /// toggle so nobody has to re-derive the trade-off.
+    /// </para>
+    /// </summary>
+    public class SandboxManager : MonoBehaviour, IMapTeleportHost
     {
-        public const int BaLangHuyenMapId = 79;
+        public const int BaLangHuyenMapId = 53;
+        public const int TinSuVuotAiPhongKy120MapId = 389;
+        public const int VuotAiNhiepThiTranMapId = 907;
+        public const int ThachThucThoiGianSoCap1MapId = 464;
+        public const int DauTruongLienDauMapId = 397;
+        public const int LamDuQuanMapId = 319;
+
         public const int PlayerActorId = 1;
+        private const string FastBootOptionalServicesSource = "StreamingAssets optional service batches";
+        private static readonly ProfilerMarker BootProfilerMarker = new ProfilerMarker("VLTK.Sandbox.Boot");
+        private static readonly ProfilerMarker BootStepProfilerMarker = new ProfilerMarker("VLTK.Sandbox.BootStep");
+        private static RegionCatalogFile _fastEditorRegionCatalogCache;
+        private static string _fastEditorItemDirCacheKey;
+        private static ItemContractImporter _fastEditorItemImporterCache;
+        private static string _fastEditorDropDirCacheKey;
+        private static DropRateRegistry _fastEditorDropRegistryCache;
+        private static string _fastEditorSkillDirCacheKey;
+        private static PcSkillRegistry _fastEditorSkillRegistryCache;
 
         private readonly Dictionary<string, SandboxServiceLoadStatus> _serviceLoadStatuses = new();
         private readonly List<string> _missingServiceSummaries = new();
@@ -72,13 +165,74 @@ namespace VLTK.Sandbox
         public Transform debugRoot;
         public Transform servicesRoot;
 
-        [Header("Boot")]
+        [Header("Boot — dev workflow toggle (see SandboxManager class doc)")]
+        [Tooltip("Map id loaded on boot. Default is Ba Lăng huyện (PC map 53) — the BLH training pentagon.")]
         public int defaultMapId = BaLangHuyenMapId;
+        [Tooltip("Master switch: if true, SandboxManager.Run() calls LoadDefaultMapOnBoot (slow path). " +
+                 "Turn OFF for tasks that don't need the world loaded (HUD, services, networking, input).")]
         public bool loadDefaultMapOnBoot = true;
+        [Tooltip("Explicit boot profile override. Full loads every subsystem including the map regions and enemy spawns (~30s on BLH). " +
+                 "FastEditor loads only the skeleton + active-map metadata + UI (~2-3s) — use this for dev iteration.")]
+        public SandboxBootProfile bootProfile = SandboxBootProfile.Full;
+        [Tooltip("★ THE toggle the team uses for fast dev iteration. " +
+                 "Tick to boot in ~2-3s (skeleton + UI + map metadata, NO region files, NO enemy spawns). " +
+                 "Un-tick to boot in ~30s (Full profile, BLH terrain + 618 regions + 812 enemies render). " +
+                 "Default in the scene is ON (fast); flip OFF in Inspector when you need to see the visual.")]
+        public bool useFastEditorBoot = false;
+        // Set during InitializeSubsystems when item/drop/skill loading should be
+        // deferred; consumed/launched in Start().
+        private bool _pendingItemDataLoad;
+        // True only while the boot default map is being loaded. After that it is
+        // reset so runtime map switches (GM panel / SwitchMap) always render the
+        // map visuals, regardless of the FastEditor skipVisuals flag (which is a
+        // boot-time optimization only).
+        private bool _initialBootMapLoad;
+
+        [Tooltip("When useFastEditorBoot is on, also load optional service batches (skill CDB, item CDB extras, etc). " +
+                 "Leave OFF for fastest boot.")]
+        public bool loadOptionalServicesInFastEditorBoot = false;
+        [Tooltip("When useFastEditorBoot is on, still load the active map's metadata (so the player can teleport / see map name) " +
+                 "without the heavy region/enemy load. Leave ON so MapManager / MapTravel stay functional.")]
+        public bool loadDefaultMapInFastEditorBoot = true;
+        [Tooltip("When useFastEditorBoot is on, also skip the MapRenderer.LoadMapRegions call (618 region files). " +
+                 "This is the single biggest boot-time saving — ~25s on BLH. Leave ON for fastest dev boot.")]
+        public bool skipMapVisualsInFastEditorBoot = true;
+        [Tooltip("When useFastEditorBoot is on, also skip the item table load. Safe to leave ON for dev.")]
+        public bool skipItemLoadingInFastEditorBoot = false;
+        [Tooltip("When useFastEditorBoot is on, cache parsed PC reference data (NpcS, Skill, etc.) in memory " +
+                 "across boots. Saves ~1-2s on the next play. Leave ON.")]
+        public bool cacheReferenceDataInFastEditorBoot = true;
+        [Tooltip("Log a [SandboxBoot] line per subsystem step + a final summary table. Cheap, leave ON.")]
+        public bool logBootTimings = true;
+        [Tooltip("Subsystem boot steps slower than this threshold (ms) get a ⚠ marker in the log. " +
+                 "50ms catches hitch sources without spamming.")]
+        public int bootTimingLogThresholdMs = 50;
+
+        [Header("SkillPort authoritative presentation")]
+        [Tooltip("Editor/development only. Production always rejects the repository test signing key.")]
+        public bool allowTestOnlySkillPortFixtureInDevelopment;
 
         public static SandboxManager Instance { get; private set; }
         public SandboxBootReport BootReport { get; private set; }
         public bool IsInitialized { get; private set; }
+        public SandboxBootProfile ActiveBootProfile { get; private set; } = SandboxBootProfile.Full;
+        public bool IsFastEditorBootActive => ActiveBootProfile == SandboxBootProfile.FastEditor;
+        public int CurrentFightState { get; private set; } = 1;
+        public int CurrentCamp { get; private set; } = 0;
+        public int OriginalCamp { get; private set; } = 0;
+        public int CurrentLogoutRv { get; private set; } = 0;
+        public int CurrentPkFlag { get; private set; } = 0;
+        public int CurrentForbidChangePk { get; private set; } = 0;
+        public int CurrentPunish { get; private set; } = 0;
+        public int CurrentCreateTeam { get; private set; } = 0;
+        public string CurrentDeathScript { get; private set; } = string.Empty;
+        public int CurrentReviveMapId { get; private set; } = 0;
+        public int CurrentReviveId { get; private set; } = 0;
+        private readonly Dictionary<int, int> _taskTempValues = new();
+        private readonly Dictionary<int, int> _pcMissionValues = new();
+        private readonly Dictionary<int, int> _pcMissionPlayerGroups = new();
+        private readonly Dictionary<int, int> _pcPartnerMasterTaskStates = new();
+        private bool _pcHasSummonedPartner;
         public AssetRegistry AssetRegistry { get; private set; }
         public MapManager MapManager { get; private set; }
         public MapRenderer MapRenderer { get; private set; }
@@ -86,13 +240,17 @@ namespace VLTK.Sandbox
         public MalePlayerVisual PlayerVisual { get; private set; }
         public MobileJoystick PlayerJoystick { get; private set; }
         public MapEnemySpawnRuntime EnemyRuntime { get; private set; }
+        public MapInteractiveObjectRuntime ObjectRuntime { get; private set; }
+        public MapTrapRuntime TrapRuntime { get; private set; }
         public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
         public TrainingNpcSpawner TrainingSpawner { get; private set; }
         public FemalePlayerVisual FemalePlayerVisual { get; private set; }
         public SkillCatalog CombatSkillCatalog { get; private set; }
         public CombatRuntimeService CombatRuntime { get; private set; }
+        public SandboxAuthoritativeCombatPresentationHost AuthoritativeCombatPresentation { get; private set; }
         public GameplayLoopService GameplayLoop { get; private set; }
         public PlayerProgressionState PlayerProgression { get; private set; }
+        public event Action<CombatFaction> RuntimeFactionSwitched;
         public QuestService QuestService { get; private set; }
         public PcSkillRegistry PcSkillsFull { get; private set; }
         public ItemDatabase ItemDb { get; private set; }
@@ -109,7 +267,15 @@ namespace VLTK.Sandbox
         public FactionPanel FactionPanel { get; private set; }
         public ShopService ShopService { get; private set; }
         public ShopPanel ShopPanel { get; private set; }
+        public GMPanelController GmPanel { get; private set; }
         private InventoryService _inventoryService;
+        private PlayerEquipmentService _equipmentService;
+
+        /// <summary>Runtime inventory service (item search/add/equip). Used by the HUD bag window.</summary>
+        public InventoryService InventoryService => _inventoryService;
+        public PlayerEquipmentService EquipmentService => _equipmentService;
+        public GmAccessService GmAccessService { get; private set; }
+        public GmTestServerItemService GmTestServerItemService { get; private set; }
 
         // PC-parity runtime services (meridian, partner, title, lottery, recipe, etc.)
         public MeridianService MeridianService { get; private set; }
@@ -276,7 +442,7 @@ namespace VLTK.Sandbox
         public ChangeFeatureDataService ChangeFeatureDataService { get; private set; }
         public GlobalConfigService GlobalConfigService { get; private set; }
         public NormalSpawnService NormalSpawnService { get; private set; }
-        public RareSpawnService RareSpawnService { get; private set; }
+        public RareEnchantService RareEnchantService { get; private set; }
         public WharfService WharfService { get; private set; }
         public WaypointService WaypointService { get; private set; }
         public AutoPathRouteService AutoPathRouteService { get; private set; }
@@ -350,9 +516,44 @@ namespace VLTK.Sandbox
         public ForbitHeartService ForbitHeartService { get; private set; }
         public StringResourceCatalogService StringResourceCatalogService { get; private set; }
         private float _combatTickAccumulator;
-        // M1.2: Region catalog and report
-        public RegionCatalogFile RegionCatalog { get; private set; }
-        public RegionConversionReport RegionReport { get; private set; }
+        // M1.2: Region catalog and report — LAZY-LOADED on first access.
+        // RegionCatalog.json is a 12 MB catalog enumerating ALL ~64k PC region .dat
+        // files (metadata flags only: hasObstacle/hasNpc/…). It is NOT needed for
+        // normal gameplay — per-map geometry/enemy/obstacle data is loaded
+        // separately and on-demand by MapManager.LoadMap + MapRenderer.
+        // Parsing it synchronously at boot added a large main-thread stall for
+        // data that nothing reads at runtime, so it is now deferred. The first
+        // read of RegionCatalog triggers the load (and reuses the FastEditor
+        // static cache when applicable).
+        private RegionCatalogFile _regionCatalogLazy;
+        private bool _regionCatalogLoaded;
+        private RegionConversionReport _regionReportLazy;
+        public RegionCatalogFile RegionCatalog
+        {
+            get
+            {
+                if (!_regionCatalogLoaded)
+                {
+                    _regionCatalogLazy = LoadRegionCatalogForBoot();
+                    _regionReportLazy = _regionCatalogLazy != null
+                        ? RegionCatalogLoader.ToConversionReport(_regionCatalogLazy)
+                        : null;
+                    _regionCatalogLoaded = true;
+                    if (_regionCatalogLazy != null)
+                        SubsystemLog.Info("Sandbox", $"Regions (lazy): {_regionCatalogLazy.totalRegions} loaded");
+                }
+                return _regionCatalogLazy;
+            }
+        }
+        public RegionConversionReport RegionReport
+        {
+            get
+            {
+                // Trigger the lazy load (which also caches the report) and return it.
+                _ = RegionCatalog;
+                return _regionReportLazy;
+            }
+        }
 
         public event Action<SandboxBootReport> OnBootComplete;
 
@@ -373,43 +574,113 @@ namespace VLTK.Sandbox
             DontDestroyOnLoad(gameObject);
 
             BootReport = new SandboxBootReport();
-            InitializeSubsystems();
+            using (BootProfilerMarker.Auto())
+            {
+                InitializeSubsystems();
+            }
+        }
+
+        // Deferred item/drop/skill loading is launched here (not in Awake) so the
+        // synchronous boot — which only needs the single active map — finishes and
+        // renders the map first. Start() runs after Awake returns, so the heavy PC
+        // item table (~1.4s) is parsed afterwards instead of blocking boot.
+        private void Start()
+        {
+            if (_pendingItemDataLoad)
+            {
+                _pendingItemDataLoad = false;
+                StartCoroutine(LoadItemDataCoroutine());
+            }
         }
 
         public void BootstrapCombatForTests(AssetRegistry registry = null)
         {
+            if (Instance == null) 
+            {
+                var field = typeof(SandboxManager).GetProperty("Instance").GetSetMethod(true);
+                field?.Invoke(this, new object[] { this });
+            }
+            
+            if (PcSkillsFull == null)
+            {
+                PcSkillsFull = PcSkillRegistry.LoadFromDirectory(System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+            }
+            
             AssetRegistry = registry ?? new AssetRegistry();
             BootstrapCombatRuntime();
         }
 
         private void InitializeSubsystems()
         {
-            InitSubsystem(SubsystemKind.Game, "Game", ref gameRoot);
-            InitSubsystem(SubsystemKind.Camera, "Camera", ref cameraRoot);
-            InitSubsystem(SubsystemKind.UI, "UI", ref uiRoot);
-            InitSubsystem(SubsystemKind.World, "World", ref worldRoot);
-            InitSubsystem(SubsystemKind.Debug, "Debug", ref debugRoot);
-            InitSubsystem(SubsystemKind.Services, "Services", ref servicesRoot);
+            // CTS-03: Initialize() null-safety + ordering. A missing dependency
+            // catalog (RegionCatalog, ItemDb, MapManager.Catalog, AssetRegistry)
+            // must NOT crash startup — SandboxManager must still become
+            // "initialized" with whatever is available so HUD/services that read
+            // via `manager?.XxxService?.Foo` keep working instead of NRE.
+            //
+            // Ordering:
+            //   1. Always-create BootReport if missing (InitSubsystem reads it).
+            //   2. Always-create subsystem root GameObjects (so child spawns find a parent).
+            //   3. Always-create AssetRegistry (UI services may read from it on Awake).
+            //   4. Always-construct MapManager (cheap; can be empty if LoadCatalog fails).
+            //   5. Try/catch each catalog/service so a single failure does not abort
+            //      the rest. Errors are recorded to BootReport + logged as warnings.
+            //   6. Set IsInitialized = true so HUD wiring proceeds regardless of
+            //      catalog completeness.
+            var bootWatch = Stopwatch.StartNew();
+            ActiveBootProfile = ResolveBootProfile();
+            // BootReport may already exist (Awake created it). If a caller invokes
+            // InitializeSubsystems directly without going through Awake (e.g. an
+            // EditMode test fixture or a custom boot orchestrator), create a fresh
+            // one so downstream steps that call BootReport.Record do not NRE.
+            if (BootReport == null) BootReport = new SandboxBootReport();
+            BootReport?.Start(ActiveBootProfile);
+
+            try { InitSubsystem(SubsystemKind.Game, "Game", ref gameRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Game) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.Camera, "Camera", ref cameraRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Camera) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.UI, "UI", ref uiRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(UI) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.World, "World", ref worldRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(World) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.Debug, "Debug", ref debugRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Debug) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.Services, "Services", ref servicesRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Services) failed: {e.Message}"); }
 
             IsInitialized = true;
 
-            EnsureSandboxCamera();
+            try { EnsureSandboxCamera(); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"EnsureSandboxCamera failed: {e.Message}"); }
 
             // M0.6: create shared registry, pass to all systems that need resource lookup
+            // (no try/catch — AssetRegistry construction is in-memory and cannot fail under
+            // normal use; if it ever does, the exception is informative and the test that
+            // called us gets a clear stack trace).
             AssetRegistry = new AssetRegistry();
-            BootstrapCombatRuntime();
+            try { TimedBootStep("BootstrapCombatRuntime", BootstrapCombatRuntime); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"BootstrapCombatRuntime failed: {e.Message}"); }
 
-            MapManager = new MapManager(AssetRegistry);
-            MapManager.LoadCatalog();
-
-            // M1.2: Load region catalog
-            var regionCat = RegionCatalogLoader.LoadFromStreamingAssets();
-            if (regionCat != null)
+            // MapManager + LoadCatalog wrapped together — if LoadCatalog throws on a
+            // missing/corrupt catalog, we keep the empty MapManager so subsequent
+            // `manager.MapManager != null` checks still hold.
+            try
             {
-                RegionCatalog = regionCat;
-                RegionReport = RegionCatalogLoader.ToConversionReport(regionCat);
-                SubsystemLog.Info("Sandbox", $"Regions: {regionCat.totalRegions} loaded");
+                MapManager = new MapManager(AssetRegistry);
+                try { TimedBootStep("MapManager.LoadCatalog", MapManager.LoadCatalog); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"MapManager.LoadCatalog failed: {e.Message}"); }
             }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"MapManager construction failed: {e.Message}");
+                MapManager = null;
+            }
+
+            // M1.2: Region catalog is now LAZY-LOADED via the RegionCatalog /
+            // RegionReport properties. It enumerates ALL ~64k PC region files but is
+            // not consumed by gameplay, so parsing the 12 MB JSON at boot was pure
+            // overhead. It loads on first access (if ever) instead of here.
 
             // Instantiate MapRenderer on the worldRoot
             if (worldRoot != null)
@@ -422,49 +693,112 @@ namespace VLTK.Sandbox
                 MapManager.OnMapLoaded += (mapId) => {
                     if (MapManager.ActiveMap != null)
                     {
-                        MapRenderer.LoadMapRegions(MapManager.ActiveMap);
+                        // skipMapVisualsInFastEditorBoot is a BOOT-time optimization
+                        // only — it must not suppress visuals when the player
+                        // deliberately switches maps at runtime.
+                        bool skipVisuals = _initialBootMapLoad
+                            && ActiveBootProfile == SandboxBootProfile.FastEditor
+                            && skipMapVisualsInFastEditorBoot;
+                        if (!skipVisuals)
+                            MapRenderer.LoadMapRegions(MapManager.ActiveMap);
+                        else
+                        {
+                            // Apply bounds from map definition so camera/player work without visuals
+                            MapRenderer.ApplyBoundsFromDefinition(MapManager.ActiveMap);
+                            SubsystemLog.Info("SandboxBoot", "FastEditor: skipped map visual rendering.");
+                        }
                         EnsurePlayerController();
+                        ApplyActiveMapBoundsToPlayer();
                         EnsureEnemyRuntime();
+                        EnsureObjectRuntime();
+                        EnsureTrapRuntime();
                         PlacePlayerOnActiveMap();
-                        SpawnEnemiesForActiveMap();
-                        SpawnTrainingNpcs();
+                        // Enemy/object/trap spawn is only skipped during the FastEditor
+                        // boot load. Runtime map switches always spawn content.
+                        if (_initialBootMapLoad && ActiveBootProfile == SandboxBootProfile.FastEditor)
+                        {
+                            SubsystemLog.Info("SandboxBoot", "FastEditor: skipped enemy/object/trap spawn.");
+                        }
+                        else
+                        {
+                            SpawnEnemiesForActiveMap();
+                            RenderObjectsForActiveMap();
+                            BuildTrapsForActiveMap();
+                        }
+                        // Training NPCs (5 bao cát/cọc gỗ/mộc nhân) are spawned for testing
+                        // only on Ba Lăng huyện (their home training ground) — and on
+                        // no-map fast boot (handled at the end of boot). Always clear any
+                        // leftover training NPCs first so they don't leak into other maps.
+                        TrainingSpawner?.Clear();
+                        if (mapId == BaLangHuyenMapId)
+                            SpawnTrainingNpcs();
                         ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
                     }
                 };
                 MapManager.OnMapUnloaded += (mapId) => {
                     EnemyRuntime?.Clear();
+                    ObjectRuntime?.Clear();
+                    TrapRuntime?.Clear();
                     MapRenderer.Clear();
                 };
 
                 EnsurePlayerController();
 
                 // ── New Subsystems ──────────────────────────────────
-                QuestService = new QuestService();
-                // Load PC item data via batch loader (14 categories, ~10k+ items)
-                var importer = PcItemBatchLoader.ImportInto(
-                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItem"));
-                ItemDb = new ItemDatabase(importer);
-                LootService = new LootDropService(ItemDb);
-                var dropRegistry = new DropRateRegistry();
-                dropRegistry.LoadDirectory(System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
-                LootService.AttachRegistry(dropRegistry);
-                PcSkillsFull = PcSkillRegistry.LoadFromDirectory(System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
-                AudioService = new AudioService();
-                if (servicesRoot != null)
+                try { QuestService = new QuestService(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"new QuestService failed: {e.Message}"); }
+                // Item/drop/skill loading is DEFERRED to Start() (LoadItemDataCoroutine),
+                // which runs AFTER Awake/InitializeSubsystems returns. Parsing the
+                // full PC item table (~28k items, ~1.4s) is not needed to show the
+                // single active map, so it is NOT part of the synchronous boot.
+                // ItemDb/LootService/InventoryService/ShopService stay null until the
+                // coroutine completes, then item-dependent UI panels/GM-login are
+                // (re)wired. FastEditor boot keeps the skip flag behaviour below.
+                bool skipItems = ActiveBootProfile == SandboxBootProfile.FastEditor && skipItemLoadingInFastEditorBoot;
+                if (skipItems)
+                {
+                    SubsystemLog.Info("SandboxBoot", "FastEditor: skipped item/drop/skill loading.");
+                }
+                else
+                {
+                    // Flag for Start() to launch LoadItemDataCoroutine (Awake must not
+                    // start it — StartCoroutine in Awake runs the first iteration inline
+                    // on some Unity versions, pulling item loading back into boot).
+                    _pendingItemDataLoad = true;
+                }
+                try { AudioService = new AudioService(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"new AudioService failed: {e.Message}"); }
+                if (servicesRoot != null && AudioService != null)
                     AudioService.Initialize(servicesRoot);
 
                 // Wire quest events to combat loot
                 if (GameplayLoop != null)
                     GameplayLoop.OnDeath += e =>
                     {
+                        if (e.isPlayer)
+                        {
+                            // Player died -> check for revive pos (RevivePosService using current map or default map)
+                            var mapId = MapManager?.ActiveMapId ?? defaultMapId;
+                            var revivePos = RevivePosService?.GetDefaultRevivePosition(mapId);
+                            if (revivePos != null)
+                            {
+                                SubsystemLog.Info("Sandbox", $"Player death event -> revive requested at Map={revivePos.MapId}, Pos=({revivePos.PosX}, {revivePos.PosY})");
+                                // A real implementation would start a timer, show UI, then call PlayerController.PlaceAt() + restore HP/MP.
+                            }
+                        }
                         if (!e.isPlayer && e.victimTemplateId != null)
                             QuestService?.UpdateKillObjective(e.victimTemplateId.Value);
                     };
 
-                // Initialize item inventory
-                var itemImporter = new ItemContractImporter();
-                _inventoryService = new InventoryService(itemImporter, null);
+                // Equipment service is cheap and needed by the player visual layer,
+                // so it is created at boot. The inventory service (needs the deferred
+                // PC item importer) and the OnEquipChanged wiring are set up inside
+                // LoadItemDataCoroutine once items are available.
+                _equipmentService = new PlayerEquipmentService();
+                GmAccessService = new GmAccessService();
+                // GmTestServerItemService / EnsureGmLoginInGame need the inventory, so
+                // they are created in LoadItemDataCoroutine after items load.
 
                 // Initialize Chat system
                 ChatService = new ChatService();
@@ -473,258 +807,32 @@ namespace VLTK.Sandbox
                 // Initialize Party system
                 PartyService = new PartyService();
 
-                // Initialize Shop system
-                ShopService = new ShopService(ItemDb, initialSilver: 5000);
+                // Shop system needs ItemDb — created in LoadItemDataCoroutine after
+                // items load (kept null until then).
 
                 // ── PC-parity runtime services (meridian, partner, title, …) ────────
                 _serviceLoadStatuses.Clear();
                 _missingServiceSummaries.Clear();
                 _unavailableServiceSummaries.Clear();
 
-                MeridianService = MeridianService.LoadFromStreamingAssets();
-                PartnerService = PartnerService.LoadFromStreamingAssets();
-                PetSkillService = PetSkillService.LoadFromStreamingAssets();
-                TitleService = TitleService.LoadFromStreamingAssets();
-                LotteryService = LotteryService.LoadFromStreamingAssets();
-                CompoundRecipeService = CompoundRecipeService.LoadFromStreamingAssets();
-                QuestItemService = QuestItemService.LoadFromStreamingAssets();
-                AdventureService = AdventureService.LoadFromStreamingAssets();
-                GuildService = GuildService.LoadFromStreamingAssets();
-                AttribConstService = AttribConstService.LoadFromStreamingAssets();
-                MissleCatalogService = MissleCatalogService.LoadFromStreamingAssets();
-                EventBonusService = EventBonusService.LoadFromStreamingAssets();
-                CityWarService = CityWarService.LoadFromStreamingAssets();
-                AuctionService = AuctionService.LoadFromStreamingAssets();
-                GoodsCatalogService = GoodsCatalogService.LoadFromStreamingAssets();
-                ShopConfigService = ShopConfigService.LoadFromStreamingAssets();
-
-                // ── Batch 2: Battlefield, Instance, Special skills, NPC scripts, etc. ─
-                BattlefieldService = LoadOptionalStreamingService(nameof(BattlefieldService), () => BattlefieldService.LoadFromStreamingAssets());
-                InstanceMapService = LoadOptionalStreamingService(nameof(InstanceMapService), () => InstanceMapService.LoadFromStreamingAssets());
-                HongbaoService = LoadOptionalStreamingService(nameof(HongbaoService), () => HongbaoService.LoadFromStreamingAssets());
-                ItemExchangeService = LoadOptionalStreamingService(nameof(ItemExchangeService), () => ItemExchangeService.LoadFromStreamingAssets());
-                SpecialSkillService = LoadOptionalStreamingService(nameof(SpecialSkillService), () => SpecialSkillService.LoadFromStreamingAssets());
-                NpcSkillService = LoadOptionalStreamingService(nameof(NpcSkillService), () => NpcSkillService.LoadFromStreamingAssets());
-                TranslifeSkillService = LoadOptionalStreamingService(nameof(TranslifeSkillService), () => TranslifeSkillService.LoadFromStreamingAssets());
-                SkillTemplateService = LoadOptionalStreamingService(nameof(SkillTemplateService), () => SkillTemplateService.LoadFromStreamingAssets());
-                NpcLevelScriptService = LoadOptionalStreamingService(nameof(NpcLevelScriptService), () => NpcLevelScriptService.LoadFromStreamingAssets());
-                NpcDeathScriptService = LoadOptionalStreamingService(nameof(NpcDeathScriptService), () => NpcDeathScriptService.LoadFromStreamingAssets());
-                DailyTaskService = LoadOptionalStreamingService(nameof(DailyTaskService), () => DailyTaskService.LoadFromStreamingAssets());
-                BossMissionService = LoadOptionalStreamingService(nameof(BossMissionService), () => BossMissionService.LoadFromStreamingAssets());
-
-                // ── Batch 3: Events, weather, music, tasks, arena, trip, bonus ───────
-                ServerEventService = LoadOptionalStreamingService(nameof(ServerEventService), () => ServerEventService.LoadFromStreamingAssets());
-                VngEventService = LoadOptionalStreamingService(nameof(VngEventService), () => VngEventService.LoadFromStreamingAssets());
-                BattleScriptService = LoadOptionalStreamingService(nameof(BattleScriptService), () => BattleScriptService.LoadFromStreamingAssets());
-                WeatherService = LoadOptionalStreamingService(nameof(WeatherService), () => WeatherService.LoadFromStreamingAssets());
-                MusicService = LoadOptionalStreamingService(nameof(MusicService), () => MusicService.LoadFromStreamingAssets());
-                GuildWorkshopService = LoadOptionalStreamingService(nameof(GuildWorkshopService), () => GuildWorkshopService.LoadFromStreamingAssets());
-                HuoYueDuService = LoadOptionalStreamingService(nameof(HuoYueDuService), () => HuoYueDuService.LoadFromStreamingAssets());
-                CityDefenceService = LoadOptionalStreamingService(nameof(CityDefenceService), () => CityDefenceService.LoadFromStreamingAssets());
-                ActivityService = LoadOptionalStreamingService(nameof(ActivityService), () => ActivityService.LoadFromStreamingAssets());
-                RandomTaskService = LoadOptionalStreamingService(nameof(RandomTaskService), () => RandomTaskService.LoadFromStreamingAssets());
-                PartnerTaskService = LoadOptionalStreamingService(nameof(PartnerTaskService), () => PartnerTaskService.LoadFromStreamingAssets());
-                MetempsychosisTaskService = LoadOptionalStreamingService(nameof(MetempsychosisTaskService), () => MetempsychosisTaskService.LoadFromStreamingAssets());
-                ArenaService = LoadOptionalStreamingService(nameof(ArenaService), () => ArenaService.LoadFromStreamingAssets());
-                TripService = LoadOptionalStreamingService(nameof(TripService), () => TripService.LoadFromStreamingAssets());
-                BonusOnlineService = LoadOptionalStreamingService(nameof(BonusOnlineService), () => BonusOnlineService.LoadFromStreamingAssets());
-
-                // ── Batch 4: Guild extras, honor, shitu, foundry, world rank, misc ──
-                GuildRankService = LoadOptionalStreamingService(nameof(GuildRankService), () => GuildRankService.LoadFromStreamingAssets());
-                GuildStuntService = LoadOptionalStreamingService(nameof(GuildStuntService), () => GuildStuntService.LoadFromStreamingAssets());
-                GuildTaskService = LoadOptionalStreamingService(nameof(GuildTaskService), () => GuildTaskService.LoadFromStreamingAssets());
-                HonorService = LoadOptionalStreamingService(nameof(HonorService), () => HonorService.LoadFromStreamingAssets());
-                ShituService = LoadOptionalStreamingService(nameof(ShituService), () => ShituService.LoadFromStreamingAssets());
-                FoundryService = LoadOptionalStreamingService(nameof(FoundryService), () => FoundryService.LoadFromStreamingAssets());
-                WorldRankService = LoadOptionalStreamingService(nameof(WorldRankService), () => WorldRankService.LoadFromStreamingAssets());
-                NewPlayerGuideService = LoadOptionalStreamingService(nameof(NewPlayerGuideService), () => NewPlayerGuideService.LoadFromStreamingAssets());
-                ChangeFeatureService = LoadOptionalStreamingService(nameof(ChangeFeatureService), () => ChangeFeatureService.LoadFromStreamingAssets());
-                StallService = LoadOptionalStreamingService(nameof(StallService), () => StallService.LoadFromStreamingAssets());
-                FlipCardService = LoadOptionalStreamingService(nameof(FlipCardService), () => FlipCardService.LoadFromStreamingAssets());
-                BaoRuongThanBiService = LoadOptionalStreamingService(nameof(BaoRuongThanBiService), () => BaoRuongThanBiService.LoadFromStreamingAssets());
-                SeasonalEventService = LoadOptionalStreamingService(nameof(SeasonalEventService), () => SeasonalEventService.LoadFromStreamingAssets());
-                CompensationService = LoadOptionalStreamingService(nameof(CompensationService), () => CompensationService.LoadFromStreamingAssets());
-
-                // ── Batch 5: Final client systems (faction maps, awards, double exp, sim city, client skill scripts) ─
-                FactionMapService = LoadOptionalStreamingService(nameof(FactionMapService), () => FactionMapService.LoadFromStreamingAssets());
-                BattleAwardService = LoadOptionalStreamingService(nameof(BattleAwardService), () => BattleAwardService.LoadFromStreamingAssets());
-                DoubleExpService = LoadOptionalStreamingService(nameof(DoubleExpService), () => DoubleExpService.LoadFromStreamingAssets());
-                SimCityPluginService = LoadOptionalStreamingService(nameof(SimCityPluginService), () => SimCityPluginService.LoadFromStreamingAssets());
-                ClientSkillScriptService = LoadOptionalStreamingService(nameof(ClientSkillScriptService), () => ClientSkillScriptService.LoadFromStreamingAssets());
-                TongJinBattleService = LoadOptionalStreamingService(nameof(TongJinBattleService), () => TongJinBattleService.LoadFromStreamingAssets());
-                BangChienService = LoadOptionalStreamingService(nameof(BangChienService), () => BangChienService.LoadFromStreamingAssets());
-                BossHoangKimService = LoadOptionalStreamingService(nameof(BossHoangKimService), () => BossHoangKimService.LoadFromStreamingAssets());
-                TaskFlagService = new TaskFlagService();
-                // ── Batch 8: Save/Load + Mail + Mount + Ranking + Friend + Pet + Shop + Missile + HudArt + FactionRuntime + BattleScript + TaskFlagRegistry ───────────
-                SaveSlotService = LoadOptionalStreamingService(nameof(SaveSlotService), () => SaveSlotService.LoadFromStreamingAssets());
-                MailService = LoadOptionalStreamingService(nameof(MailService), () => MailService.LoadFromStreamingAssets());
-                MountService = LoadOptionalStreamingService(nameof(MountService), () => MountService.LoadFromStreamingAssets());
-                RankingService = LoadOptionalStreamingService(nameof(RankingService), () => RankingService.LoadFromStreamingAssets());
-                FriendService = LoadOptionalStreamingService(nameof(FriendService), () => FriendService.LoadFromStreamingAssets());
-                PetService = LoadOptionalStreamingService(nameof(PetService), () => PetService.LoadFromStreamingAssets());
-                ShopConfigService = LoadOptionalStreamingService(nameof(ShopConfigService), () => ShopConfigService.LoadFromStreamingAssets());
-                MissileEffectService = LoadOptionalStreamingService(nameof(MissileEffectService), () => MissileEffectService.LoadFromStreamingAssets());
-                HudArtCatalogService = LoadOptionalStreamingService(nameof(HudArtCatalogService), () => HudArtCatalogService.LoadFromStreamingAssets());
-                FactionMapRuntimeService = FactionMapRuntimeService != null ? FactionMapRuntimeService : new FactionMapRuntimeService(FactionMapService);
-                BattleScriptRuntimeService = BattleScriptRuntimeService != null ? BattleScriptRuntimeService : new BattleScriptRuntimeService(BattleScriptService);
-                TaskFlagRegistryService = LoadOptionalStreamingService(nameof(TaskFlagRegistryService), () => TaskFlagRegistryService.LoadFromStreamingAssets());
-                // ── Batch 9: Map data + Skill data + World boss + Achievement + Mall + Fashion + Sign-in + Treasure + Encounter + Friend gift + Text + Animation ───────────
-                MapListFullService = LoadOptionalStreamingService(nameof(MapListFullService), () => MapListFullService.LoadFromStreamingAssets());
-                MapElementService = LoadOptionalStreamingService(nameof(MapElementService), () => MapElementService.LoadFromStreamingAssets());
-                MapRespawnService = LoadOptionalStreamingService(nameof(MapRespawnService), () => MapRespawnService.LoadFromStreamingAssets());
-                MapBlockService = LoadOptionalStreamingService(nameof(MapBlockService), () => MapBlockService.LoadFromStreamingAssets());
-                MapNpcRespawnService = LoadOptionalStreamingService(nameof(MapNpcRespawnService), () => MapNpcRespawnService.LoadFromStreamingAssets());
-                MapMusicService = LoadOptionalStreamingService(nameof(MapMusicService), () => MapMusicService.LoadFromStreamingAssets());
-                SkillLevelDataService = LoadOptionalStreamingService(nameof(SkillLevelDataService), () => SkillLevelDataService.LoadFromStreamingAssets());
-                SkillUpgradeService = LoadOptionalStreamingService(nameof(SkillUpgradeService), () => SkillUpgradeService.LoadFromStreamingAssets());
-                SkillBookService = LoadOptionalStreamingService(nameof(SkillBookService), () => SkillBookService.LoadFromStreamingAssets());
-                SkillComboService = LoadOptionalStreamingService(nameof(SkillComboService), () => SkillComboService.LoadFromStreamingAssets());
-                SkillStateService = LoadOptionalStreamingService(nameof(SkillStateService), () => SkillStateService.LoadFromStreamingAssets());
-                SkillMasteryService = LoadOptionalStreamingService(nameof(SkillMasteryService), () => SkillMasteryService.LoadFromStreamingAssets());
-                WorldBossService = LoadOptionalStreamingService(nameof(WorldBossService), () => WorldBossService.LoadFromStreamingAssets());
-                AchievementService = LoadOptionalStreamingService(nameof(AchievementService), () => AchievementService.LoadFromStreamingAssets());
-                DailyRewardService = LoadOptionalStreamingService(nameof(DailyRewardService), () => DailyRewardService.LoadFromStreamingAssets());
-                MallService = LoadOptionalStreamingService(nameof(MallService), () => MallService.LoadFromStreamingAssets());
-                FashionService = LoadOptionalStreamingService(nameof(FashionService), () => FashionService.LoadFromStreamingAssets());
-                SignInService = LoadOptionalStreamingService(nameof(SignInService), () => SignInService.LoadFromStreamingAssets());
-                TreasureHuntService = LoadOptionalStreamingService(nameof(TreasureHuntService), () => TreasureHuntService.LoadFromStreamingAssets());
-                EncounterService = LoadOptionalStreamingService(nameof(EncounterService), () => EncounterService.LoadFromStreamingAssets());
-                FriendGiftService = LoadOptionalStreamingService(nameof(FriendGiftService), () => FriendGiftService.LoadFromStreamingAssets());
-                TextResourceService = LoadOptionalStreamingService(nameof(TextResourceService), () => TextResourceService.LoadFromStreamingAssets());
-                AnimationBankService = LoadOptionalStreamingService(nameof(AnimationBankService), () => AnimationBankService.LoadFromStreamingAssets());
-                // ── Batch 10: Faction skill tree + bonus + relation + Guild scripts + Battle map config + reward config + honor + Sơ/Trung/Cao Jin ───────────
-                FactionSkillTreeService = LoadOptionalStreamingService(nameof(FactionSkillTreeService), () => FactionSkillTreeService.LoadFromStreamingAssets());
-                FactionBonusService = LoadOptionalStreamingService(nameof(FactionBonusService), () => FactionBonusService.LoadFromStreamingAssets());
-                FactionRelationService = LoadOptionalStreamingService(nameof(FactionRelationService), () => FactionRelationService.LoadFromStreamingAssets());
-                GuildScriptService = LoadOptionalStreamingService(nameof(GuildScriptService), () => GuildScriptService.LoadFromStreamingAssets());
-                BattleMapConfigService = LoadOptionalStreamingService(nameof(BattleMapConfigService), () => BattleMapConfigService.LoadFromStreamingAssets());
-                BattleRewardConfigService = LoadOptionalStreamingService(nameof(BattleRewardConfigService), () => BattleRewardConfigService.LoadFromStreamingAssets());
-                BattleHonorService = LoadOptionalStreamingService(nameof(BattleHonorService), () => BattleHonorService.LoadFromStreamingAssets());
-                SjBattleService = LoadOptionalStreamingService(nameof(SjBattleService), () => SjBattleService.LoadFromStreamingAssets());
-                // ── Batch 11: Hoa Sơn + Sprite asset + Sound effect + Map connection + NPC shop item + Reputation + Title effect + VIP level ───────────
-                HuaShanLuanJianService = LoadOptionalStreamingService(nameof(HuaShanLuanJianService), () => HuaShanLuanJianService.LoadFromStreamingAssets());
-                SpriteAssetService = LoadOptionalStreamingService(nameof(SpriteAssetService), () => SpriteAssetService.LoadFromStreamingAssets());
-                SoundEffectService = LoadOptionalStreamingService(nameof(SoundEffectService), () => SoundEffectService.LoadFromStreamingAssets());
-                MapConnectionService = LoadOptionalStreamingService(nameof(MapConnectionService), () => MapConnectionService.LoadFromStreamingAssets());
-                NpcShopItemService = LoadOptionalStreamingService(nameof(NpcShopItemService), () => NpcShopItemService.LoadFromStreamingAssets());
-                ReputationService = LoadOptionalStreamingService(nameof(ReputationService), () => ReputationService.LoadFromStreamingAssets());
-                TitleEffectService = LoadOptionalStreamingService(nameof(TitleEffectService), () => TitleEffectService.LoadFromStreamingAssets());
-                VipLevelService = LoadOptionalStreamingService(nameof(VipLevelService), () => VipLevelService.LoadFromStreamingAssets());
-                // ── Batch 12: Guild city war + Script registries (mission 985, skill 2,486, item 635, event 455, task 316, global 579, library 44) ───────────
-                GuildCityWarService = new GuildCityWarService(CityWarService);
-                GuildCityWarLogService = LoadOptionalStreamingService(nameof(GuildCityWarLogService), () => GuildCityWarLogService.LoadFromStreamingAssets());
-                MissionScriptService = LoadOptionalStreamingService(nameof(MissionScriptService), () => MissionScriptService.LoadFromStreamingAssets());
-                SkillScriptService = LoadOptionalStreamingService(nameof(SkillScriptService), () => SkillScriptService.LoadFromStreamingAssets());
-                ItemScriptService = LoadOptionalStreamingService(nameof(ItemScriptService), () => ItemScriptService.LoadFromStreamingAssets());
-                EventScriptService = LoadOptionalStreamingService(nameof(EventScriptService), () => EventScriptService.LoadFromStreamingAssets());
-                TaskScriptService = LoadOptionalStreamingService(nameof(TaskScriptService), () => TaskScriptService.LoadFromStreamingAssets());
-                GlobalScriptService = LoadOptionalStreamingService(nameof(GlobalScriptService), () => GlobalScriptService.LoadFromStreamingAssets());
-                LibraryScriptService = LoadOptionalStreamingService(nameof(LibraryScriptService), () => LibraryScriptService.LoadFromStreamingAssets());
-                // ── Batch 13: Area script registries (14.x GBK areas, faction quest, town, gbk trigger, tong battle) ───────────
-                AreaScriptService = LoadOptionalStreamingService(nameof(AreaScriptService), () => AreaScriptService.LoadFromStreamingAssets());
-                GbkMapScriptService = LoadOptionalStreamingService(nameof(GbkMapScriptService), () => GbkMapScriptService.LoadFromStreamingAssets());
-                FactionQuestAreaService = LoadOptionalStreamingService(nameof(FactionQuestAreaService), () => FactionQuestAreaService.LoadFromStreamingAssets());
-                TownScriptService = LoadOptionalStreamingService(nameof(TownScriptService), () => TownScriptService.LoadFromStreamingAssets());
-                GbkTriggerService = LoadOptionalStreamingService(nameof(GbkTriggerService), () => GbkTriggerService.LoadFromStreamingAssets());
-                TongBattleScriptService = LoadOptionalStreamingService(nameof(TongBattleScriptService), () => TongBattleScriptService.LoadFromStreamingAssets());
-
-                // ── Batch 6: Client settings, items, maps (37 more services) ───────────
-                PortraitService = LoadOptionalStreamingService(nameof(PortraitService), () => PortraitService.LoadFromStreamingAssets());
-                SoundListService = LoadOptionalStreamingService(nameof(SoundListService), () => SoundListService.LoadFromStreamingAssets());
-                KillerService = LoadOptionalStreamingService(nameof(KillerService), () => KillerService.LoadFromStreamingAssets());
-                ItemDetailService = LoadOptionalStreamingService(nameof(ItemDetailService), () => ItemDetailService.LoadFromStreamingAssets());
-                ItemTypeService = LoadOptionalStreamingService(nameof(ItemTypeService), () => ItemTypeService.LoadFromStreamingAssets());
-                MapTrafficService = LoadOptionalStreamingService(nameof(MapTrafficService), () => MapTrafficService.LoadFromStreamingAssets());
-                MapTypeService = LoadOptionalStreamingService(nameof(MapTypeService), () => MapTypeService.LoadFromStreamingAssets());
-                AdjustColorService = LoadOptionalStreamingService(nameof(AdjustColorService), () => AdjustColorService.LoadFromStreamingAssets());
-                ClientWeaponSkillService = LoadOptionalStreamingService(nameof(ClientWeaponSkillService), () => ClientWeaponSkillService.LoadFromStreamingAssets());
-                GoldEquipService = LoadOptionalStreamingService(nameof(GoldEquipService), () => GoldEquipService.LoadFromStreamingAssets());
-                PlatinaEquipService = LoadOptionalStreamingService(nameof(PlatinaEquipService), () => PlatinaEquipService.LoadFromStreamingAssets());
-                HorseService = LoadOptionalStreamingService(nameof(HorseService), () => HorseService.LoadFromStreamingAssets());
-                PotionService = LoadOptionalStreamingService(nameof(PotionService), () => PotionService.LoadFromStreamingAssets());
-                MagicScriptService = LoadOptionalStreamingService(nameof(MagicScriptService), () => MagicScriptService.LoadFromStreamingAssets());
-                MagicAttribService = LoadOptionalStreamingService(nameof(MagicAttribService), () => MagicAttribService.LoadFromStreamingAssets());
-                ScrollService = LoadOptionalStreamingService(nameof(ScrollService), () => ScrollService.LoadFromStreamingAssets());
-                CaveListFullService = LoadOptionalStreamingService(nameof(CaveListFullService), () => CaveListFullService.LoadFromStreamingAssets());
-                GoldBossService = LoadOptionalStreamingService(nameof(GoldBossService), () => GoldBossService.LoadFromStreamingAssets());
-                ChangeFeatureDataService = LoadOptionalStreamingService(nameof(ChangeFeatureDataService), () => ChangeFeatureDataService.LoadFromStreamingAssets());
-                GlobalConfigService = LoadOptionalStreamingService(nameof(GlobalConfigService), () => GlobalConfigService.LoadFromStreamingAssets());
-                NormalSpawnService = LoadOptionalStreamingService(nameof(NormalSpawnService), () => NormalSpawnService.LoadFromStreamingAssets());
-                RareSpawnService = LoadOptionalStreamingService(nameof(RareSpawnService), () => RareSpawnService.LoadFromStreamingAssets());
-                WharfService = LoadOptionalStreamingService(nameof(WharfService), () => WharfService.LoadFromStreamingAssets());
-                WaypointService = LoadOptionalStreamingService(nameof(WaypointService), () => WaypointService.LoadFromStreamingAssets());
-                AutoPathRouteService = LoadOptionalStreamingService(nameof(AutoPathRouteService), () => AutoPathRouteService.LoadFromStreamingAssets());
-                RevivePosService = LoadOptionalStreamingService(nameof(RevivePosService), () => RevivePosService.LoadFromStreamingAssets());
-                FactionConfigService = LoadOptionalStreamingService(nameof(FactionConfigService), () => FactionConfigService.LoadFromStreamingAssets());
-                NpcResService = LoadOptionalStreamingService(nameof(NpcResService), () => NpcResService.LoadFromStreamingAssets());
-                NpcSFullService = LoadOptionalStreamingService(nameof(NpcSFullService), () => NpcSFullService.LoadFromStreamingAssets());
-                TongStuntService = LoadOptionalStreamingService(nameof(TongStuntService), () => TongStuntService.LoadFromStreamingAssets());
-                TongSettingService = LoadOptionalStreamingService(nameof(TongSettingService), () => TongSettingService.LoadFromStreamingAssets());
-                TongNpcPosService = LoadOptionalStreamingService(nameof(TongNpcPosService), () => TongNpcPosService.LoadFromStreamingAssets());
-                MapListService = LoadOptionalStreamingService(nameof(MapListService), () => MapListService.LoadFromStreamingAssets());
-                MapDescService = LoadOptionalStreamingService(nameof(MapDescService), () => MapDescService.LoadFromStreamingAssets());
-                BossSpawnService = LoadOptionalStreamingService(nameof(BossSpawnService), () => BossSpawnService.LoadFromStreamingAssets());
-                DropRateConfigService = LoadOptionalStreamingService(nameof(DropRateConfigService), () => DropRateConfigService.LoadFromStreamingAssets());
-                // Batch 14: Station/Travel, Guild Workshop/Task, Mission Config
-                StationService = LoadOptionalStreamingService(nameof(StationService), () => StationService.LoadFromStreamingAssets());
-                StationPriceService = LoadOptionalStreamingService(nameof(StationPriceService), () => StationPriceService.LoadFromStreamingAssets());
-                WaypointPriceService = LoadOptionalStreamingService(nameof(WaypointPriceService), () => WaypointPriceService.LoadFromStreamingAssets());
-                GuildWorkshopLevelService = LoadOptionalStreamingService(nameof(GuildWorkshopLevelService), () => GuildWorkshopLevelService.LoadFromStreamingAssets());
-                GuildTaskDefService = LoadOptionalStreamingService(nameof(GuildTaskDefService), () => GuildTaskDefService.LoadFromStreamingAssets());
-                MissionArenaConfigService = LoadOptionalStreamingService(nameof(MissionArenaConfigService), () => MissionArenaConfigService.LoadFromStreamingAssets());
-                MissionBattleConfigService = LoadOptionalStreamingService(nameof(MissionBattleConfigService), () => MissionBattleConfigService.LoadFromStreamingAssets());
-                MissionMazeConfigService = LoadOptionalStreamingService(nameof(MissionMazeConfigService), () => MissionMazeConfigService.LoadFromStreamingAssets());
-                MissionQianchongService = LoadOptionalStreamingService(nameof(MissionQianchongService), () => MissionQianchongService.LoadFromStreamingAssets());
-                // Batch 14b: Task detail config services
-                TaskDailyConfigService = LoadOptionalStreamingService(nameof(TaskDailyConfigService), () => TaskDailyConfigService.LoadFromStreamingAssets());
-                TaskRandomConfigService = LoadOptionalStreamingService(nameof(TaskRandomConfigService), () => TaskRandomConfigService.LoadFromStreamingAssets());
-                TaskLevelLinkService = LoadOptionalStreamingService(nameof(TaskLevelLinkService), () => TaskLevelLinkService.LoadFromStreamingAssets());
-                TaskTalkConfigService = LoadOptionalStreamingService(nameof(TaskTalkConfigService), () => TaskTalkConfigService.LoadFromStreamingAssets());
-                TaskEventService = LoadOptionalStreamingService(nameof(TaskEventService), () => TaskEventService.LoadFromStreamingAssets());
-                // Batch 14c: Object/ItemValue/Music/Weather/Partner/NativePlace/Timer
-                ObjDataService = LoadOptionalStreamingService(nameof(ObjDataService), () => ObjDataService.LoadFromStreamingAssets());
-                ObjectSettingService = LoadOptionalStreamingService(nameof(ObjectSettingService), () => ObjectSettingService.LoadFromStreamingAssets());
-                MusicConfigService = LoadOptionalStreamingService(nameof(MusicConfigService), () => MusicConfigService.LoadFromStreamingAssets());
-                WeatherConfigService = LoadOptionalStreamingService(nameof(WeatherConfigService), () => WeatherConfigService.LoadFromStreamingAssets());
-                ItemValueService = LoadOptionalStreamingService(nameof(ItemValueService), () => ItemValueService.LoadFromStreamingAssets());
-                PartnerEventService = LoadOptionalStreamingService(nameof(PartnerEventService), () => PartnerEventService.LoadFromStreamingAssets());
-                PartnerBagService = LoadOptionalStreamingService(nameof(PartnerBagService), () => PartnerBagService.LoadFromStreamingAssets());
-                PartnerSettingService = LoadOptionalStreamingService(nameof(PartnerSettingService), () => PartnerSettingService.LoadFromStreamingAssets());
-                NativePlaceService = LoadOptionalStreamingService(nameof(NativePlaceService), () => NativePlaceService.LoadFromStreamingAssets());
-                TimerTaskService = LoadOptionalStreamingService(nameof(TimerTaskService), () => TimerTaskService.LoadFromStreamingAssets());
-                // Batch 15: Item sub-types
-                BrokenEquipService = LoadOptionalStreamingService(nameof(BrokenEquipService), () => BrokenEquipService.LoadFromStreamingAssets());
-                FusionService = LoadOptionalStreamingService(nameof(FusionService), () => FusionService.LoadFromStreamingAssets());
-                MantleService = LoadOptionalStreamingService(nameof(MantleService), () => MantleService.LoadFromStreamingAssets());
-                MaskService = LoadOptionalStreamingService(nameof(MaskService), () => MaskService.LoadFromStreamingAssets());
-                SignetService = LoadOptionalStreamingService(nameof(SignetService), () => SignetService.LoadFromStreamingAssets());
-                ShipinService = LoadOptionalStreamingService(nameof(ShipinService), () => ShipinService.LoadFromStreamingAssets());
-                SuiteActivateCountService = LoadOptionalStreamingService(nameof(SuiteActivateCountService), () => SuiteActivateCountService.LoadFromStreamingAssets());
-                CompoundScriptService = LoadOptionalStreamingService(nameof(CompoundScriptService), () => CompoundScriptService.LoadFromStreamingAssets());
-                // Batch 15b: Config services
-                ForbitItemService = LoadOptionalStreamingService(nameof(ForbitItemService), () => ForbitItemService.LoadFromStreamingAssets());
-                TaxRateService = LoadOptionalStreamingService(nameof(TaxRateService), () => TaxRateService.LoadFromStreamingAssets());
-                ProgressConfigService = LoadOptionalStreamingService(nameof(ProgressConfigService), () => ProgressConfigService.LoadFromStreamingAssets());
-                RankSettingService = LoadOptionalStreamingService(nameof(RankSettingService), () => RankSettingService.LoadFromStreamingAssets());
-                FoundryResDemandService = LoadOptionalStreamingService(nameof(FoundryResDemandService), () => FoundryResDemandService.LoadFromStreamingAssets());
-                PlatinaMagicRateService = LoadOptionalStreamingService(nameof(PlatinaMagicRateService), () => PlatinaMagicRateService.LoadFromStreamingAssets());
-                RecoinService = LoadOptionalStreamingService(nameof(RecoinService), () => RecoinService.LoadFromStreamingAssets());
-                CityHongbaoService = LoadOptionalStreamingService(nameof(CityHongbaoService), () => CityHongbaoService.LoadFromStreamingAssets());
-                // Batch 16: Task tollgate/newtask
-                TollgateKillerService = LoadOptionalStreamingService(nameof(TollgateKillerService), () => TollgateKillerService.LoadFromStreamingAssets());
-                NewTaskBranchService = LoadOptionalStreamingService(nameof(NewTaskBranchService), () => NewTaskBranchService.LoadFromStreamingAssets());
-                MainPassTaskService = LoadOptionalStreamingService(nameof(MainPassTaskService), () => MainPassTaskService.LoadFromStreamingAssets());
-                // Batch 16b: Remaining config services
-                AutoUpdateConfigService = LoadOptionalStreamingService(nameof(AutoUpdateConfigService), () => AutoUpdateConfigService.LoadFromStreamingAssets());
-                TiredWarningService = LoadOptionalStreamingService(nameof(TiredWarningService), () => TiredWarningService.LoadFromStreamingAssets());
-                PlayerLimitTimeService = LoadOptionalStreamingService(nameof(PlayerLimitTimeService), () => PlayerLimitTimeService.LoadFromStreamingAssets());
-                PermitDialogNpcService = LoadOptionalStreamingService(nameof(PermitDialogNpcService), () => PermitDialogNpcService.LoadFromStreamingAssets());
-                ProductConfigService = LoadOptionalStreamingService(nameof(ProductConfigService), () => ProductConfigService.LoadFromStreamingAssets());
-                UtilitiesService = LoadOptionalStreamingService(nameof(UtilitiesService), () => UtilitiesService.LoadFromStreamingAssets());
-                ForbitHeartService = LoadOptionalStreamingService(nameof(ForbitHeartService), () => ForbitHeartService.LoadFromStreamingAssets());
-                StringResourceCatalogService = LoadOptionalStreamingService(nameof(StringResourceCatalogService), () => StringResourceCatalogService.LoadFromStreamingAssets());
-
-                LogOptionalServiceSummary();
+                if (ShouldLoadOptionalStreamingServices(ActiveBootProfile))
+                {
+                    if (Application.isPlaying)
+                    {
+                        StartCoroutine(LoadOptionalServicesCoroutine());
+                    }
+                    else
+                    {
+                        InitializeFastBootFallbackServices();
+                    }
+                }
+                else
+                {
+                    InitializeFastBootFallbackServices();
+                }
+                // GmTestServerItemService.EnsureGmLoginInGame() is invoked inside
+                // LoadItemDataCoroutine after items/inventory are ready (it grants
+                // GM login items, which need the item table).
 
                 // Wire combat events to chat log
                 if (GameplayLoop != null)
@@ -735,21 +843,689 @@ namespace VLTK.Sandbox
                     };
 
                 // Build mobile UI panels
-                EnsureMobileUiPanels();
+                try { EnsureMobileUiPanels(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"EnsureMobileUiPanels failed: {e.Message}"); }
 
                 // Place player at training pentagon center immediately so it never
                 // appears at (0,0) before the map finishes loading.
-                PlacePlayerAtDefaultSpawn();
+                try { PlacePlayerAtDefaultSpawn(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"PlacePlayerAtDefaultSpawn failed: {e.Message}"); }
 
-                if (loadDefaultMapOnBoot && MapManager.Catalog.ContainsKey(defaultMapId))
-                    MapManager.LoadMap(defaultMapId);
+                if (ShouldLoadDefaultMapOnBoot(ActiveBootProfile) && MapManager != null && MapManager.Catalog.ContainsKey(defaultMapId))
+                {
+                    _initialBootMapLoad = true;
+                    try { TimedBootStep("MapManager.LoadMap", () => MapManager.LoadMap(defaultMapId)); }
+                    catch (Exception e) { SubsystemLog.Warn("Sandbox", $"MapManager.LoadMap({defaultMapId}) failed: {e.Message}"); }
+                    _initialBootMapLoad = false;
+                }
+
+                // Training NPCs spawn condition #1: no map loaded (fast boot no-map).
+                // (Condition #2 — map is Ba Lăng huyện — is handled in the OnMapLoaded
+                // handler above.) When no map is loaded OnMapLoaded never fires, so
+                // spawn the 5 training NPCs around the player now for testing.
+                if (MapManager != null && MapManager.ActiveMap == null)
+                {
+                    try
+                    {
+                        EnsureEnemyRuntime();
+                        if (TrainingSpawner != null)
+                        {
+                            TrainingSpawner.usePlayerPosition = true;
+                            SpawnTrainingNpcs();
+                            SubsystemLog.Info("SandboxBoot",
+                                "FastEditor no-map boot: spawned 5 training NPCs around player for testing.");
+                        }
+                    }
+                    catch (Exception e) { SubsystemLog.Warn("Sandbox", $"Boot training NPC spawn failed: {e.Message}"); }
+                }
             }
 
+            bootWatch.Stop();
+            BootReport?.Complete(bootWatch.ElapsedMilliseconds);
+            LogBootTimingSummary();
             SubsystemLog.Info("Sandbox",
                 $"Initialized v{SandboxVersion.Version} ({SandboxVersion.Codename}) " +
+                $"profile={ActiveBootProfile} in {bootWatch.ElapsedMilliseconds}ms " +
                 $"at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
-            OnBootComplete?.Invoke(BootReport);
+            // Wrapped to ensure subscribers cannot crash SandboxManager boot.
+            try { OnBootComplete?.Invoke(BootReport); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"OnBootComplete subscriber threw: {e.Message}"); }
+        }
+
+        /// <summary>
+        /// Lazily loads the PC item table, drop rates, and skill registry AFTER the
+        /// synchronous boot + initial map load, then wires up the item-dependent
+        /// services (ItemDb/LootService/InventoryService/ShopService), item UI
+        /// panels (Inventory/Shop), and GM-login item grants. Yielding between
+        /// heavy steps keeps the main thread responsive while the map is already
+        /// visible.
+        /// </summary>
+        private System.Collections.IEnumerator LoadItemDataCoroutine()
+        {
+            // Yield first so nothing runs inline in Start(); the map is already
+            // rendered by the time the synchronous boot returned.
+            yield return null;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            ItemContractImporter importer = null;
+            try
+            {
+                var itemDir = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
+                importer = LoadItemImporterForBoot(itemDir);
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred item loading failed: {e.Message}");
+                yield break;
+            }
+            yield return null;
+
+            try
+            {
+                ItemDb = new ItemDatabase(importer);
+                LootService = new LootDropService(ItemDb);
+                var dropRegistry = LoadDropRateRegistryForBoot(
+                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
+                LootService.AttachRegistry(dropRegistry);
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred ItemDb/Loot setup failed: {e.Message}");
+                ItemDb = null;
+                LootService = null;
+            }
+            yield return null;
+
+            try
+            {
+                PcSkillsFull = LoadPcSkillRegistryForBoot(
+                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred PcSkillRegistry load failed: {e.Message}");
+                PcSkillsFull = null;
+            }
+            yield return null;
+
+            // Wire inventory + equipment events + shop, now that item data exists.
+            try
+            {
+                if (importer != null && _equipmentService != null)
+                {
+                    _inventoryService = new InventoryService(importer, _equipmentService);
+                    _equipmentService.OnEquipChanged += (evt) => {
+                        if (PlayerController != null && PlayerController.visual != null)
+                            ApplyEquipmentVisualChange(PlayerController.visual, evt.slot, evt.itemId, evt.newVariant, PlayerController.EquipWeapon);
+                        if (FemalePlayerVisual != null)
+                            ApplyEquipmentVisualChange(FemalePlayerVisual, evt.slot, evt.itemId, evt.newVariant, FemalePlayerVisual.SetWeapon);
+                    };
+                }
+                ShopService = new ShopService(ItemDb, initialSilver: 5000);
+                if (_inventoryService != null && GmAccessService != null)
+                    GmTestServerItemService = new GmTestServerItemService(this, _inventoryService, GmAccessService);
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred inventory/shop setup failed: {e.Message}");
+            }
+            yield return null;
+
+            // (Re)initialize item-dependent UI panels now that ItemDb/inventory exist.
+            // The panels were created (null-data) at boot; re-Initialize with real data.
+            try
+            {
+                if (InventoryPanel != null)
+                    InventoryPanel.Initialize(ItemDb, _inventoryService);
+                else
+                    EnsureMobileUiPanels(); // create them if boot skipped panel build
+                if (ShopPanel != null && ShopService != null)
+                    ShopPanel.Initialize(ShopService, _inventoryService, ItemDb);
+                else
+                    EnsureMobileUiPanels();
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred item-panel rewire failed: {e.Message}");
+            }
+
+            // Grant GM login items now that inventory is ready.
+            try { GmTestServerItemService?.EnsureGmLoginInGame(); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"Deferred EnsureGmLoginInGame failed: {e.Message}"); }
+
+            watch.Stop();
+            RecordBootTiming("ItemData.LazyLoad", watch.ElapsedMilliseconds);
+            SubsystemLog.Info("SandboxBoot", $"Item data lazy-loaded in {watch.ElapsedMilliseconds}ms " +
+                $"(ItemDb={(ItemDb != null ? "ok" : "null")}, inv={(_inventoryService != null ? "ok" : "null")}).");
+        }
+
+        public static void ApplyEquipmentVisualChange(IPlayerVisual visual, PlayerEquipSlot slot, int itemId, int newVariant, Action<PcWeaponType, int> applyWeapon = null)
+        {
+            if (visual == null) return;
+            if (slot == PlayerEquipSlot.Weapon)
+            {
+                var weapon = PlayerEquipmentService.GetWeaponType(itemId, newVariant);
+                if (applyWeapon != null)
+                    applyWeapon(weapon, newVariant);
+                else
+                    visual.SetWeapon(weapon, newVariant);
+                return;
+            }
+            visual.SetEquipVariant(slot, newVariant);
+        }
+
+        private System.Collections.IEnumerator LoadOptionalServicesCoroutine()
+        {
+            // Initial backup / fallback services setup to prevent NREs
+            TaskFlagService = new TaskFlagService();
+            if (FactionMapRuntimeService == null)
+                FactionMapRuntimeService = new FactionMapRuntimeService();
+            if (BattleScriptRuntimeService == null)
+                BattleScriptRuntimeService = new BattleScriptRuntimeService();
+
+            yield return null;
+
+            // Meridian, Partner, Title, PetSkill, Lottery, CompoundRecipe, QuestItem, Adventure, Guild, AttribConst, MissleCatalog, EventBonus, CityWar, Auction, GoodsCatalog, ShopConfig
+            MeridianService = MeridianService.LoadFromStreamingAssets();
+            yield return null;
+            PartnerService = PartnerService.LoadFromStreamingAssets();
+            yield return null;
+            PetSkillService = PetSkillService.LoadFromStreamingAssets();
+            yield return null;
+            TitleService = TitleService.LoadFromStreamingAssets();
+            yield return null;
+            LotteryService = LotteryService.LoadFromStreamingAssets();
+            yield return null;
+            CompoundRecipeService = CompoundRecipeService.LoadFromStreamingAssets();
+            yield return null;
+            QuestItemService = QuestItemService.LoadFromStreamingAssets();
+            yield return null;
+            AdventureService = AdventureService.LoadFromStreamingAssets();
+            yield return null;
+            GuildService = GuildService.LoadFromStreamingAssets();
+            yield return null;
+            AttribConstService = AttribConstService.LoadFromStreamingAssets();
+            yield return null;
+            MissleCatalogService = MissleCatalogService.LoadFromStreamingAssets();
+            yield return null;
+            EventBonusService = EventBonusService.LoadFromStreamingAssets();
+            yield return null;
+            CityWarService = CityWarService.LoadFromStreamingAssets();
+            yield return null;
+            AuctionService = AuctionService.LoadFromStreamingAssets();
+            yield return null;
+            GoodsCatalogService = GoodsCatalogService.LoadFromStreamingAssets();
+            yield return null;
+            ShopConfigService = ShopConfigService.LoadFromStreamingAssets();
+
+            yield return null;
+
+            // ── Batch 2: Battlefield, Instance, Special skills, NPC scripts, etc. ─
+            BattlefieldService = LoadOptionalStreamingService(nameof(BattlefieldService), () => BattlefieldService.LoadFromStreamingAssets());
+            InstanceMapService = LoadOptionalStreamingService(nameof(InstanceMapService), () => InstanceMapService.LoadFromStreamingAssets());
+            HongbaoService = LoadOptionalStreamingService(nameof(HongbaoService), () => HongbaoService.LoadFromStreamingAssets());
+            ItemExchangeService = LoadOptionalStreamingService(nameof(ItemExchangeService), () => ItemExchangeService.LoadFromStreamingAssets());
+            SpecialSkillService = LoadOptionalStreamingService(nameof(SpecialSkillService), () => SpecialSkillService.LoadFromStreamingAssets());
+            NpcSkillService = LoadOptionalStreamingService(nameof(NpcSkillService), () => NpcSkillService.LoadFromStreamingAssets());
+            TranslifeSkillService = LoadOptionalStreamingService(nameof(TranslifeSkillService), () => TranslifeSkillService.LoadFromStreamingAssets());
+            SkillTemplateService = LoadOptionalStreamingService(nameof(SkillTemplateService), () => SkillTemplateService.LoadFromStreamingAssets());
+            NpcLevelScriptService = LoadOptionalStreamingService(nameof(NpcLevelScriptService), () => NpcLevelScriptService.LoadFromStreamingAssets());
+            NpcDeathScriptService = LoadOptionalStreamingService(nameof(NpcDeathScriptService), () => NpcDeathScriptService.LoadFromStreamingAssets());
+            DailyTaskService = LoadOptionalStreamingService(nameof(DailyTaskService), () => DailyTaskService.LoadFromStreamingAssets());
+            BossMissionService = LoadOptionalStreamingService(nameof(BossMissionService), () => BossMissionService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            // ── Batch 3: Events, weather, music, tasks, arena, trip, bonus ───────
+            ServerEventService = LoadOptionalStreamingService(nameof(ServerEventService), () => ServerEventService.LoadFromStreamingAssets());
+            VngEventService = LoadOptionalStreamingService(nameof(VngEventService), () => VngEventService.LoadFromStreamingAssets());
+            BattleScriptService = LoadOptionalStreamingService(nameof(BattleScriptService), () => BattleScriptService.LoadFromStreamingAssets());
+            WeatherService = LoadOptionalStreamingService(nameof(WeatherService), () => WeatherService.LoadFromStreamingAssets());
+            MusicService = LoadOptionalStreamingService(nameof(MusicService), () => MusicService.LoadFromStreamingAssets());
+            GuildWorkshopService = LoadOptionalStreamingService(nameof(GuildWorkshopService), () => GuildWorkshopService.LoadFromStreamingAssets());
+            HuoYueDuService = LoadOptionalStreamingService(nameof(HuoYueDuService), () => HuoYueDuService.LoadFromStreamingAssets());
+            CityDefenceService = LoadOptionalStreamingService(nameof(CityDefenceService), () => CityDefenceService.LoadFromStreamingAssets());
+            ActivityService = LoadOptionalStreamingService(nameof(ActivityService), () => ActivityService.LoadFromStreamingAssets());
+            RandomTaskService = LoadOptionalStreamingService(nameof(RandomTaskService), () => RandomTaskService.LoadFromStreamingAssets());
+            PartnerTaskService = LoadOptionalStreamingService(nameof(PartnerTaskService), () => PartnerTaskService.LoadFromStreamingAssets());
+            MetempsychosisTaskService = LoadOptionalStreamingService(nameof(MetempsychosisTaskService), () => MetempsychosisTaskService.LoadFromStreamingAssets());
+            ArenaService = LoadOptionalStreamingService(nameof(ArenaService), () => ArenaService.LoadFromStreamingAssets());
+            TripService = LoadOptionalStreamingService(nameof(TripService), () => TripService.LoadFromStreamingAssets());
+            BonusOnlineService = LoadOptionalStreamingService(nameof(BonusOnlineService), () => BonusOnlineService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            // ── Batch 4: Guild extras, honor, shitu, foundry, world rank, misc ──
+            GuildRankService = LoadOptionalStreamingService(nameof(GuildRankService), () => GuildRankService.LoadFromStreamingAssets());
+            GuildStuntService = LoadOptionalStreamingService(nameof(GuildStuntService), () => GuildStuntService.LoadFromStreamingAssets());
+            GuildTaskService = LoadOptionalStreamingService(nameof(GuildTaskService), () => GuildTaskService.LoadFromStreamingAssets());
+            HonorService = LoadOptionalStreamingService(nameof(HonorService), () => HonorService.LoadFromStreamingAssets());
+            ShituService = LoadOptionalStreamingService(nameof(ShituService), () => ShituService.LoadFromStreamingAssets());
+            FoundryService = LoadOptionalStreamingService(nameof(FoundryService), () => FoundryService.LoadFromStreamingAssets());
+            WorldRankService = LoadOptionalStreamingService(nameof(WorldRankService), () => WorldRankService.LoadFromStreamingAssets());
+            NewPlayerGuideService = LoadOptionalStreamingService(nameof(NewPlayerGuideService), () => NewPlayerGuideService.LoadFromStreamingAssets());
+            ChangeFeatureService = LoadOptionalStreamingService(nameof(ChangeFeatureService), () => ChangeFeatureService.LoadFromStreamingAssets());
+            StallService = LoadOptionalStreamingService(nameof(StallService), () => StallService.LoadFromStreamingAssets());
+            FlipCardService = LoadOptionalStreamingService(nameof(FlipCardService), () => FlipCardService.LoadFromStreamingAssets());
+            BaoRuongThanBiService = LoadOptionalStreamingService(nameof(BaoRuongThanBiService), () => BaoRuongThanBiService.LoadFromStreamingAssets());
+            SeasonalEventService = LoadOptionalStreamingService(nameof(SeasonalEventService), () => SeasonalEventService.LoadFromStreamingAssets());
+            CompensationService = LoadOptionalStreamingService(nameof(CompensationService), () => CompensationService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            // ── Batch 5: Final client systems (faction maps, awards, double exp, sim city, client skill scripts) ─
+            FactionMapService = LoadOptionalStreamingService(nameof(FactionMapService), () => FactionMapService.LoadFromStreamingAssets());
+            BattleAwardService = LoadOptionalStreamingService(nameof(BattleAwardService), () => BattleAwardService.LoadFromStreamingAssets());
+            DoubleExpService = LoadOptionalStreamingService(nameof(DoubleExpService), () => DoubleExpService.LoadFromStreamingAssets());
+            SimCityPluginService = LoadOptionalStreamingService(nameof(SimCityPluginService), () => SimCityPluginService.LoadFromStreamingAssets());
+            ClientSkillScriptService = LoadOptionalStreamingService(nameof(ClientSkillScriptService), () => ClientSkillScriptService.LoadFromStreamingAssets());
+            TongJinBattleService = LoadOptionalStreamingService(nameof(TongJinBattleService), () => TongJinBattleService.LoadFromStreamingAssets());
+            BangChienService = LoadOptionalStreamingService(nameof(BangChienService), () => BangChienService.LoadFromStreamingAssets());
+            BossHoangKimService = LoadOptionalStreamingService(nameof(BossHoangKimService), () => BossHoangKimService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            SaveSlotService = LoadOptionalStreamingService(nameof(SaveSlotService), () => SaveSlotService.LoadFromStreamingAssets());
+            MailService = LoadOptionalStreamingService(nameof(MailService), () => MailService.LoadFromStreamingAssets());
+            MountService = LoadOptionalStreamingService(nameof(MountService), () => MountService.LoadFromStreamingAssets());
+            RankingService = LoadOptionalStreamingService(nameof(RankingService), () => RankingService.LoadFromStreamingAssets());
+            FriendService = LoadOptionalStreamingService(nameof(FriendService), () => FriendService.LoadFromStreamingAssets());
+            PetService = LoadOptionalStreamingService(nameof(PetService), () => PetService.LoadFromStreamingAssets());
+            ShopConfigService = LoadOptionalStreamingService(nameof(ShopConfigService), () => ShopConfigService.LoadFromStreamingAssets());
+            MissileEffectService = LoadOptionalStreamingService(nameof(MissileEffectService), () => MissileEffectService.LoadFromStreamingAssets());
+            HudArtCatalogService = LoadOptionalStreamingService(nameof(HudArtCatalogService), () => HudArtCatalogService.LoadFromStreamingAssets());
+            FactionMapRuntimeService = FactionMapRuntimeService != null ? FactionMapRuntimeService : new FactionMapRuntimeService(FactionMapService);
+            BattleScriptRuntimeService = BattleScriptRuntimeService != null ? BattleScriptRuntimeService : new BattleScriptRuntimeService(BattleScriptService);
+            TaskFlagRegistryService = LoadOptionalStreamingService(nameof(TaskFlagRegistryService), () => TaskFlagRegistryService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            MapListFullService = LoadOptionalStreamingService(nameof(MapListFullService), () => MapListFullService.LoadFromStreamingAssets());
+            MapElementService = LoadOptionalStreamingService(nameof(MapElementService), () => MapElementService.LoadFromStreamingAssets());
+            MapRespawnService = LoadOptionalStreamingService(nameof(MapRespawnService), () => MapRespawnService.LoadFromStreamingAssets());
+            MapBlockService = LoadOptionalStreamingService(nameof(MapBlockService), () => MapBlockService.LoadFromStreamingAssets());
+            MapNpcRespawnService = LoadOptionalStreamingService(nameof(MapNpcRespawnService), () => MapNpcRespawnService.LoadFromStreamingAssets());
+            MapMusicService = LoadOptionalStreamingService(nameof(MapMusicService), () => MapMusicService.LoadFromStreamingAssets());
+            SkillLevelDataService = LoadOptionalStreamingService(nameof(SkillLevelDataService), () => SkillLevelDataService.LoadFromStreamingAssets());
+            SkillUpgradeService = LoadOptionalStreamingService(nameof(SkillUpgradeService), () => SkillUpgradeService.LoadFromStreamingAssets());
+            SkillBookService = LoadOptionalStreamingService(nameof(SkillBookService), () => SkillBookService.LoadFromStreamingAssets());
+            SkillComboService = LoadOptionalStreamingService(nameof(SkillComboService), () => SkillComboService.LoadFromStreamingAssets());
+            SkillStateService = LoadOptionalStreamingService(nameof(SkillStateService), () => SkillStateService.LoadFromStreamingAssets());
+            SkillMasteryService = LoadOptionalStreamingService(nameof(SkillMasteryService), () => SkillMasteryService.LoadFromStreamingAssets());
+            WorldBossService = LoadOptionalStreamingService(nameof(WorldBossService), () => WorldBossService.LoadFromStreamingAssets());
+            AchievementService = LoadOptionalStreamingService(nameof(AchievementService), () => AchievementService.LoadFromStreamingAssets());
+            DailyRewardService = LoadOptionalStreamingService(nameof(DailyRewardService), () => DailyRewardService.LoadFromStreamingAssets());
+            MallService = LoadOptionalStreamingService(nameof(MallService), () => MallService.LoadFromStreamingAssets());
+            FashionService = LoadOptionalStreamingService(nameof(FashionService), () => FashionService.LoadFromStreamingAssets());
+            SignInService = LoadOptionalStreamingService(nameof(SignInService), () => SignInService.LoadFromStreamingAssets());
+            TreasureHuntService = LoadOptionalStreamingService(nameof(TreasureHuntService), () => TreasureHuntService.LoadFromStreamingAssets());
+            EncounterService = LoadOptionalStreamingService(nameof(EncounterService), () => EncounterService.LoadFromStreamingAssets());
+            FriendGiftService = LoadOptionalStreamingService(nameof(FriendGiftService), () => FriendGiftService.LoadFromStreamingAssets());
+            TextResourceService = LoadOptionalStreamingService(nameof(TextResourceService), () => TextResourceService.LoadFromStreamingAssets());
+            AnimationBankService = LoadOptionalStreamingService(nameof(AnimationBankService), () => AnimationBankService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            FactionSkillTreeService = LoadOptionalStreamingService(nameof(FactionSkillTreeService), () => FactionSkillTreeService.LoadFromStreamingAssets());
+            FactionBonusService = LoadOptionalStreamingService(nameof(FactionBonusService), () => FactionBonusService.LoadFromStreamingAssets());
+            FactionRelationService = LoadOptionalStreamingService(nameof(FactionRelationService), () => FactionRelationService.LoadFromStreamingAssets());
+            GuildScriptService = LoadOptionalStreamingService(nameof(GuildScriptService), () => GuildScriptService.LoadFromStreamingAssets());
+            BattleMapConfigService = LoadOptionalStreamingService(nameof(BattleMapConfigService), () => BattleMapConfigService.LoadFromStreamingAssets());
+            BattleRewardConfigService = LoadOptionalStreamingService(nameof(BattleRewardConfigService), () => BattleRewardConfigService.LoadFromStreamingAssets());
+            BattleHonorService = LoadOptionalStreamingService(nameof(BattleHonorService), () => BattleHonorService.LoadFromStreamingAssets());
+            SjBattleService = LoadOptionalStreamingService(nameof(SjBattleService), () => SjBattleService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            HuaShanLuanJianService = LoadOptionalStreamingService(nameof(HuaShanLuanJianService), () => HuaShanLuanJianService.LoadFromStreamingAssets());
+            SpriteAssetService = LoadOptionalStreamingService(nameof(SpriteAssetService), () => SpriteAssetService.LoadFromStreamingAssets());
+            SoundEffectService = LoadOptionalStreamingService(nameof(SoundEffectService), () => SoundEffectService.LoadFromStreamingAssets());
+            MapConnectionService = LoadOptionalStreamingService(nameof(MapConnectionService), () => MapConnectionService.LoadFromStreamingAssets());
+            NpcShopItemService = LoadOptionalStreamingService(nameof(NpcShopItemService), () => NpcShopItemService.LoadFromStreamingAssets());
+            ReputationService = LoadOptionalStreamingService(nameof(ReputationService), () => ReputationService.LoadFromStreamingAssets());
+            TitleEffectService = LoadOptionalStreamingService(nameof(TitleEffectService), () => TitleEffectService.LoadFromStreamingAssets());
+            VipLevelService = LoadOptionalStreamingService(nameof(VipLevelService), () => VipLevelService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            GuildCityWarService = new GuildCityWarService(CityWarService);
+            GuildCityWarLogService = LoadOptionalStreamingService(nameof(GuildCityWarLogService), () => GuildCityWarLogService.LoadFromStreamingAssets());
+            MissionScriptService = LoadOptionalStreamingService(nameof(MissionScriptService), () => MissionScriptService.LoadFromStreamingAssets());
+            SkillScriptService = LoadOptionalStreamingService(nameof(SkillScriptService), () => SkillScriptService.LoadFromStreamingAssets());
+            ItemScriptService = LoadOptionalStreamingService(nameof(ItemScriptService), () => ItemScriptService.LoadFromStreamingAssets());
+            EventScriptService = LoadOptionalStreamingService(nameof(EventScriptService), () => EventScriptService.LoadFromStreamingAssets());
+            TaskScriptService = LoadOptionalStreamingService(nameof(TaskScriptService), () => TaskScriptService.LoadFromStreamingAssets());
+            GlobalScriptService = LoadOptionalStreamingService(nameof(GlobalScriptService), () => GlobalScriptService.LoadFromStreamingAssets());
+            LibraryScriptService = LoadOptionalStreamingService(nameof(LibraryScriptService), () => LibraryScriptService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            AreaScriptService = LoadOptionalStreamingService(nameof(AreaScriptService), () => AreaScriptService.LoadFromStreamingAssets());
+            GbkMapScriptService = LoadOptionalStreamingService(nameof(GbkMapScriptService), () => GbkMapScriptService.LoadFromStreamingAssets());
+            FactionQuestAreaService = LoadOptionalStreamingService(nameof(FactionQuestAreaService), () => FactionQuestAreaService.LoadFromStreamingAssets());
+            TownScriptService = LoadOptionalStreamingService(nameof(TownScriptService), () => TownScriptService.LoadFromStreamingAssets());
+            GbkTriggerService = LoadOptionalStreamingService(nameof(GbkTriggerService), () => GbkTriggerService.LoadFromStreamingAssets());
+            TongBattleScriptService = LoadOptionalStreamingService(nameof(TongBattleScriptService), () => TongBattleScriptService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            PortraitService = LoadOptionalStreamingService(nameof(PortraitService), () => PortraitService.LoadFromStreamingAssets());
+            SoundListService = LoadOptionalStreamingService(nameof(SoundListService), () => SoundListService.LoadFromStreamingAssets());
+            KillerService = LoadOptionalStreamingService(nameof(KillerService), () => KillerService.LoadFromStreamingAssets());
+            ItemDetailService = LoadOptionalStreamingService(nameof(ItemDetailService), () => ItemDetailService.LoadFromStreamingAssets());
+            ItemTypeService = LoadOptionalStreamingService(nameof(ItemTypeService), () => ItemTypeService.LoadFromStreamingAssets());
+            MapTrafficService = LoadOptionalStreamingService(nameof(MapTrafficService), () => MapTrafficService.LoadFromStreamingAssets());
+            MapTypeService = LoadOptionalStreamingService(nameof(MapTypeService), () => MapTypeService.LoadFromStreamingAssets());
+            AdjustColorService = LoadOptionalStreamingService(nameof(AdjustColorService), () => AdjustColorService.LoadFromStreamingAssets());
+            ClientWeaponSkillService = LoadOptionalStreamingService(nameof(ClientWeaponSkillService), () => ClientWeaponSkillService.LoadFromStreamingAssets());
+            GoldEquipService = LoadOptionalStreamingService(nameof(GoldEquipService), () => GoldEquipService.LoadFromStreamingAssets());
+            PlatinaEquipService = LoadOptionalStreamingService(nameof(PlatinaEquipService), () => PlatinaEquipService.LoadFromStreamingAssets());
+            HorseService = LoadOptionalStreamingService(nameof(HorseService), () => HorseService.LoadFromStreamingAssets());
+            PotionService = LoadOptionalStreamingService(nameof(PotionService), () => PotionService.LoadFromStreamingAssets());
+            MagicScriptService = LoadOptionalStreamingService(nameof(MagicScriptService), () => MagicScriptService.LoadFromStreamingAssets());
+            MagicAttribService = LoadOptionalStreamingService(nameof(MagicAttribService), () => MagicAttribService.LoadFromStreamingAssets());
+            ScrollService = LoadOptionalStreamingService(nameof(ScrollService), () => ScrollService.LoadFromStreamingAssets());
+            CaveListFullService = LoadOptionalStreamingService(nameof(CaveListFullService), () => CaveListFullService.LoadFromStreamingAssets());
+            GoldBossService = LoadOptionalStreamingService(nameof(GoldBossService), () => GoldBossService.LoadFromStreamingAssets());
+            ChangeFeatureDataService = LoadOptionalStreamingService(nameof(ChangeFeatureDataService), () => ChangeFeatureDataService.LoadFromStreamingAssets());
+            GlobalConfigService = LoadOptionalStreamingService(nameof(GlobalConfigService), () => GlobalConfigService.LoadFromStreamingAssets());
+            NormalSpawnService = LoadOptionalStreamingService(nameof(NormalSpawnService), () => NormalSpawnService.LoadFromStreamingAssets());
+            RareEnchantService = LoadOptionalStreamingService(nameof(RareEnchantService), () => RareEnchantService.LoadFromStreamingAssets());
+            WharfService = LoadOptionalStreamingService(nameof(WharfService), () => WharfService.LoadFromStreamingAssets());
+            WaypointService = LoadOptionalStreamingService(nameof(WaypointService), () => WaypointService.LoadFromStreamingAssets());
+            AutoPathRouteService = LoadOptionalStreamingService(nameof(AutoPathRouteService), () => AutoPathRouteService.LoadFromStreamingAssets());
+            RevivePosService = LoadOptionalStreamingService(nameof(RevivePosService), () => RevivePosService.LoadFromStreamingAssets());
+            FactionConfigService = LoadOptionalStreamingService(nameof(FactionConfigService), () => FactionConfigService.LoadFromStreamingAssets());
+            NpcResService = LoadOptionalStreamingService(nameof(NpcResService), () => NpcResService.LoadFromStreamingAssets());
+            NpcSFullService = LoadOptionalStreamingService(nameof(NpcSFullService), () => NpcSFullService.LoadFromStreamingAssets());
+            TongStuntService = LoadOptionalStreamingService(nameof(TongStuntService), () => TongStuntService.LoadFromStreamingAssets());
+            TongSettingService = LoadOptionalStreamingService(nameof(TongSettingService), () => TongSettingService.LoadFromStreamingAssets());
+            TongNpcPosService = LoadOptionalStreamingService(nameof(TongNpcPosService), () => TongNpcPosService.LoadFromStreamingAssets());
+            MapListService = LoadOptionalStreamingService(nameof(MapListService), () => MapListService.LoadFromStreamingAssets());
+            MapDescService = LoadOptionalStreamingService(nameof(MapDescService), () => MapDescService.LoadFromStreamingAssets());
+            BossSpawnService = LoadOptionalStreamingService(nameof(BossSpawnService), () => BossSpawnService.LoadFromStreamingAssets());
+            DropRateConfigService = LoadOptionalStreamingService(nameof(DropRateConfigService), () => DropRateConfigService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            StationService = LoadOptionalStreamingService(nameof(StationService), () => StationService.LoadFromStreamingAssets());
+            StationPriceService = LoadOptionalStreamingService(nameof(StationPriceService), () => StationPriceService.LoadFromStreamingAssets());
+            WaypointPriceService = LoadOptionalStreamingService(nameof(WaypointPriceService), () => WaypointPriceService.LoadFromStreamingAssets());
+            GuildWorkshopLevelService = LoadOptionalStreamingService(nameof(GuildWorkshopLevelService), () => GuildWorkshopLevelService.LoadFromStreamingAssets());
+            GuildTaskDefService = LoadOptionalStreamingService(nameof(GuildTaskDefService), () => GuildTaskDefService.LoadFromStreamingAssets());
+            MissionArenaConfigService = LoadOptionalStreamingService(nameof(MissionArenaConfigService), () => MissionArenaConfigService.LoadFromStreamingAssets());
+            MissionBattleConfigService = LoadOptionalStreamingService(nameof(MissionBattleConfigService), () => MissionBattleConfigService.LoadFromStreamingAssets());
+            MissionMazeConfigService = LoadOptionalStreamingService(nameof(MissionMazeConfigService), () => MissionMazeConfigService.LoadFromStreamingAssets());
+            MissionQianchongService = LoadOptionalStreamingService(nameof(MissionQianchongService), () => MissionQianchongService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            TaskDailyConfigService = LoadOptionalStreamingService(nameof(TaskDailyConfigService), () => TaskDailyConfigService.LoadFromStreamingAssets());
+            TaskRandomConfigService = LoadOptionalStreamingService(nameof(TaskRandomConfigService), () => TaskRandomConfigService.LoadFromStreamingAssets());
+            TaskLevelLinkService = LoadOptionalStreamingService(nameof(TaskLevelLinkService), () => TaskLevelLinkService.LoadFromStreamingAssets());
+            TaskTalkConfigService = LoadOptionalStreamingService(nameof(TaskTalkConfigService), () => TaskTalkConfigService.LoadFromStreamingAssets());
+            TaskEventService = LoadOptionalStreamingService(nameof(TaskEventService), () => TaskEventService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            ObjDataService = LoadOptionalStreamingService(nameof(ObjDataService), () => ObjDataService.LoadFromStreamingAssets());
+            ObjectSettingService = LoadOptionalStreamingService(nameof(ObjectSettingService), () => ObjectSettingService.LoadFromStreamingAssets());
+            MusicConfigService = LoadOptionalStreamingService(nameof(MusicConfigService), () => MusicConfigService.LoadFromStreamingAssets());
+            WeatherConfigService = LoadOptionalStreamingService(nameof(WeatherConfigService), () => WeatherConfigService.LoadFromStreamingAssets());
+            ItemValueService = LoadOptionalStreamingService(nameof(ItemValueService), () => ItemValueService.LoadFromStreamingAssets());
+            PartnerEventService = LoadOptionalStreamingService(nameof(PartnerEventService), () => PartnerEventService.LoadFromStreamingAssets());
+            PartnerBagService = LoadOptionalStreamingService(nameof(PartnerBagService), () => PartnerBagService.LoadFromStreamingAssets());
+            PartnerSettingService = LoadOptionalStreamingService(nameof(PartnerSettingService), () => PartnerSettingService.LoadFromStreamingAssets());
+            NativePlaceService = LoadOptionalStreamingService(nameof(NativePlaceService), () => NativePlaceService.LoadFromStreamingAssets());
+            TimerTaskService = LoadOptionalStreamingService(nameof(TimerTaskService), () => TimerTaskService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            BrokenEquipService = LoadOptionalStreamingService(nameof(BrokenEquipService), () => BrokenEquipService.LoadFromStreamingAssets());
+            FusionService = LoadOptionalStreamingService(nameof(FusionService), () => FusionService.LoadFromStreamingAssets());
+            MantleService = LoadOptionalStreamingService(nameof(MantleService), () => MantleService.LoadFromStreamingAssets());
+            MaskService = LoadOptionalStreamingService(nameof(MaskService), () => MaskService.LoadFromStreamingAssets());
+            SignetService = LoadOptionalStreamingService(nameof(SignetService), () => SignetService.LoadFromStreamingAssets());
+            ShipinService = LoadOptionalStreamingService(nameof(ShipinService), () => ShipinService.LoadFromStreamingAssets());
+            SuiteActivateCountService = LoadOptionalStreamingService(nameof(SuiteActivateCountService), () => SuiteActivateCountService.LoadFromStreamingAssets());
+            CompoundScriptService = LoadOptionalStreamingService(nameof(CompoundScriptService), () => CompoundScriptService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            ForbitItemService = LoadOptionalStreamingService(nameof(ForbitItemService), () => ForbitItemService.LoadFromStreamingAssets());
+            TaxRateService = LoadOptionalStreamingService(nameof(TaxRateService), () => TaxRateService.LoadFromStreamingAssets());
+            ProgressConfigService = LoadOptionalStreamingService(nameof(ProgressConfigService), () => ProgressConfigService.LoadFromStreamingAssets());
+            RankSettingService = LoadOptionalStreamingService(nameof(RankSettingService), () => RankSettingService.LoadFromStreamingAssets());
+            FoundryResDemandService = LoadOptionalStreamingService(nameof(FoundryResDemandService), () => FoundryResDemandService.LoadFromStreamingAssets());
+            PlatinaMagicRateService = LoadOptionalStreamingService(nameof(PlatinaMagicRateService), () => PlatinaMagicRateService.LoadFromStreamingAssets());
+            RecoinService = LoadOptionalStreamingService(nameof(RecoinService), () => RecoinService.LoadFromStreamingAssets());
+            CityHongbaoService = LoadOptionalStreamingService(nameof(CityHongbaoService), () => CityHongbaoService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            TollgateKillerService = LoadOptionalStreamingService(nameof(TollgateKillerService), () => TollgateKillerService.LoadFromStreamingAssets());
+            NewTaskBranchService = LoadOptionalStreamingService(nameof(NewTaskBranchService), () => NewTaskBranchService.LoadFromStreamingAssets());
+            MainPassTaskService = LoadOptionalStreamingService(nameof(MainPassTaskService), () => MainPassTaskService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            AutoUpdateConfigService = LoadOptionalStreamingService(nameof(AutoUpdateConfigService), () => AutoUpdateConfigService.LoadFromStreamingAssets());
+            TiredWarningService = LoadOptionalStreamingService(nameof(TiredWarningService), () => TiredWarningService.LoadFromStreamingAssets());
+            PlayerLimitTimeService = LoadOptionalStreamingService(nameof(PlayerLimitTimeService), () => PlayerLimitTimeService.LoadFromStreamingAssets());
+            PermitDialogNpcService = LoadOptionalStreamingService(nameof(PermitDialogNpcService), () => PermitDialogNpcService.LoadFromStreamingAssets());
+            ProductConfigService = LoadOptionalStreamingService(nameof(ProductConfigService), () => ProductConfigService.LoadFromStreamingAssets());
+            UtilitiesService = LoadOptionalStreamingService(nameof(UtilitiesService), () => UtilitiesService.LoadFromStreamingAssets());
+            ForbitHeartService = LoadOptionalStreamingService(nameof(ForbitHeartService), () => ForbitHeartService.LoadFromStreamingAssets());
+            StringResourceCatalogService = LoadOptionalStreamingService(nameof(StringResourceCatalogService), () => StringResourceCatalogService.LoadFromStreamingAssets());
+
+            LogOptionalServiceSummary();
+            GmTestServerItemService?.EnsureGmLoginInGame();
+        }
+
+
+        private SandboxBootProfile ResolveBootProfile()
+        {
+#if UNITY_EDITOR
+            if (useFastEditorBoot)
+                return SandboxBootProfile.FastEditor;
+#endif
+            return bootProfile;
+        }
+
+        private bool ShouldLoadOptionalStreamingServices(SandboxBootProfile profile)
+        {
+            if (profile == SandboxBootProfile.FastEditor)
+                return loadOptionalServicesInFastEditorBoot;
+            return true;
+        }
+
+        private bool ShouldLoadDefaultMapOnBoot(SandboxBootProfile profile)
+        {
+            if (!loadDefaultMapOnBoot)
+                return false;
+            if (profile == SandboxBootProfile.FastEditor)
+                return loadDefaultMapInFastEditorBoot;
+            return true;
+        }
+
+        private bool ShouldUseFastEditorReferenceDataCache()
+        {
+#if UNITY_EDITOR
+            return ActiveBootProfile == SandboxBootProfile.FastEditor && cacheReferenceDataInFastEditorBoot;
+#else
+            return false;
+#endif
+        }
+
+        private RegionCatalogFile LoadRegionCatalogForBoot()
+        {
+            if (ShouldUseFastEditorReferenceDataCache() && _fastEditorRegionCatalogCache != null)
+            {
+                RecordBootTiming("RegionCatalog.CacheHit", 0);
+                return _fastEditorRegionCatalogCache;
+            }
+
+            var regionCat = TimedBootStep("RegionCatalog.Load", RegionCatalogLoader.LoadFromStreamingAssets);
+            if (ShouldUseFastEditorReferenceDataCache() && regionCat != null)
+                _fastEditorRegionCatalogCache = regionCat;
+            return regionCat;
+        }
+
+        private ItemContractImporter LoadItemImporterForBoot(string itemDir)
+        {
+            if (ShouldUseFastEditorReferenceDataCache() &&
+                _fastEditorItemImporterCache != null &&
+                string.Equals(_fastEditorItemDirCacheKey, itemDir, StringComparison.Ordinal))
+            {
+                RecordBootTiming("PcItemReferenceData.CacheHit", 0);
+                return _fastEditorItemImporterCache;
+            }
+
+            var importer = TimedBootStep("PcItemBatchLoader.ImportInto",
+                () => PcItemBatchLoader.ImportInto(itemDir));
+            TimedBootStep("PcMagicScriptItemParser.ImportInto",
+                () => PcMagicScriptItemParser.ImportInto(itemDir, importer));
+
+            if (ShouldUseFastEditorReferenceDataCache())
+            {
+                _fastEditorItemDirCacheKey = itemDir;
+                _fastEditorItemImporterCache = importer;
+            }
+
+            return importer;
+        }
+
+        private DropRateRegistry LoadDropRateRegistryForBoot(string dropDir)
+        {
+            if (ShouldUseFastEditorReferenceDataCache() &&
+                _fastEditorDropRegistryCache != null &&
+                string.Equals(_fastEditorDropDirCacheKey, dropDir, StringComparison.Ordinal))
+            {
+                RecordBootTiming("DropRateRegistry.CacheHit", 0);
+                return _fastEditorDropRegistryCache;
+            }
+
+            var dropRegistry = new DropRateRegistry();
+            TimedBootStep("DropRateRegistry.LoadDirectory", () => dropRegistry.LoadDirectory(dropDir));
+
+            if (ShouldUseFastEditorReferenceDataCache())
+            {
+                _fastEditorDropDirCacheKey = dropDir;
+                _fastEditorDropRegistryCache = dropRegistry;
+            }
+
+            return dropRegistry;
+        }
+
+        private PcSkillRegistry LoadPcSkillRegistryForBoot(string skillDir)
+        {
+            if (ShouldUseFastEditorReferenceDataCache() &&
+                _fastEditorSkillRegistryCache != null &&
+                string.Equals(_fastEditorSkillDirCacheKey, skillDir, StringComparison.Ordinal))
+            {
+                RecordBootTiming("PcSkillRegistry.CacheHit", 0);
+                return _fastEditorSkillRegistryCache;
+            }
+
+            var registry = TimedBootStep("PcSkillRegistry.LoadFromDirectory",
+                () => PcSkillRegistry.LoadFromDirectory(skillDir));
+
+            if (ShouldUseFastEditorReferenceDataCache())
+            {
+                _fastEditorSkillDirCacheKey = skillDir;
+                _fastEditorSkillRegistryCache = registry;
+            }
+
+            return registry;
+        }
+
+        private void InitializeFastBootFallbackServices()
+        {
+            TaskFlagService = new TaskFlagService();
+            if (FactionMapRuntimeService == null)
+                FactionMapRuntimeService = new FactionMapRuntimeService();
+            if (BattleScriptRuntimeService == null)
+                BattleScriptRuntimeService = new BattleScriptRuntimeService();
+
+            RecordServiceStatus(
+                "OptionalStreamingServices",
+                FastBootOptionalServicesSource,
+                SandboxServiceDataStatus.SkippedForFastBoot,
+                0,
+                "FastEditor boot bỏ qua batch optional StreamingAssets; tắt useFastEditorBoot để nạp đầy đủ.");
+            SubsystemLog.Info("SandboxBoot",
+                "FastEditor boot: skipped optional StreamingAssets service batches.");
+        }
+
+        private T TimedBootStep<T>(string stepName, Func<T> action)
+        {
+            var watch = Stopwatch.StartNew();
+            using (BootStepProfilerMarker.Auto())
+            {
+                try
+                {
+                    return action();
+                }
+                finally
+                {
+                    watch.Stop();
+                    RecordBootTiming(stepName, watch.ElapsedMilliseconds);
+                }
+            }
+        }
+
+        private void TimedBootStep(string stepName, Action action)
+        {
+            var watch = Stopwatch.StartNew();
+            using (BootStepProfilerMarker.Auto())
+            {
+                try
+                {
+                    action();
+                }
+                finally
+                {
+                    watch.Stop();
+                    RecordBootTiming(stepName, watch.ElapsedMilliseconds);
+                }
+            }
+        }
+
+        private void RecordBootTiming(string stepName, long milliseconds)
+        {
+            BootReport?.RecordTiming(stepName, milliseconds);
+            if (logBootTimings && milliseconds >= Math.Max(0, bootTimingLogThresholdMs))
+                SubsystemLog.Info("SandboxBoot", $"{stepName}: {milliseconds}ms");
+        }
+
+        private void LogBootTimingSummary()
+        {
+            if (!logBootTimings || BootReport == null)
+                return;
+
+            SubsystemLog.Info("SandboxBoot",
+                $"profile={BootReport.BootProfile}, total={BootReport.TotalMilliseconds}ms, slowest={BuildBootTimingSummary(5)}");
+        }
+
+        private string BuildBootTimingSummary(int maxSteps)
+        {
+            if (BootReport == null || BootReport.Timings.Count == 0)
+                return "(none)";
+
+            // Only consider timings recorded during the synchronous boot phase.
+            // Deferred/async steps (e.g. item table lazy-loaded after the map is
+            // shown) are recorded AFTER Complete() and reported separately so the
+            // synchronous-boot `slowest` breakdown is not polluted by them.
+            int syncCount = Math.Min(BootReport.SynchronousTimingCount, BootReport.Timings.Count);
+            var timings = new List<(string stepName, long milliseconds)>(syncCount);
+            for (int i = 0; i < syncCount; i++)
+                timings.Add(BootReport.Timings[i]);
+            timings.Sort((a, b) => b.milliseconds.CompareTo(a.milliseconds));
+            int count = Math.Min(Math.Max(0, maxSteps), timings.Count);
+            var parts = new List<string>(count);
+            for (int i = 0; i < count; i++)
+                parts.Add($"{timings[i].stepName}={timings[i].milliseconds}ms");
+            return string.Join(", ", parts);
         }
 
 
@@ -880,11 +1656,24 @@ namespace VLTK.Sandbox
             }
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
+            // First-boot: default faction = Cái Bang. This is the fresh Stop/Play
+            // sandbox contract; a player-selected runtime faction is retained while alive.
+            // Without this the player joins with faction=None, knownSkills empty,
+            // and the skill panel shows 0 skills + slots are blank.
+            if (PlayerProgression.faction == CombatFaction.None)
+                PlayerProgression.GrantFactionSkillPanelProgression(
+                    CombatSkillCatalog, GameplayLoopService.DefaultPlayerFaction);
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
+            // Wire skill cast sound → AudioService (PC missles.txt SoundPath)
+            SkillEffectVisual.OnCastSound = (pcPath) => AudioService?.PlaySkillCast(pcPath);
+            InitializeAuthoritativeCombatPresentation();
 
             // Gameplay Loop: wire all subsystems together
             GameplayLoop = new GameplayLoopService(CombatSkillCatalog);
             var gp = GameplayLoop.RegisterPlayer(PlayerActorId, "Cái Bang Đệ Tử", PlayerProgression.level, Vector2.zero);
+            gp.combat.faction = PlayerProgression.faction;
+            gp.combat.maxMana = PcMaxManaFormula.Compute(PlayerProgression.level, 0, PlayerProgression.faction);
+            gp.combat.currentMana = gp.combat.maxMana;
             gp.combat.knownSkills = PlayerProgression.knownSkills;
             gp.combat.skillLevels = PlayerProgression.skillLevels;
 
@@ -893,6 +1682,9 @@ namespace VLTK.Sandbox
             PlayerProgression.MaxAllSkillLevels(CombatSkillCatalog);
             gp.combat.knownSkills = PlayerProgression.knownSkills;
             gp.combat.skillLevels = PlayerProgression.skillLevels;
+            gp.combat.MaterializeLearnedPassiveStates(CombatSkillCatalog);
+            SkillEffectVisual?.SynchronizeStateAuras(
+                gp.combat, gp.worldPos, ResolveLocalPlayerAuraPosition);
 
             // Auto-grant horse at level 30+ per PC horseres.txt progression.
             // Sandbox default: player joins at level 30 (CaiBang quest complete),
@@ -904,14 +1696,152 @@ namespace VLTK.Sandbox
             GameplayLoop.OnDeath += e =>
             {
                 if (e.isPlayer)
-                    SubsystemLog.Info("Gameplay", $"Player chết! Respawn sau 5s.");
+                {
+                    var mapId = MapManager?.ActiveMapId ?? defaultMapId;
+                    var revivePos = RevivePosService?.GetDefaultRevivePosition(mapId);
+                    string reviveMsg = revivePos != null ? $" Revive Map={revivePos.MapId} Pos={revivePos.PosX + ", " + revivePos.PosY}." : "";
+                    SubsystemLog.Info("Gameplay", $"Player chết! Respawn sau 5s.{reviveMsg}");
+                }
                 else
                     SubsystemLog.Info("Gameplay", $"{e.victimNameVi} bị giết. +{e.expReward}EXP +{e.silverReward}Bạc");
             };
             GameplayLoop.OnLevelUp += e =>
                 SubsystemLog.Info("Gameplay", $"LEVEL UP! {e.oldLevel} → {e.newLevel}");
             // GameplayLoop.OnDamage += e =>
-            //     SubsystemLog.Info("Gameplay", $"DMG: {e.attackerId}→{e.targetId} -{e.damage} ({e.type})");
+              //     SubsystemLog.Info("Gameplay", $"DMG: {e.attackerId}→{e.targetId} -{e.damage} ({e.type})");
+          }
+
+        private void InitializeAuthoritativeCombatPresentation()
+        {
+            string directory = Path.Combine(Application.streamingAssetsPath, "Generated/SkillPort");
+            SkillPortProjectionLoadResult load =
+                allowTestOnlySkillPortFixtureInDevelopment && (Application.isEditor || Debug.isDebugBuild)
+                    ? SkillPortClientProjectionLoader.LoadDevelopmentFixtureFromDirectory(directory)
+                    : SkillPortClientProjectionLoader.LoadFromDirectory(directory);
+            if (!load.success)
+            {
+                AuthoritativeCombatPresentation = null;
+                SubsystemLog.Info("SkillPort", "Authoritative presentation disabled: " + load.detail);
+                return;
+            }
+
+            AuthoritativeCombatPresentation =
+                new SandboxAuthoritativeCombatPresentationHost(this, load.projection);
+        }
+
+        public bool RequiresAuthoritativeSkillInput(int skillId)
+        {
+            return AuthoritativeCombatPresentation != null &&
+                   AuthoritativeCombatPresentation.RequiresAuthoritativeInput(skillId);
+        }
+
+        public void BeginAuthoritativeCombatSession(
+            ulong sessionEpoch,
+            ulong initialServerSequence,
+            ulong initialServerTick,
+            string localEntityId)
+        {
+            AuthoritativeCombatPresentation?.BeginSession(
+                sessionEpoch,
+                initialServerSequence,
+                initialServerTick,
+                localEntityId);
+        }
+
+        public AuthoritativePresentationDispatchResult ApplyAuthoritativeServerEnvelope(byte[] bytes)
+        {
+            return AuthoritativeCombatPresentation != null
+                ? AuthoritativeCombatPresentation.ApplyServerEnvelope(bytes)
+                : AuthoritativePresentationDispatchResult.PolicyBlocked;
+        }
+
+        /// <summary>
+        /// GM-only in-memory transition used to test every faction without restarting the scene.
+        /// It intentionally does not alter inventory, weapon, mount, position, or SkillPort policy.
+        /// </summary>
+        public bool TrySwitchRuntimeFaction(CombatFaction targetFaction, out string detail)
+        {
+            if (targetFaction == CombatFaction.None ||
+                !Enum.IsDefined(typeof(CombatFaction), targetFaction))
+            {
+                detail = $"Unsupported runtime faction: {targetFaction}";
+                return false;
+            }
+
+            var player = GameplayLoop?.Player;
+            if (CombatSkillCatalog == null || PlayerProgression == null || player?.combat == null)
+            {
+                detail = "Combat runtime is not initialized";
+                return false;
+            }
+
+            PlayerProgression.ReplaceFactionSkillPanelProgression(CombatSkillCatalog, targetFaction);
+            PlayerProgression.MaxAllSkillLevels(CombatSkillCatalog);
+
+            CombatActorState combat = player.combat;
+            combat.faction = targetFaction;
+            combat.level = PlayerProgression.level;
+            combat.knownSkills = PlayerProgression.knownSkills;
+            combat.skillLevels = PlayerProgression.skillLevels;
+            combat.activeSkillId = 0;
+            combat.currentWeaponSkillId = 0;
+            combat.fightMode = true;
+            combat.ClearSkillStateSources();
+            combat.MaterializeLearnedPassiveStates(CombatSkillCatalog);
+            combat.currentLife = Mathf.Max(1, combat.maxLife);
+            combat.currentMana = Mathf.Max(0, combat.maxMana);
+            player.level = PlayerProgression.level;
+
+            if (PlayerController != null)
+            {
+                PcWeaponType preservedWeapon = PlayerController.EquippedWeapon;
+                PlayerController.CancelDash();
+                PlayerController.ResetMovementState();
+                combat.position = PlayerController.transform.position;
+                combat.rideHorse = PlayerController.Mount != null && PlayerController.Mount.IsMounted;
+
+                if (targetFaction == CombatFaction.EMei || targetFaction == CombatFaction.CuiYan)
+                    PlayerController.SetGender(true);
+                else if (targetFaction == CombatFaction.Shaolin)
+                    PlayerController.SetGender(false);
+                PlayerController.EquipWeapon(preservedWeapon);
+            }
+
+            int clearedCooldowns = CombatRuntime?.ResetActorCooldowns(combat.actorId) ?? 0;
+            if (GameplayLoop?.Combat != null && !ReferenceEquals(GameplayLoop.Combat, CombatRuntime))
+                clearedCooldowns += GameplayLoop.Combat.ResetActorCooldowns(combat.actorId);
+            int clearedEffects = SkillEffectVisual?.ClearActiveEffects() ?? 0;
+            AuthoritativeCombatPresentation?.ClearTransientPresentationState();
+            SynchronizeLocalPlayerStateAuras();
+
+            int notificationFailures = NotifyRuntimeFactionSwitched(targetFaction);
+            detail = $"Faction={targetFaction}, skills={PlayerProgression.knownSkills.Count}, " +
+                     $"cooldownsCleared={clearedCooldowns}, effectsCleared={clearedEffects}, " +
+                     $"notificationFailures={notificationFailures}";
+            SubsystemLog.Info("GM", "Runtime faction switch: " + detail);
+            return true;
+        }
+
+        private int NotifyRuntimeFactionSwitched(CombatFaction targetFaction)
+        {
+            Delegate[] listeners = RuntimeFactionSwitched?.GetInvocationList();
+            if (listeners == null) return 0;
+            int failures = 0;
+            foreach (Delegate listener in listeners)
+            {
+                try
+                {
+                    ((Action<CombatFaction>)listener)(targetFaction);
+                }
+                catch (Exception ex)
+                {
+                    failures++;
+                    SubsystemLog.Warn(
+                        "GM",
+                        $"RuntimeFactionSwitched listener failed after committed switch: {ex.Message}");
+                }
+            }
+            return failures;
         }
 
         public void GrantFactionSkillPanelProgression(CombatFaction targetFaction)
@@ -954,13 +1884,106 @@ namespace VLTK.Sandbox
             TrainingSpawner = enemyGo.AddComponent<TrainingNpcSpawner>();
         }
 
+        private void EnsureObjectRuntime()
+        {
+            if (ObjectRuntime != null || worldRoot == null)
+                return;
+            var objectGo = new GameObject("MapInteractiveObjectRuntime");
+            objectGo.transform.SetParent(worldRoot, false);
+            ObjectRuntime = objectGo.AddComponent<MapInteractiveObjectRuntime>();
+        }
+
+        private void EnsureTrapRuntime()
+        {
+            if (TrapRuntime != null || worldRoot == null)
+                return;
+            var trapGo = new GameObject("MapTrapRuntime");
+            trapGo.transform.SetParent(worldRoot, false);
+            TrapRuntime = trapGo.AddComponent<MapTrapRuntime>();
+        }
+
         private void SpawnEnemiesForActiveMap()
         {
             if (EnemyRuntime == null || MapManager?.ActiveMap == null)
                 return;
             // Region_S folder contains server-side NPC spawn data with real PC coordinates.
-            var regionSFolder = System.IO.Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{MapManager.ActiveMapId}");
+            var regionSFolder = ResolveRegionSFolderForActiveMap();
             EnemyRuntime.SpawnForMap(MapManager.ActiveMapId, regionSFolder);
+
+            // Bridge spawned enemies into GameplayLoop so combat/AI can interact with them.
+            if (GameplayLoop != null)
+            {
+                int bridged = 0;
+                foreach (var entry in EnemyRuntime.Entries)
+                {
+                    int templateId = entry.template?.templateId ?? 0;
+                    string nameVi   = entry.template?.DisplayName ?? "Quái";
+                    int level       = Mathf.Max(1, entry.level);
+                    var pos         = entry.worldPosition;
+                    // Use instanceId as actorId; offset by 10000 to avoid collision with player (id=1).
+                    int actorId     = 10000 + entry.instanceId;
+                    GameplayLoop.RegisterEnemy(actorId, nameVi, templateId, level, pos);
+                    bridged++;
+                }
+                SubsystemLog.Info("MapEnemy", $"GameplayLoop: bridged {bridged} enemies từ EnemyRuntime.");
+            }
+        }
+
+        private void RenderObjectsForActiveMap()
+        {
+            if (ObjectRuntime == null || MapManager?.ActiveMap == null)
+                return;
+            ObjectRuntime.RenderForMap(MapManager.ActiveMap);
+        }
+
+        private void BuildTrapsForActiveMap()
+        {
+            if (TrapRuntime == null || MapManager?.ActiveMap == null)
+                return;
+            TrapRuntime.BuildForMap(MapManager.ActiveMap);
+        }
+
+        private string ResolveRegionSFolderForActiveMap()
+        {
+            var mapId = MapManager.ActiveMapId;
+            var entry = MapManager.ActiveMap?.catalogEntry;
+            if (!string.IsNullOrEmpty(entry?.serverRegionFolder))
+            {
+                var generated = ResolveStreamingAssetsPath(entry.serverRegionFolder);
+                if (HasRegionSFiles(generated))
+                {
+                    SubsystemLog.Info("MapEnemy", $"Map {mapId}: using generated PC server Region_S: {entry.serverRegionFolder}");
+                    return generated;
+                }
+
+                SubsystemLog.Warn("MapEnemy", $"Map {mapId}: generated server Region_S missing on disk, falling back to legacy TestData");
+            }
+
+            var legacy = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapId}");
+            if (HasRegionSFiles(legacy))
+                SubsystemLog.Info("MapEnemy", $"Map {mapId}: using legacy TestData Region_S");
+            else
+                SubsystemLog.Info("MapEnemy", $"Map {mapId}: no static PC Region_S files found");
+            return legacy;
+        }
+
+        private static string ResolveStreamingAssetsPath(string path)
+        {
+            return Path.IsPathRooted(path) ? path : Path.Combine(Application.streamingAssetsPath, path);
+        }
+
+        private static bool HasRegionSFiles(string folder)
+        {
+            try
+            {
+                return !string.IsNullOrEmpty(folder) &&
+                       Directory.Exists(folder) &&
+                       Directory.GetFiles(folder, "*_Region_S.dat").Length > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void SpawnTrainingNpcs()
@@ -984,12 +2007,18 @@ namespace VLTK.Sandbox
             // Equip Cái Bang Bổng Pháp staff weapon on boot for testing.
             // PC: Cái Bang Bổng Pháp requires 长棍类 weapon to cast staff skills.
             // 长棍类1 → PcWeaponType.LongWeapon → MA_RW_010_* SPRs.
-            PlayerController.EquipWeapon(PcWeaponType.LongWeapon);
-
-            // Auto-equip horse from PlayerProgression. PC source: level 30+ unlocks horse
-            // (see horseres.txt). Sandbox defaults: level 200 = red horse (id=5).
-            int horseId = PlayerProgression?.horseId ?? 0;
-            if (horseId > 0) PlayerController.SetHorseId(horseId);
+            //
+            // FastEditor guard: skip weapon equip on FastEditor boot to avoid loading 8×N
+            // MA_RW_010 SPRs (which can hang Unity for 20+ minutes when the SPR decoder
+            // stalls on shadow/aux frames). Re-enable manually by un-ticking FastEditor.
+            if (ActiveBootProfile != SandboxBootProfile.FastEditor)
+            {
+                PlayerController.EquipWeapon(PcWeaponType.LongWeapon);
+            }
+            else
+            {
+                SubsystemLog.Info("SandboxBoot", "FastEditor: skipped player weapon equip (MA_RW_010_* SPRs).");
+            }
 
             PlayerVisual = PlayerController.visual as MalePlayerVisual;
             PlayerJoystick = EnsureMobileJoystick();
@@ -1041,10 +2070,156 @@ namespace VLTK.Sandbox
             SubsystemLog.Info("Sandbox", $"Player pre-placed at {spawn} for map {mapId}");
         }
 
+        public int GetFightState() => CurrentFightState;
+
+        public void SetFightState(int fightState)
+        {
+            CurrentFightState = Mathf.Clamp(fightState, 0, 1);
+            SubsystemLog.Info("Sandbox", $"PC SetFightState({CurrentFightState}) applied");
+        }
+
+        public int GetCurCamp() => CurrentCamp;
+
+        public int GetCamp() => OriginalCamp;
+
+        public void SetCurCamp(int camp)
+        {
+            CurrentCamp = Mathf.Max(0, camp);
+            SubsystemLog.Info("Sandbox", $"PC SetCurCamp({CurrentCamp}) applied");
+        }
+
+        public void SetOriginalCamp(int camp)
+        {
+            OriginalCamp = Mathf.Max(0, camp);
+            SubsystemLog.Info("Sandbox", $"PC GetCamp source set to {OriginalCamp}");
+        }
+
+        public void SetLogoutRv(int value)
+        {
+            CurrentLogoutRv = value;
+            SubsystemLog.Info("Sandbox", $"PC SetLogoutRV({CurrentLogoutRv}) applied");
+        }
+
+        public void SetPkFlag(int value)
+        {
+            CurrentPkFlag = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC SetPKFlag({CurrentPkFlag}) applied");
+        }
+
+        public void ForbidChangePk(int value)
+        {
+            CurrentForbidChangePk = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC ForbidChangePK({CurrentForbidChangePk}) applied");
+        }
+
+        public void SetPunish(int value)
+        {
+            CurrentPunish = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC SetPunish({CurrentPunish}) applied");
+        }
+
+        public void SetCreateTeam(int value)
+        {
+            CurrentCreateTeam = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC SetCreateTeam({CurrentCreateTeam}) applied");
+        }
+
+        public void SetTaskTemp(int taskId, int value)
+        {
+            if (taskId > 0)
+            {
+                if (value == 0) _taskTempValues.Remove(taskId);
+                else _taskTempValues[taskId] = value;
+            }
+            SubsystemLog.Info("Sandbox", $"PC SetTaskTemp({taskId},{value}) applied");
+        }
+
+        public int GetTaskTemp(int taskId)
+            => taskId > 0 && _taskTempValues.TryGetValue(taskId, out var value) ? value : 0;
+
+        public int GetPcMissionValue(int missionVarId)
+            => missionVarId > 0 && _pcMissionValues.TryGetValue(missionVarId, out var value) ? value : 0;
+
+        public void SetPcMissionValue(int missionVarId, int value)
+        {
+            if (missionVarId > 0)
+            {
+                if (value == 0) _pcMissionValues.Remove(missionVarId);
+                else _pcMissionValues[missionVarId] = value;
+            }
+            SubsystemLog.Info("Sandbox", $"PC SetMissionV({missionVarId},{value}) source recorded");
+        }
+
+        public int GetPcMissionPlayerGroup(int missionId)
+            => missionId > 0 && _pcMissionPlayerGroups.TryGetValue(missionId, out var group) ? group : 0;
+
+        public void SetPcMissionPlayerGroup(int missionId, int group)
+        {
+            if (missionId > 0)
+            {
+                if (group == 0) _pcMissionPlayerGroups.Remove(missionId);
+                else _pcMissionPlayerGroups[missionId] = group;
+            }
+            SubsystemLog.Info("Sandbox", $"PC mission {missionId} player group recorded as {group}");
+        }
+
+        public bool HasPcSummonedPartner()
+            => _pcHasSummonedPartner;
+
+        public void SetPcSummonedPartner(bool hasSummonedPartner)
+        {
+            _pcHasSummonedPartner = hasSummonedPartner;
+            SubsystemLog.Info("Sandbox", $"PC PARTNER_GetCurPartner summoned state recorded as {hasSummonedPartner}");
+        }
+
+        public int GetPcPartnerMasterTaskState(int masterTaskId)
+            => masterTaskId > 0 && _pcPartnerMasterTaskStates.TryGetValue(masterTaskId, out var value) ? value : 0;
+
+        public void SetPcPartnerMasterTaskState(int masterTaskId, int value)
+        {
+            if (masterTaskId > 0)
+            {
+                if (value == 0) _pcPartnerMasterTaskStates.Remove(masterTaskId);
+                else _pcPartnerMasterTaskStates[masterTaskId] = value;
+            }
+            SubsystemLog.Info("Sandbox", $"PC PARTNER_SetTaskValue({masterTaskId},{value}) source recorded");
+        }
+
+        public void SetDeathScript(string scriptPath)
+        {
+            CurrentDeathScript = scriptPath ?? string.Empty;
+            SubsystemLog.Info("Sandbox", $"PC SetDeathScript({CurrentDeathScript}) applied");
+        }
+
+        public void LeaveTeamForPcTrap()
+        {
+            SubsystemLog.Info("Sandbox", "PC LeaveTeam() recorded for trap action");
+        }
+
+        public void SetRevPos(int mapId, int reviveId)
+        {
+            CurrentReviveMapId = mapId;
+            CurrentReviveId = reviveId;
+            SubsystemLog.Info("Sandbox", $"PC SetRevPos({mapId},{reviveId}) applied");
+        }
+
+        private void ApplyActiveMapBoundsToPlayer()
+        {
+            var bounds = MapManager?.ActiveMap?.sourceBoundsRect;
+            if (PlayerController == null || bounds == null)
+                return;
+
+            PlayerController.SetMapBounds(bounds);
+            SubsystemLog.Info("Sandbox",
+                $"Player map bounds set to x={bounds.x}..{bounds.x + bounds.width}, y={bounds.y}..{bounds.y + bounds.height}");
+        }
+
         private void PlacePlayerOnActiveMap()
         {
             if (PlayerController == null)
                 return;
+
+            ApplyActiveMapBoundsToPlayer();
 
             // Map-specific spawn point
             int mapId = MapManager?.ActiveMapId ?? defaultMapId;
@@ -1081,7 +2256,7 @@ namespace VLTK.Sandbox
             {
                 // MobileJoystick already in scene (e.g. from Sandbox.unity) — still ensure the
                 // mount toggle button is wired so testers can mount/dismount from the HUD.
-                EnsureMountToggleButton(existing.transform.parent as RectTransform);
+                // EnsureMountToggleButton(existing.transform.parent as RectTransform);
                 return existing;
             }
 
@@ -1098,7 +2273,11 @@ namespace VLTK.Sandbox
             canvasGo.transform.SetParent(uiRoot, false);
             var canvas = canvasGo.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 100;
+            // Joystick phải nằm trên cùng: HUD UI Toolkit (PanelSettings sortingOrder=0),
+            // PanelCanvas (sortingOrder=200) và mọi PcBottomBarBg/CombatActionCluster đè vùng
+            // trái-dưới đều phải ở dưới joystick. 500 chừa headroom cho tooltip/dialogue popup
+            // tương lai (sortingOrder 600..700) mà vẫn không che joystick.
+            canvas.sortingOrder = 500;
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1280f, 720f);
@@ -1111,9 +2290,14 @@ namespace VLTK.Sandbox
             background.anchorMax = new Vector2(0f, 0f);
             background.pivot = new Vector2(0.5f, 0.5f);
             background.anchoredPosition = new Vector2(120f, 120f);
-            background.sizeDelta = new Vector2(150f, 150f);
+            // Vòng đế joystick — sprite ngọc-bích thật (fallback procedural khi thiếu art).
+            background.sizeDelta = new Vector2(220f, 220f);
             var bgImage = backgroundGo.AddComponent<Image>();
-            bgImage.sprite = CreateUiDiscSprite(new Color(0.15f, 0.85f, 0.25f, 0.28f), new Color(0.70f, 1f, 0.70f, 0.65f));
+            var joystickBase = LoadJoystickArt("UI/VirtualJoystick/joystick_base");
+            bgImage.sprite = joystickBase != null
+                ? joystickBase
+                : CreateUiDiscSprite(new Color(0.15f, 0.85f, 0.25f, 0.28f), new Color(0.70f, 1f, 0.70f, 0.65f));
+            bgImage.preserveAspect = true;
 
             var handleGo = new GameObject("Handle");
             handleGo.transform.SetParent(backgroundGo.transform, false);
@@ -1122,57 +2306,92 @@ namespace VLTK.Sandbox
             handle.anchorMax = new Vector2(0.5f, 0.5f);
             handle.pivot = new Vector2(0.5f, 0.5f);
             handle.anchoredPosition = Vector2.zero;
-            handle.sizeDelta = new Vector2(74f, 74f);
+            // Núm joystick — sprite ngọc-bích thật (fallback procedural khi thiếu art).
+            handle.sizeDelta = new Vector2(110f, 110f);
             var handleImage = handleGo.AddComponent<Image>();
-            handleImage.sprite = CreateUiDiscSprite(new Color(0.12f, 0.95f, 0.30f, 0.78f), new Color(0.85f, 1f, 0.85f, 0.95f));
+            var joystickHandle = LoadJoystickArt("UI/VirtualJoystick/joystick_handle");
+            handleImage.sprite = joystickHandle != null
+                ? joystickHandle
+                : CreateUiDiscSprite(new Color(0.12f, 0.95f, 0.30f, 0.78f), new Color(0.85f, 1f, 0.85f, 0.95f));
+            handleImage.preserveAspect = true;
 
             var joystick = backgroundGo.AddComponent<MobileJoystick>();
             joystick.background = background;
             joystick.handle = handle;
-            joystick.radius = 58f;
-            joystick.inputRadius = 55f;
+            // radius (bán kính di chuyển visible của handle) & inputRadius khớp vòng đế 220px.
+            joystick.radius = 92f;
+            joystick.inputRadius = 86f;
             joystick.deadZone = 0.08f;
             joystick.sensitivity = 1.35f;
-            EnsureMountToggleButton(canvasGo.GetComponent<RectTransform>());
+            // EnsureMountToggleButton(canvasGo.GetComponent<RectTransform>());
             return joystick;
         }
 
         private void EnsureMountToggleButton(RectTransform canvasTransform)
         {
-            if (canvasTransform == null) return;
-            var existing = canvasTransform.Find("MountToggleButton");
-            if (existing != null) return;
+            if (canvasTransform == null || canvasTransform.Find("MountBtn") != null)
+                return;
 
-            var buttonGo = new GameObject("MountToggleButton");
-            buttonGo.transform.SetParent(canvasTransform, false);
-            var rt = buttonGo.AddComponent<RectTransform>();
+            // Nút lên/xuống ngựa — góc phải, ngang tầm giữa (khớp horse_btn spec 0.90,0.55).
+            var btnGo = new GameObject("MountBtn");
+            btnGo.transform.SetParent(canvasTransform, false);
+            var rt = btnGo.AddComponent<RectTransform>();
             rt.anchorMin = new Vector2(1f, 0f);
             rt.anchorMax = new Vector2(1f, 0f);
             rt.pivot = new Vector2(1f, 0f);
-            rt.anchoredPosition = new Vector2(-32f, 220f);
-            rt.sizeDelta = new Vector2(220f, 86f);
-            var img = buttonGo.AddComponent<Image>();
-            img.sprite = CreateUiDiscSprite(new Color(0.18f, 0.42f, 0.75f, 0.85f), new Color(0.85f, 0.95f, 1f, 0.95f));
-            var btn = buttonGo.AddComponent<Button>();
+            rt.anchoredPosition = new Vector2(-32f, 200f);
+            rt.sizeDelta = new Vector2(150f, 60f);
+            var img = btnGo.AddComponent<Image>();
+            img.color = new Color(0.45f, 0.30f, 0.12f, 0.9f);
+            var btn = btnGo.AddComponent<Button>();
             btn.targetGraphic = img;
-            btn.onClick.AddListener(() =>
-            {
-                if (PlayerController != null) PlayerController.ToggleMount();
-            });
 
-            // Label
-            var labelGo = new GameObject("Label");
-            labelGo.transform.SetParent(buttonGo.transform, false);
-            var lrt = labelGo.AddComponent<RectTransform>();
+            var lblGo = new GameObject("Label");
+            lblGo.transform.SetParent(btnGo.transform, false);
+            var lrt = lblGo.AddComponent<RectTransform>();
             lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
             lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
-            var txt = labelGo.AddComponent<Text>();
-            txt.text = "Ngựa";
+            var txt = lblGo.AddComponent<Text>();
             txt.alignment = TextAnchor.MiddleCenter;
-            txt.color = new Color(1f, 1f, 1f, 1f);
-            txt.fontSize = 36;
+            txt.color = Color.white;
+            txt.fontSize = 24;
             txt.fontStyle = FontStyle.Bold;
             txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
+
+            var toggle = btnGo.AddComponent<MountToggleButton>();
+            toggle.Bind(PlayerController, txt);
+            btn.onClick.AddListener(toggle.OnClick);
+        }
+
+        // Cache sprite art joystick đã load từ Resources (load 1 lần).
+        private static Sprite _joystickBaseArt;
+        private static Sprite _joystickHandleArt;
+
+        /// <summary>
+        /// Load sprite joystick từ <c>Resources/UI/VirtualJoystick</c>. Trả về <c>null</c>
+        /// khi thiếu art (caller sẽ fallback sang procedural disc). Cache tĩnh để
+        /// không load lại nhiều lần khi build lại HUD.
+        /// </summary>
+        private static Sprite LoadJoystickArt(string resourcesPath)
+        {
+            if (string.IsNullOrEmpty(resourcesPath))
+                return null;
+
+            if (resourcesPath.EndsWith("base", System.StringComparison.Ordinal))
+            {
+                if (_joystickBaseArt == null)
+                    _joystickBaseArt = Resources.Load<Sprite>(resourcesPath);
+                return _joystickBaseArt;
+            }
+
+            if (resourcesPath.EndsWith("handle", System.StringComparison.Ordinal))
+            {
+                if (_joystickHandleArt == null)
+                    _joystickHandleArt = Resources.Load<Sprite>(resourcesPath);
+                return _joystickHandleArt;
+            }
+
+            return Resources.Load<Sprite>(resourcesPath);
         }
 
         private static Sprite CreateUiDiscSprite(Color fill, Color ring)
@@ -1264,7 +2483,10 @@ namespace VLTK.Sandbox
                 MapSelectPanel.Initialize(MapManager, SwitchMap);
             }
 
-            // Chat Panel
+#if VLTK_LEGACY_CHAT_PANEL
+            // Chat Panel — RETIRED by port-pc-chat-bar-parity.
+            // The HUD chat bar (HudChatBarController) is now the single PC-parity chat surface.
+            // Re-enable this define to restore the legacy uGUI ChatPanel for debugging.
             if (ChatPanel == null && ChatService != null)
             {
                 var cpGo = new GameObject("ChatPanel");
@@ -1272,6 +2494,7 @@ namespace VLTK.Sandbox
                 ChatPanel = cpGo.AddComponent<ChatPanel>();
                 ChatPanel.Initialize(ChatService);
             }
+#endif
 
             // Party Panel
             if (PartyPanel == null && PartyService != null)
@@ -1301,6 +2524,8 @@ namespace VLTK.Sandbox
             }
 
             // Minimap Panel (separate canvas since it uses a different layout)
+            // DISABLED: uGUI MinimapPanel conflicts with the authentic PC UI Toolkit Minimap.
+            /*
             if (MinimapPanel == null && uiRoot != null)
             {
                 var minimapCanvas = new GameObject("MinimapCanvas");
@@ -1316,9 +2541,27 @@ namespace VLTK.Sandbox
                 if (PlayerController != null)
                     MinimapPanel.Initialize(MapManager, PlayerController, EnemyRuntime);
             }
+            */
+
+            GmPanel = FindObjectOfType<GMPanelController>(true);
+
+            // Wire scene GMButton to GMPanelController.Toggle() (button is placed in scene at top-right corner)
+            if (GmPanel != null)
+            {
+                GmPanel.gameObject.SetActive(true);
+                var gmButtonGO = GameObject.Find("GMButton");
+                if (gmButtonGO != null)
+                {
+                    var gmBtn = gmButtonGO.GetComponent<UnityEngine.UI.Button>();
+                    if (gmBtn != null && gmBtn.onClick.GetPersistentEventCount() == 0)
+                    {
+                        gmBtn.onClick.AddListener(GmPanel.Toggle);
+                    }
+                }
+            }
 
             // Add HUD buttons for panels (on the joystick canvas)
-            EnsureHudButtons();
+            // EnsureHudButtons();
         }
 
         /// <summary>
@@ -1354,6 +2597,8 @@ namespace VLTK.Sandbox
                 MapPortManifest.ThanhDoId => "bgm_thanhdo",
                 MapPortManifest.DaiLyId => "bgm_daily",
                 MapPortManifest.BienKinhId => "bgm_bienkinh",
+                MapPortManifest.TinSuVuotAiPhongKy120Id => "bgm_balang",
+                MapPortManifest.VuotAiNhiepThiTranId => "bgm_balang",
                 _ => "bgm_balang",
             };
             AudioService?.PlayBGM(bgmId);
@@ -1385,10 +2630,12 @@ namespace VLTK.Sandbox
                 new Vector2(-32f, 460f), new Color(0.4f, 0.1f, 0.6f, 0.85f),
                 () => MapSelectPanel?.Toggle());
 
-            // Chat toggle button
+#if VLTK_LEGACY_CHAT_PANEL
+            // Chat toggle button — legacy uGUI ChatPanel only; HUD ChatBar is always visible.
             EnsurePanelButton(canvasTransform, "ChatBtn", "Chat",
                 new Vector2(-32f, 380f), new Color(0.2f, 0.4f, 0.3f, 0.85f),
                 () => ChatPanel?.Toggle());
+#endif
 
             // Party button
             EnsurePanelButton(canvasTransform, "PartyBtn", "Đội",
@@ -1404,6 +2651,9 @@ namespace VLTK.Sandbox
             EnsurePanelButton(canvasTransform, "ShopBtn", "Cửa Hàng",
                 new Vector2(-175f, 540f), new Color(0.1f, 0.3f, 0.1f, 0.85f),
                 () => ShopPanel?.Toggle());
+
+            // GM button is in scene (GMButton at top-right corner), wired via FindObjectOfType in EnsureMobileUiPanels.
+            // No need to add a duplicate GmBtn here.
         }
 
         private void EnsurePanelButton(RectTransform parent, string name, string label,
@@ -1525,7 +2775,92 @@ namespace VLTK.Sandbox
             }
 
             // Gameplay loop tick: mana regen, enemy AI, respawn timers
+            // Sync player combat position from scene controller so range checks work correctly.
+            if (GameplayLoop?.Player != null && PlayerController != null)
+            {
+                var wpos = (Vector2)PlayerController.transform.position;
+                GameplayLoop.Player.worldPos = wpos;
+                GameplayLoop.Player.combat.position = wpos;
+            }
+
+            // Sync live enemy scene positions → GameplayLoop so AI distance checks work.
+            // Uses Entries (no alloc) with cached enemyBehaviour reference.
+            if (GameplayLoop != null && EnemyRuntime != null)
+            {
+                foreach (var entry in EnemyRuntime.Entries)
+                {
+                    if (entry.enemyBehaviour == null) continue;
+                    var glActor = GameplayLoop.GetActor(10000 + entry.instanceId);
+                    if (glActor == null || glActor.isDead) continue;
+                    var scenePos = (Vector2)entry.enemyBehaviour.transform.position;
+                    glActor.worldPos = scenePos;
+                    glActor.combat.position = scenePos;
+                }
+            }
+
             GameplayLoop?.Tick(Time.deltaTime);
+            SynchronizeLocalPlayerStateAuras();
+            SynchronizeEnemyStateAuras();
+        }
+
+        private void SynchronizeLocalPlayerStateAuras()
+        {
+            var player = GameplayLoop?.Player;
+            if (player?.combat == null) return;
+            player.combat.MaterializeLearnedPassiveStates(CombatSkillCatalog);
+            SkillEffectVisual?.SynchronizeStateAuras(
+                player.combat, player.worldPos, ResolveLocalPlayerAuraPosition);
+        }
+
+        private Vector2 ResolveLocalPlayerAuraPosition()
+        {
+            if (PlayerController != null)
+                return PlayerController.transform.position;
+            return GameplayLoop?.Player?.worldPos ?? Vector2.zero;
+        }
+
+        private void SynchronizeEnemyStateAuras()
+        {
+            if (GameplayLoop == null || EnemyRuntime == null || SkillEffectVisual == null)
+                return;
+
+            foreach (var entry in EnemyRuntime.Entries)
+            {
+                var actor = GameplayLoop.GetActor(10000 + entry.instanceId);
+                if (actor?.combat == null) continue;
+                if (actor.isDead || entry.enemyBehaviour == null)
+                {
+                    SkillEffectVisual.RemoveStateAurasForActor(actor.combat.actorId);
+                    continue;
+                }
+
+                var liveEnemy = entry.enemyBehaviour;
+                Vector2 position = liveEnemy.transform.position;
+                SkillEffectVisual.SynchronizeStateAuras(
+                    actor.combat,
+                    position,
+                    () => liveEnemy != null
+                        ? (Vector2)liveEnemy.transform.position
+                        : actor.worldPos);
+            }
+        }
+
+        // ── IMapTeleportHost implementation ──────────────────────────────────
+
+        public bool HasMap(int mapId)
+        {
+            // For now, sandbox only has the default map loaded.
+            // Real implementation would check MapManager or scene loading.
+            return mapId == defaultMapId;
+        }
+
+        public void SwitchMapAndPlacePlayer(int mapId, Vector2 worldPosition)
+        {
+            Debug.Log($"[SandboxManager] Teleport to map {mapId} at ({worldPosition.x:F1}, {worldPosition.y:F1})");
+            if (HasMap(mapId) && PlayerController != null)
+            {
+                PlayerController.PlaceAt(worldPosition, snapCamera: false);
+            }
         }
     }
 }

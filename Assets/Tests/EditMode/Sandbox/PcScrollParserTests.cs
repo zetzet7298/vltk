@@ -1,28 +1,30 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using VLTK.Model;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
     public class PcScrollParserTests
     {
-        private static string SamplePath => Path.Combine(
+        private const int ExpectedPcScrollRows = 2600;
+        private const string PcSourcePath = "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/scroll.txt";
+        private static string ReferencePath => Path.Combine(
             Directory.GetCurrentDirectory(),
-            "Assets/StreamingAssets/Reference/PcMap/scroll_sample.txt");
+            "Assets/StreamingAssets/Reference/PcMap/scroll.txt");
 
         [Test]
-        public void ParseFile_LoadsTenScrollRows()
+        public void ParseFile_LoadsExactPcScrollCount()
         {
-            var rows = PcScrollParser.ParseFile(SamplePath);
-            Assert.AreEqual(10, rows.Count, "Expected 10 scroll rows from sample file");
+            var rows = PcScrollParser.ParseFile(ReferencePath);
+            Assert.AreEqual(ExpectedPcScrollRows, rows.Count,
+                $"Reference scroll.txt must match exact PC source row count from {PcSourcePath}");
         }
 
         [Test]
         public void ParseFile_IdsAreUnique()
         {
-            var rows = PcScrollParser.ParseFile(SamplePath);
+            var rows = PcScrollParser.ParseFile(ReferencePath);
             var ids = rows.Select(r => r.scrollId).ToList();
             Assert.AreEqual(ids.Count, ids.Distinct().Count(), "Scroll ids must be unique");
         }
@@ -30,17 +32,17 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ParseFile_AllIdsPositive()
         {
-            var rows = PcScrollParser.ParseFile(SamplePath);
+            var rows = PcScrollParser.ParseFile(ReferencePath);
             Assert.IsTrue(rows.All(r => r.scrollId > 0));
         }
 
         [Test]
-        public void ParseFile_FightStateIsValid()
+        public void ParseFile_ParsesTwoColumnValueTableWithoutSkippedRows()
         {
-            var rows = PcScrollParser.ParseFile(SamplePath);
-            var valid = new System.Collections.Generic.HashSet<int> { 0, 1, 2, 3 };
-            Assert.IsTrue(rows.All(r => valid.Contains(r.fightState)),
-                "fightState must be one of {0,1,2,3} for parity with waypoint encoding");
+            var rows = PcScrollParser.ParseFile(ReferencePath);
+            Assert.AreEqual(1, rows.First().scrollId);
+            Assert.AreEqual(2600, rows.Last().scrollId);
+            Assert.IsTrue(rows.All(r => r.cost >= 0), "PC scroll.txt value column must parse as non-negative runtime data");
         }
     }
 }

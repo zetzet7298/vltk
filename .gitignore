@@ -95,6 +95,27 @@ Assets/StreamingAssets/aa/
 Assets/AssetBundles/
 
 # ─────────────────────────────────────────────────
+# PC game SPR assets (extracted from PAKs at build time)
+# jx-pc is the SOLE source-of-truth; SPRs are not versioned.
+# SPRs live OUTSIDE Assets/ to keep Unity import time bounded —
+# 67K+ binary SPRs in Assets/StreamingAssets/ hung Unity for 1+ hours.
+# Source: /var/www/jx-pc/pak_unpacked/ → /var/www/vltk-mobile/SpritesRuntime/
+SpritesRuntime/
+Assets/StreamingAssets/Generated/MapRegions/
+Assets/StreamingAssets/Generated/MapSprites/
+Assets/StreamingAssets/Generated/MapServerRegions/
+Assets/StreamingAssets/Generated/NpcSprites/
+Assets/StreamingAssets/Generated/ObjectSprites/
+Assets/StreamingAssets/Generated.meta
+Assets/StreamingAssets/Generated/*.meta
+# Skill icon SPRs are intermediate (PNGs in UI/HUD/Art/PcSkillIcons are runtime art)
+Assets/StreamingAssets/Sprites/SkillIconsPc/*.spr
+Assets/StreamingAssets/Sprites/SkillIconsPc/*.spr.meta
+Assets/StreamingAssets/Sprites/SkillIconsPc.meta
+Assets/StreamingAssets/Sprites.meta
+!Assets/StreamingAssets/Sprites/SkillIconsPc/*.json
+!Assets/StreamingAssets/Sprites/SkillIconsPc/*.json.meta
+# ─────────────────────────────────────────────────
 # Converted/extracted game assets (intermediate output from vltktool)
 # ─────────────────────────────────────────────────
 Assets/Resources/Extracted/
@@ -136,7 +157,7 @@ yarn-error.log
 keystore.properties
 google-services.json
 GoogleService-Info.plist
-
+vltkunity
 # ─────────────────────────────────────────────────
 # Antigravity agent workspace
 # ─────────────────────────────────────────────────
@@ -158,15 +179,22 @@ GoogleService-Info.plist
 # scripts/                  → Harness & tool scripts
 
 # ─────────────────────────────────────────────────
-# Agent tooling skill dirs (not VLTK project source)
+# Agent tooling skill dirs
 # ─────────────────────────────────────────────────
 .codex/
 .factory/
-.agents/
+!.agents/
+.agents/*
+.opencode/skills/
+!harness/.agents/
+harness/.agents/*
+!harness/.agents/skills/
+harness/.agents/skills/**/*-workspace/
+harness/.agents/skills/**/__pycache__/
 .understand-anything/
 .kiro/
 .pi/
-
+.omp
 # ─────────────────────────────────────────────────
 # Unity auto-recovery scene backup
 # ─────────────────────────────────────────────────
@@ -174,3 +202,51 @@ Assets/_Recovery/
 Assets/_Recovery.meta
 Assets/Screenshots/*.png
 Assets/Screenshots/*.png.meta
+
+# ─────────────────────────────────────────────────
+# Agent git worktrees
+# ─────────────────────────────────────────────────
+.worktrees/
+backend/
+
+# ─────────────────────────────────────────────────
+# Static HTML Gallery
+# ─────────────────────────────────────────────────
+html/
+AudioRuntime/
+# ─────────────────────────────────────────────────
+# PC game audio assets (WAVs from PAKs)
+# jx-pc is the SOLE source-of-truth; WAVs are not versioned.
+# Copied from /var/www/jx-pc/pak_unpacked/sound/ to StreamingAssets/sound/
+# ─────────────────────────────────────────────────
+Assets/StreamingAssets/sound/
+Assets/StreamingAssets/sound.meta
+
+# Dev artifacts
+/Screenshots/
+/Captures/
+/harness/screenshots/
+*.slnx
+
+# ─────────────────────────────────────────────────
+# Canonical Unity.gitignore additions (github/gitignore)
+# ─────────────────────────────────────────────────
+*.unitypackage
+*.app
+*.unitypackage.meta
+crashlytics-build.properties
+crashlytics-build.properties.meta
+.vsconfig
+/Assets/Plugins/Editor/JetBrains/
+/Assets/Plugins/Editor/JetBrains.meta
+# Gradle wrapper output (Android)
+.gradle/
+*.apk.meta
+*.aab.meta
+# Burst cache
+Library/Bee/
+Library/Bee.artifacts/
+
+# Harness core maintenance binary
+scripts/bin/harness
+scripts/bin/harness.exe

@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcNpcSFullRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public NpcSFullService() : this(null) { }
+
         public NpcSFullService(PcNpcSFullRegistry reg) { _reg = reg ?? new PcNpcSFullRegistry(); }
 
         public static NpcSFullService LoadFromStreamingAssets(string subDir = "Reference/PcNpc")

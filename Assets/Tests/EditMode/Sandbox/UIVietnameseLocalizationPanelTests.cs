@@ -146,6 +146,24 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, snap.totalItems);
         }
 
+
+        [Test]
+        public void Mall_BuildSnapshot_UsesMallEntries()
+        {
+            var reg = new PcMallRegistry();
+            reg.Register(new PcMallEntry { mallItemId = 10, itemId = 99, price = 1000, currency = MallService.CurrencyGold, discount = 20, requiredVipLevel = 0, stock = 5, maxBuyPerDay = 2 });
+            var svc = new MallService(reg);
+
+            var snap = MallPanelService.BuildSnapshot(svc, 1, 0);
+
+            Assert.AreEqual(1, snap.totalItems);
+            Assert.AreEqual(1, snap.availableItems);
+            Assert.AreEqual(10, snap.rows[0].mallItemId);
+            Assert.AreEqual(800, snap.rows[0].effectivePrice);
+            Assert.AreEqual("Vàng", snap.rows[0].currency);
+            Assert.IsTrue(MallPanelService.TryBuy(svc, 1, 10, 0));
+        }
+
         [Test]
         public void Mall_GetForVip_Empty_ForNull()
         {
@@ -175,6 +193,23 @@ namespace VLTK.Tests.Sandbox
             var snap = TreasureHuntPanelService.BuildSnapshot(null, 1, 1, 0, 0);
             Assert.IsNotNull(snap);
             Assert.AreEqual(0, snap.totalTreasures);
+        }
+
+
+        [Test]
+        public void Treasure_BuildSnapshot_UsesMapAndDistance()
+        {
+            var reg = new PcTreasureHuntRegistry();
+            reg.Register(new PcTreasureHuntEntry { treasureId = 3, mapId = 907, posX = 10, posY = 0, itemId = 88, itemCount = 2, requiredLevel = 1, detectionRange = 20 });
+            var svc = new TreasureHuntService(reg);
+
+            var snap = TreasureHuntPanelService.BuildSnapshot(svc, 1, 907, 0, 0);
+
+            Assert.AreEqual(1, snap.totalTreasures);
+            Assert.AreEqual(1, snap.nearbyTreasures);
+            Assert.AreEqual(3, snap.rows[0].treasureId);
+            Assert.AreEqual(10f, snap.rows[0].distance, 0.001f);
+            Assert.IsTrue(TreasureHuntPanelService.TryDig(svc, 1, 3));
         }
 
         [Test]

@@ -1,0 +1,14 @@
+{
+    "files": [
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/event/tongwar/tongwar_signup.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/event/tongwar/tongwar_gmscript.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions/tongwar/tongwar_autoexec.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions/tongwar/tongwar_main.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions/tongwar/trap/tongwar_trap.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/event/tongwar/tongwar_signup.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/event/tongwar/tongwar_gmscript.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions/tongwar/tongwar_autoexec.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions/tongwar/tongwar_main.lua",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions/tongwar/trap/tongwar_trap.lua"
+    ]
+}

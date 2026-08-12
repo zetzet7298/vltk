@@ -4,8 +4,11 @@
     "references": [
         "VLTK.Core",
         "VLTK.Model",
-        "VLTK.Sandbox",
-        "VLTK.Sprites"
+        "VLTK.Gameplay.Domain",
+        "VLTK.PortData",
+        "VLTK.Sandbox.Runtime",
+        "VLTK.Sprites",
+        "VLTK.Backend"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -116,9 +116,8 @@ namespace VLTK.Tests.Sandbox
             var svc = new VngEventService(reg);
             int vip3 = 0;
             foreach (var _ in svc.GetEventsForVip(3)) vip3++;
-            Assert.AreEqual(3, vip3, "Với VIP 3, có 3 event (1 open + VIP1 + VIP5? không, chỉ 2 vì VIP5>3)");
-            // Cụ thể: id=1 (open), id=2 (VIP1≤3). id=3 (VIP5>3) loại. id=4 (VIP10>3) loại.
-            Assert.AreEqual(2, vip3);
+            // id=1 (open, vip0≤3), id=2 (VIP1≤3) match. id=3 (VIP5>3) and id=4 (VIP10>3) excluded.
+            Assert.AreEqual(2, vip3, "VIP 3: 2 event (open + VIP1); VIP5/VIP10 excluded");
         }
     }
 

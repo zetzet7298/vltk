@@ -1,0 +1,162 @@
+schema_version: 1
+claims:
+- id: CLAIM-0001
+  dri: reverse-engineering
+  reviewer: qa-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0001
+  - EVID-0002
+  statement: Client PC mo package.ini qua KPakList va lookup first-match theo thu tu package mo thanh cong.
+  evidence:
+  - EVID-0001
+  - EVID-0002
+  confidence: high
+- id: CLAIM-0002
+  dri: reverse-engineering
+  reviewer: qa-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0003
+  statement: Unity sprite resolver hien tai tim first-match theo filesystem root, chua enforce package/version/locale/hash.
+  evidence:
+  - EVID-0003
+  confidence: high
+- id: CLAIM-0003
+  dri: reverse-engineering
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0004
+  statement: MapRenderer hien co duong remap map 53 sang 79.
+  evidence:
+  - EVID-0004
+  confidence: high
+- id: CLAIM-0004
+  dri: reverse-engineering
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0005
+  statement: Panel mobile hien tai con dung flat color/font fallback va khong co provenance PC SPR day du.
+  evidence:
+  - EVID-0005
+  confidence: high
+- id: CLAIM-0005
+  dri: reverse-engineering
+  reviewer: qa-parity-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0006
+  statement: Backend CSharp hien co la REST/mock legacy, co contract cu ghi FastAPI va khong co Protobuf realtime production.
+  evidence:
+  - EVID-0006
+  confidence: high
+- id: CLAIM-0006
+  dri: reverse-engineering
+  reviewer: qa-parity-review
+  phase: P0-P4
+  status: BLOCKED
+  acceptance_evidence:
+  - EVID-0007
+  statement: PC live runtime golden capture hien bi block do thieu trusted binary/config/server stack.
+  evidence:
+  - EVID-0007
+  confidence: medium
+- id: CLAIM-0007
+  dri: reverse-engineering
+  reviewer: qa-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0008
+  statement: PC co hai time domain la loop tick va Windows GetTickCount; movement missile dung integer arithmetic.
+  evidence:
+  - EVID-0008
+  confidence: high
+- id: CLAIM-0008
+  dri: reverse-engineering
+  reviewer: spec-governance-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0009
+  statement: DevHarness hiện spawn đúng 5 training NPC và gán MAX_HP bằng 999999.
+  evidence:
+  - EVID-0009
+  confidence: high
+- id: CLAIM-0009
+  dri: reverse-engineering
+  reviewer: spec-governance-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0010
+  statement: Panel inventory stale ghi footer N/28 dù grid được mô tả 6x10.
+  evidence:
+  - EVID-0010
+  confidence: high
+- id: CLAIM-0010
+  dri: reverse-engineering
+  reviewer: spec-governance-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0011
+  statement: Snapshot filesystem đã phát hiện updatejx15.pak và updatejx16.pak ngoài danh sách active package.ini.
+  evidence:
+  - EVID-0011
+  confidence: high
+- id: CLAIM-0011
+  dri: reverse-engineering
+  reviewer: content-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0012
+  statement: Skill catalog đã census 1554 record nhưng artifact tĩnh chưa xác minh branch runtime, logic hoặc visual parity.
+  evidence:
+  - EVID-0012
+  confidence: high
+- id: CLAIM-0012
+  dri: reverse-engineering
+  reviewer: combat-parity-review
+  phase: P0
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0013
+  - EVID-0014
+  statement: Hai service target hiện hữu dùng tiêu chí cạnh tranh, một ưu tiên HP thấp và một ưu tiên khoảng cách gần nhất.
+  evidence:
+  - EVID-0013
+  - EVID-0014
+  confidence: high
+- id: CLAIM-0013
+  dri: reverse-engineering
+  reviewer: content-platform-review
+  phase: P1
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0015
+  statement: Runtime hiện chỉ có abstraction chọn load mode; bằng chứng chưa bao phủ pipeline download, version, cache và
+    rollback production.
+  evidence:
+  - EVID-0015
+  confidence: medium
+- id: CLAIM-0014
+  dri: product-parity
+  reviewer: sre-performance-review
+  phase: ALL
+  status: SOURCE_PROVEN
+  acceptance_evidence:
+  - EVID-0016
+  statement: Gate sản phẩm yêu cầu 1000 WSS CCU và authoritative p95 tối đa 200 ms; đây là tiêu chí chưa phải kết quả load
+    test.
+  evidence:
+  - EVID-0016
+  confidence: high

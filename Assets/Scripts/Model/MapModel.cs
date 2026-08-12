@@ -30,6 +30,11 @@ namespace VLTK.Model
         public string displayNameRaw;
         public string displayNameNormalized;
         public string sourceMapPath;
+        public string geometryKey;
+        public string regionFolder;
+        public string spriteFolder;
+        public string serverRegionFolder;
+        public RectDef geometryBounds;
         public SourceAssetId settingSourceId;
         public string worldSetMembership;
         public RectDef rect;

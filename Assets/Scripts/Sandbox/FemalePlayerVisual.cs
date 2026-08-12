@@ -2,7 +2,7 @@
 // VLTK Mobile — ST-02.1 Female Player Visual
 // Mirror of MalePlayerVisual for FM_* SPR parts.
 // Same layered SPR system, 8-direction animation, sorting.
-// Source: PC npcres/woman SPR set (FM_BD/H/HR/LH/RH, variant 050).
+// Source: PC npcres/woman SPR set (FM_BD/HD/HR/LH/RH, canonical variant 019).
 // -----------------------------------------------------------------------------
 
 using System;
@@ -16,16 +16,17 @@ namespace VLTK.Sandbox
 {
     /// <summary>
     /// Runtime renderer cho female player SPR set.
-    /// Mirror of MalePlayerVisual với FM_* body parts (variant 050).
+    /// Mirror of MalePlayerVisual với FM_* body parts (canonical variant 019).
     /// Tầng layer: shadow, body, head, hair, hands, weapon — giống male.
-    /// Shadow và LW/RW weapon slots luôn build nhưng mark not-required vì PC
-    /// npcres/woman không có file cho các phần đó.
+    /// Female shoulder optional. Missing required HR_019 reports exact asset hole.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class FemalePlayerVisual : MonoBehaviour, IPlayerVisual
     {
         [Header("Playback")]
         public PlayerVisualAction currentAction { get; set; } = PlayerVisualAction.Idle;
+        public bool walkMode { get; set; }   // PC walk mode (WK01) vs run (RN01).
+        public bool isMeditating { get; set; } // PC 打坐 (ZZ01) forces Sit and blocks move-driven action changes.
         public PcWeaponType currentWeapon { get; set; } = PcWeaponType.EmptyHand;
         public bool isMounted { get; set; }
         public int direction { get; set; }
@@ -43,14 +44,31 @@ namespace VLTK.Sandbox
         [Header("Diagnostics")]
         public bool logMissingParts = true;
 
+        [Header("Equipment Variants")]
+        public int armorVariant = FemalePlayerSpriteCatalog.ArmorVariant;
+        public int headVariant = FemalePlayerSpriteCatalog.ArmorVariant;
+        public int hairVariant = FemalePlayerSpriteCatalog.ArmorVariant;
+        public int weaponVariant = FemalePlayerSpriteCatalog.EmptyWeaponVariant;
+        public int mountHorseVariant = FemalePlayerSpriteCatalog.MountHorseVariant;
+
+        private int _loadedArmorVariant = -1;
+        private int _loadedHeadVariant = -1;
+        private int _loadedHairVariant = -1;
+        private int _loadedWeaponVariant = -1;
+        private int _loadedHorseVariant = -1;
+
         private readonly Dictionary<PlayerSpritePartKind, PartRuntime> _parts = new();
         private PlayerVisualAction _loadedAction = (PlayerVisualAction)(-1);
         private PcWeaponType _loadedWeapon = (PcWeaponType)(-1);
         private readonly List<string> _lastMissingRequiredParts = new();
         private float _time;
+        private float _logicalActionProgress = -1f;
 
         public int LoadedPartCount { get; private set; }
+        public int ActionPartsRefreshCount { get; private set; }
+        // Driver-local diagnostic; rendering shares direction-inclusive absolute index.
         public int CurrentFrameInDirection { get; private set; }
+        public float CurrentPlaybackRate => ResolvePlaybackRate(currentAction);
         public bool HasAllRequiredParts { get; private set; }
         public int MissingRequiredPartCount => LastMissingRequiredParts.Count;
         public IReadOnlyList<string> LastMissingRequiredParts => _lastMissingRequiredParts;
@@ -91,8 +109,8 @@ namespace VLTK.Sandbox
         {
             if (clip == null || clip.sprites == null) return false;
             for (int i = 0; i < clip.sprites.Length; i++)
-                if (clip.sprites[i] != null) return true;
-            return false;
+                if (clip.sprites[i] == null) return false;
+            return clip.sprites.Length > 0;
         }
 
         private void Awake()
@@ -117,11 +135,18 @@ namespace VLTK.Sandbox
         public void SetMoveInput(Vector2 input)
         {
             LastMoveInput = Vector2.ClampMagnitude(input, 1f);
+            // PC 打坐: meditation locks the visual to Sit (ZZ01) regardless of input.
+            if (isMeditating)
+            {
+                SetAction(PlayerVisualAction.Sit);
+                return;
+            }
             int nextDirection = FemalePlayerSpriteCatalog.DirectionFromMove(LastMoveInput);
             if (nextDirection >= 0)
             {
                 direction = nextDirection;
-                SetAction(PlayerVisualAction.Move);
+                // PC 走路/跑步: walk mode plays Walk (WK01), otherwise run (RN01 Move).
+                SetAction(walkMode ? PlayerVisualAction.Walk : PlayerVisualAction.Move);
             }
             else
             {
@@ -131,7 +156,18 @@ namespace VLTK.Sandbox
 
         public void SetAction(PlayerVisualAction action)
         {
-            if (isMounted) action = PlayerVisualAction.Ride;
+            _logicalActionProgress = -1f;
+            // PC 打坐 (meditate) is sticky: force Sit (ZZ01) until meditation ends.
+            if (isMeditating)
+                action = PlayerVisualAction.Sit;
+            if (isMounted)
+                action = action == PlayerVisualAction.Walk ? PlayerVisualAction.RideWalk
+                    : action == PlayerVisualAction.Move ? PlayerVisualAction.RideMove
+                    : action == PlayerVisualAction.Attack ? PlayerVisualAction.RideAttack
+                    : action == PlayerVisualAction.Attack1 ? PlayerVisualAction.RideAttack1
+                    : action == PlayerVisualAction.Magic ? PlayerVisualAction.RideMagic
+                    : action == PlayerVisualAction.RideAttack || action == PlayerVisualAction.RideAttack1 || action == PlayerVisualAction.RideMagic ? action
+                    : PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
             currentAction = action;
@@ -147,7 +183,9 @@ namespace VLTK.Sandbox
             _loadedAction = (PlayerVisualAction)(-1);
             if (isMounted)
             {
-                currentAction = PlayerVisualAction.Ride;
+                currentAction = (LastMoveInput.sqrMagnitude > 0.0001f)
+                    ? (walkMode ? PlayerVisualAction.RideWalk : PlayerVisualAction.RideMove)
+                    : PlayerVisualAction.Ride;
             }
             else
             {
@@ -161,8 +199,17 @@ namespace VLTK.Sandbox
         public void SetWeapon(PcWeaponType weapon)
         {
             if (currentWeapon == weapon) return;
+            SetWeapon(weapon, FemalePlayerSpriteCatalog.GetWeaponSprVariant(weapon));
+        }
+
+        public void SetWeapon(PcWeaponType weapon, int exactVariant)
+        {
+            if (currentWeapon == weapon && weaponVariant == exactVariant) return;
+            bool familyChanged = currentWeapon != weapon;
             currentWeapon = weapon;
-            _loadedAction = (PlayerVisualAction)(-1);
+            weaponVariant = exactVariant;
+            if (familyChanged)
+                _loadedAction = (PlayerVisualAction)(-1);
             RefreshActionParts(force: true);
             ApplyFrame(0f);
         }
@@ -171,7 +218,38 @@ namespace VLTK.Sandbox
         {
             direction = ((nextDirection % FemalePlayerSpriteCatalog.DirectionCount) + FemalePlayerSpriteCatalog.DirectionCount)
                         % FemalePlayerSpriteCatalog.DirectionCount;
-            ApplySorting();
+            ApplyFrame(_time);
+        }
+
+        public void SetEquipVariant(PlayerEquipSlot slot, int variant)
+        {
+            switch (slot)
+            {
+                case PlayerEquipSlot.Body:
+                    if (armorVariant == variant) return;
+                    armorVariant = variant;
+                    break;
+                case PlayerEquipSlot.Head:
+                    if (headVariant == variant) return;
+                    headVariant = variant;
+                    break;
+                case PlayerEquipSlot.Hair:
+                    if (hairVariant == variant) return;
+                    hairVariant = variant;
+                    break;
+                case PlayerEquipSlot.Weapon:
+                    if (weaponVariant == variant) return;
+                    weaponVariant = variant;
+                    break;
+                case PlayerEquipSlot.Mount:
+                    if (mountHorseVariant == variant) return;
+                    mountHorseVariant = variant;
+                    break;
+                default:
+                    return;
+            }
+            RefreshActionParts(force: true);
+            ApplyFrame(0f);
         }
 
         public void Tick(float deltaTime)
@@ -181,30 +259,50 @@ namespace VLTK.Sandbox
             ApplyFrame(_time);
         }
 
+        public void SetLogicalActionProgress(float normalizedProgress)
+        {
+            _logicalActionProgress = normalizedProgress < 0f ? -1f : Mathf.Clamp01(normalizedProgress);
+        }
+
         public void RefreshActionParts(bool force = false)
         {
-            if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon)
+            if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon &&
+                _loadedArmorVariant == armorVariant && _loadedHeadVariant == headVariant &&
+                _loadedHairVariant == hairVariant && _loadedWeaponVariant == weaponVariant &&
+                _loadedHorseVariant == mountHorseVariant)
                 return;
+
+            ActionPartsRefreshCount++;
 
             for (int i = transform.childCount - 1; i >= 0; i--)
                 transform.GetChild(i).gameObject.SetActive(false);
 
             foreach (var part in _parts.Values)
+            {
                 part.renderer.enabled = false;
+                part.clip = null;
+            }
 
             LoadedPartCount = 0;
             HasAllRequiredParts = true;
             _lastMissingRequiredParts.Clear();
-            var specs = FemalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
+            var specs = FemalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon, armorVariant, headVariant, weaponVariant, hairVariant, mountHorseVariant);
             foreach (var spec in specs)
             {
                 var runtime = GetOrCreatePart(spec);
                 runtime.spec = spec;
-                runtime.clip = LoadClip(spec.sourcePath);
-                bool ok = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
-                runtime.renderer.enabled = ok;
-                runtime.renderer.gameObject.SetActive(ok);
-                if (ok)
+                runtime.clip = LoadClip(spec.sourcePath, spec.expectedDirections);
+                bool loaded = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
+                // Part-count model (NOT staging): npcres/woman canonically has only
+                // BD/HD/HR/LH/RH art — no Shadow/LW/RW. Those slots are spec.required
+                // = false. A non-required slot whose {uid}.spr happens to resolve
+                // (orphan FM_LW/FM_RW staged from an out-of-scope tree) must NOT
+                // inflate LoadedPartCount nor paint a phantom layer. Gate by
+                // spec.required so the count reflects the real per-gender layer set.
+                bool show = loaded && spec.required;
+                runtime.renderer.enabled = show;
+                runtime.renderer.gameObject.SetActive(show);
+                if (show)
                     LoadedPartCount++;
                 else if (spec.required)
                 {
@@ -224,6 +322,11 @@ namespace VLTK.Sandbox
 
             _loadedAction = currentAction;
             _loadedWeapon = currentWeapon;
+            _loadedArmorVariant = armorVariant;
+            _loadedHeadVariant = headVariant;
+            _loadedHairVariant = hairVariant;
+            _loadedWeaponVariant = weaponVariant;
+            _loadedHorseVariant = mountHorseVariant;
             ApplySorting();
         }
 
@@ -239,36 +342,106 @@ namespace VLTK.Sandbox
             return runtime;
         }
 
-        private void ApplyFrame(float time)
+        private float ResolvePlaybackRate(PlayerVisualAction action)
         {
-            float rate = currentAction switch
+            return action switch
             {
                 PlayerVisualAction.Move => moveFrameRate,
-                PlayerVisualAction.Magic => magicFrameRate,
-                PlayerVisualAction.Attack => attackFrameRate,
-                _ => idleFrameRate,
+                PlayerVisualAction.Walk => moveFrameRate * 0.55f, // PC walk mode: slower cadence than run.
+                PlayerVisualAction.RideWalk => moveFrameRate * 0.55f,
+                PlayerVisualAction.RideMove => moveFrameRate,
+                PlayerVisualAction.Magic or PlayerVisualAction.RideMagic => magicFrameRate,
+                PlayerVisualAction.Attack or PlayerVisualAction.Attack1 or PlayerVisualAction.RideAttack or PlayerVisualAction.RideAttack1 => attackFrameRate,
+                PlayerVisualAction.Jump => magicFrameRate, // PC 跳跃 leap burst cycle.
+                _ => idleFrameRate, // Idle, Sit (打坐), Ride use idle cadence.
             };
+        }
+
+        private void ApplyFrame(float time)
+        {
+            float rate = ResolvePlaybackRate(currentAction);
             int baseOrder = MapRenderer.PlayerSortingOrder;
-
-            foreach (var runtime in _parts.Values)
+            PartRuntime driver = null;
+            // KNpcRes.cpp:267-299 scans numeric part slots, not catalog/dictionary order.
+            for (int i = 0; i <= (int)PlayerSpritePartKind.HorseRear; i++)
             {
-                var clip = runtime.clip;
-                if (clip == null || clip.framesPerDirection <= 0 || clip.sprites == null || clip.sprites.Length == 0)
+                if (_parts.TryGetValue((PlayerSpritePartKind)i, out var runtime) && HasFrames(runtime.clip))
+                {
+                    driver = runtime;
+                    break;
+                }
+            }
+
+            CurrentFrameInDirection = driver == null ? 0 : FrameInDirection(time, rate, driver.clip.framesPerDirection);
+            int driverDirection = driver == null ? 0 : DirectionIndex(driver.clip);
+            int driverFrameIndex = driver == null ? -1
+                : driverDirection * driver.clip.framesPerDirection + CurrentFrameInDirection;
+
+            // KNpcRes.cpp:253-265 separately scales Shadow; lines 290-298 reuse nCurFrameNo unchanged.
+            if (_parts.TryGetValue(PlayerSpritePartKind.Shadow, out var shadow) && HasFrames(shadow.clip))
+            {
+                int shadowFrame = DirectionIndex(shadow.clip) * shadow.clip.framesPerDirection
+                    + FrameInDirection(time, rate, shadow.clip.framesPerDirection);
+                ApplyFrameIndex(shadow, shadowFrame, baseOrder);
+            }
+
+            for (int i = 0; i <= (int)PlayerSpritePartKind.HorseRear; i++)
+            {
+                if (!_parts.TryGetValue((PlayerSpritePartKind)i, out var runtime) || !HasFrames(runtime.clip))
                     continue;
-
-                int frameInDirection = Mathf.FloorToInt(time * rate) % clip.framesPerDirection;
-                if (frameInDirection < 0) frameInDirection += clip.framesPerDirection;
-                CurrentFrameInDirection = frameInDirection;
-
-                int dir = clip.directionCount > 1 ? direction % clip.directionCount : 0;
-                int frameIndex = dir * clip.framesPerDirection + frameInDirection;
-                frameIndex = Mathf.Clamp(frameIndex, 0, clip.sprites.Length - 1);
-
-                runtime.renderer.sprite = clip.sprites[frameIndex];
-                runtime.renderer.transform.localPosition = clip.offsets[frameIndex];
-                runtime.renderer.sortingOrder = baseOrder + FemalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
+                if (driver == null)
+                {
+                    runtime.renderer.enabled = false;
+                    runtime.renderer.sprite = null;
+                    continue;
+                }
+                ApplyFrameIndex(runtime, driverFrameIndex, baseOrder);
             }
         }
+
+        private void ApplyFrameIndex(PartRuntime runtime, int frameIndex, int baseOrder)
+        {
+            var clip = runtime.clip;
+            if (frameIndex < 0 || frameIndex >= clip.sprites.Length || clip.sprites[frameIndex] == null)
+            {
+                runtime.renderer.enabled = false;
+                runtime.renderer.sprite = null;
+                if (runtime.spec.required && !_lastMissingRequiredParts.Contains(runtime.spec.sourcePath))
+                {
+                    HasAllRequiredParts = false;
+                    _lastMissingRequiredParts.Add(runtime.spec.sourcePath);
+                }
+                return;
+            }
+
+            runtime.renderer.sprite = clip.sprites[frameIndex];
+            runtime.renderer.enabled = true;
+            if (runtime.spec.required && _lastMissingRequiredParts.Remove(runtime.spec.sourcePath))
+                HasAllRequiredParts = _lastMissingRequiredParts.Count == 0;
+            runtime.renderer.transform.localPosition = clip.offsets[frameIndex];
+            runtime.renderer.sortingOrder = baseOrder + FemalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
+        }
+
+        private int DirectionIndex(ClipRuntime clip)
+            => clip.directionCount > 1 ? direction % clip.directionCount : 0;
+
+        private int FrameInDirection(float time, float rate, int framesPerDirection)
+        {
+            if (_logicalActionProgress >= 0f && IsControllerCastAction(currentAction))
+                return Mathf.Min(framesPerDirection - 1, Mathf.FloorToInt(_logicalActionProgress * framesPerDirection));
+            if (currentAction == PlayerVisualAction.Sit || currentAction == PlayerVisualAction.Jump)
+                return Mathf.Min(Mathf.FloorToInt(time * rate), framesPerDirection - 1);
+
+            int frame = Mathf.FloorToInt(time * rate) % framesPerDirection;
+            return frame < 0 ? frame + framesPerDirection : frame;
+        }
+
+        private static bool HasFrames(ClipRuntime clip)
+            => clip != null && clip.framesPerDirection > 0 && clip.sprites != null && clip.sprites.Length > 0;
+
+        private static bool IsControllerCastAction(PlayerVisualAction action)
+            => action is PlayerVisualAction.Attack or PlayerVisualAction.Attack1 or PlayerVisualAction.Magic or
+                PlayerVisualAction.RideAttack or PlayerVisualAction.RideAttack1 or PlayerVisualAction.RideMagic;
 
         private void ApplySorting()
         {
@@ -277,14 +450,14 @@ namespace VLTK.Sandbox
                 runtime.renderer.sortingOrder = baseOrder + FemalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
         }
 
-        private ClipRuntime LoadClip(string sourcePath)
+        private ClipRuntime LoadClip(string sourcePath, int expectedDirections = 0)
         {
             if (string.IsNullOrEmpty(sourcePath)) return null;
 
             string root = string.IsNullOrEmpty(spritesRootOverride)
                 ? Path.Combine(Application.streamingAssetsPath, "Sprites")
                 : spritesRootOverride;
-            string cacheKey = $"{root}|{sourcePath}|ppu={pixelsPerUnit:F3}|ref={referencePixel.x:F1},{referencePixel.y:F1}";
+            string cacheKey = $"{root}|{sourcePath}|ppu={pixelsPerUnit:F3}|ref={referencePixel.x:F1},{referencePixel.y:F1}|dir={expectedDirections}";
             if (ClipCache.TryGetValue(cacheKey, out var cached))
             {
                 if (IsClipAlive(cached)) return cached;
@@ -305,10 +478,37 @@ namespace VLTK.Sandbox
                 return null;
             }
 
-            int directions = Mathf.Max(1, decoded.header.directions);
             int totalFrames = decoded.frames.Length;
-            int framesPerDirection = Mathf.Max(1, totalFrames / directions);
-            if (totalFrames % directions != 0) directions = 1;
+            int headerDirections = decoded.header.directions;
+            if (headerDirections < 1 || headerDirections > totalFrames)
+            {
+                LogMissing(sourcePath, "SPR direction metadata is invalid");
+                return null;
+            }
+
+            // Horse files use their known eight-direction physical layout, but only
+            // when complete. Never round malformed frame metadata into a usable clip.
+            int directions = expectedDirections > 1 ? expectedDirections : headerDirections;
+            if (totalFrames % directions != 0)
+            {
+                LogMissing(sourcePath, "SPR frame count does not divide direction metadata");
+                return null;
+            }
+            int framesPerDirection = totalFrames / directions;
+
+            for (int i = 0; i < totalFrames; i++)
+            {
+                var frame = decoded.frames[i];
+                long pixelCount = frame == null ? 0L : (long)frame.width * frame.height;
+                if (frame == null || frame.width == 0 || frame.height == 0 ||
+                    frame.width > SprFramePlayback.MaxTextureDimension ||
+                    frame.height > SprFramePlayback.MaxTextureDimension ||
+                    frame.rgbaPixels == null || frame.rgbaPixels.Length != pixelCount)
+                {
+                    LogMissing(sourcePath, $"SPR used frame {i} is structurally invalid");
+                    return null;
+                }
+            }
 
             var clip = new ClipRuntime
             {
@@ -323,9 +523,12 @@ namespace VLTK.Sandbox
             for (int i = 0; i < totalFrames; i++)
             {
                 var frame = decoded.frames[i];
-                if (frame == null || frame.width == 0 || frame.height == 0) continue;
                 var tex = SprDecoder.CreateTexture(frame);
-                if (tex == null) continue;
+                if (tex == null)
+                {
+                    LogMissing(sourcePath, $"SPR used frame {i} texture creation failed");
+                    return null;
+                }
                 tex.name = $"FemalePlayer_{Path.GetFileNameWithoutExtension(sourcePath)}_{i:000}";
                 clip.sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height),
                     new Vector2(0f, 1f), pixelsPerUnit, 0, SpriteMeshType.FullRect);

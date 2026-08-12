@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcMantleRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public MantleService() : this(null) { }
+
         public MantleService(PcMantleRegistry reg) { _reg = reg ?? new PcMantleRegistry(); }
 
         public static MantleService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

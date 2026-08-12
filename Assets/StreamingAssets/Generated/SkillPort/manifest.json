@@ -1,0 +1,229 @@
+{
+  "artifacts": [
+    {
+      "kind": "binary",
+      "logicalPath": "skill_port.catalog.pb",
+      "mediaType": "application/x-protobuf",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.catalog.pb",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "3c4f729aded00d475e8ee3cd6539cf649138bc399c75205862a4f1b17312e4ad",
+      "sizeBytes": 585713,
+      "uri": "urn:sha256:3c4f729aded00d475e8ee3cd6539cf649138bc399c75205862a4f1b17312e4ad"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.client.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.client.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "9fb3f0b21fd05bfae3e5459b4c45c9241c3052c4163f87bcc783faece6fdbae2",
+      "sizeBytes": 544922,
+      "uri": "urn:sha256:9fb3f0b21fd05bfae3e5459b4c45c9241c3052c4163f87bcc783faece6fdbae2"
+    },
+    {
+      "kind": "binary",
+      "logicalPath": "skill_port.client.pb",
+      "mediaType": "application/x-protobuf",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.client.pb",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "498e2f3d14d352b7924aaebdff17765aee719f968804fd3c96a54f127286a773",
+      "sizeBytes": 235046,
+      "uri": "urn:sha256:498e2f3d14d352b7924aaebdff17765aee719f968804fd3c96a54f127286a773"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.dependencies.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.dependencies.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "ffc4b01d5d42ef08569e91ecaf4e4135a968f83b13e710e0d4e928ba40f8988e",
+      "sizeBytes": 283254,
+      "uri": "urn:sha256:ffc4b01d5d42ef08569e91ecaf4e4135a968f83b13e710e0d4e928ba40f8988e"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.index.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.index.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "a7c3e54965480b640e0c5bfffe71e58a83be8536aa4e5fd1d0521caf71838f30",
+      "sizeBytes": 60091,
+      "uri": "urn:sha256:a7c3e54965480b640e0c5bfffe71e58a83be8536aa4e5fd1d0521caf71838f30"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.ir.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.ir.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "dae8590ad37e87f65e08402f966f142358a4a31c40506019161aae93f0563c23",
+      "sizeBytes": 2348662,
+      "uri": "urn:sha256:dae8590ad37e87f65e08402f966f142358a4a31c40506019161aae93f0563c23"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.protobuf_adapter.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.protobuf_adapter.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "fb7c8ebdb84c983914c9fe99910e99970bd4217976b1e72b9376568be514c1da",
+      "sizeBytes": 876,
+      "uri": "urn:sha256:fb7c8ebdb84c983914c9fe99910e99970bd4217976b1e72b9376568be514c1da"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.provenance.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.provenance.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "6ab6fd6cdc6b42b975ceedf345e6f914f36d1f4a7f53e67a7d15fc791e1e2a20",
+      "sizeBytes": 2934,
+      "uri": "urn:sha256:6ab6fd6cdc6b42b975ceedf345e6f914f36d1f4a7f53e67a7d15fc791e1e2a20"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.release_gate.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.release_gate.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "109e89adf0c89700530379897aef77ba549d14bc67c51b64e47e87ab158ba963",
+      "sizeBytes": 532,
+      "uri": "urn:sha256:109e89adf0c89700530379897aef77ba549d14bc67c51b64e47e87ab158ba963"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.reproducibility.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.reproducibility.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "1bc850856089fcd5e569211cd479a8688b15b81c291592e8c4c1128acdbf6b96",
+      "sizeBytes": 1773,
+      "uri": "urn:sha256:1bc850856089fcd5e569211cd479a8688b15b81c291592e8c4c1128acdbf6b96"
+    },
+    {
+      "kind": "config",
+      "logicalPath": "skill_port.server.json",
+      "mediaType": "application/json",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.server.json",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "c93ec9432326287b34da5ca3f3805b42aa7e39364a5f5a7ec44712edfc2af8a4",
+      "sizeBytes": 571170,
+      "uri": "urn:sha256:c93ec9432326287b34da5ca3f3805b42aa7e39364a5f5a7ec44712edfc2af8a4"
+    },
+    {
+      "kind": "binary",
+      "logicalPath": "skill_port.server.pb",
+      "mediaType": "application/x-protobuf",
+      "provenance": {
+        "discoveryTool": "importer",
+        "parserName": "scripts.skill_port.compiler",
+        "parserVersion": "skill_port_compiler_py_protobuf_ed25519/v2",
+        "sourcePath": "skill_port.server.pb",
+        "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+      },
+      "sha256": "5b3afc113233622c7019394f54509a524d0d0e673809a3ec50db89e41740c48b",
+      "sizeBytes": 353891,
+      "uri": "urn:sha256:5b3afc113233622c7019394f54509a524d0d0e673809a3ec50db89e41740c48b"
+    }
+  ],
+  "contentDigest": {
+    "catalogUnionSha256": "2bea3c7669782d36e04902e31b33f2907b7736c48f2ec351ced14a911a36109d",
+    "catalogUnionSize": 242,
+    "clientProjectionSha256": "498e2f3d14d352b7924aaebdff17765aee719f968804fd3c96a54f127286a773",
+    "contentReleaseId": "00000000-0000-4000-8000-000000000242",
+    "manifestSha256": "b3a15de386e3abe1ed91e975afaf6606fbf45b4abede6f50ec25c5acfe4590af",
+    "runtimeSkillPolicyId": "skill-port-runtime-policy-gate0-blocked-v1",
+    "sourceSnapshotId": "skillport-gate0-dev-snapshot"
+  },
+  "createdAt": "1970-01-01T00:00:00Z",
+  "hotReloadAllowed": false,
+  "luaPolicy": {
+    "hostApiWhitelist": [
+      "SkillPort.ReadOnlyCatalog"
+    ],
+    "hostApiWhitelistSha256": "e336f06e2e1487c953396d1132a5bc5f09a66fe87c9adf7c19369efb90fd626a",
+    "runtime": "Lua 5.1",
+    "sandboxPolicyVersion": "skill-port-no-lua-runtime-v1"
+  },
+  "manifestSha256": "b3a15de386e3abe1ed91e975afaf6606fbf45b4abede6f50ec25c5acfe4590af",
+  "realmId": "00000000-0000-4000-8000-000000000001",
+  "releaseId": "00000000-0000-4000-8000-000000000242",
+  "runtimeSkillPolicy": {
+    "androidPhysicalEvidenceStatus": "BLOCKED",
+    "catalogUnionSha256": "2bea3c7669782d36e04902e31b33f2907b7736c48f2ec351ced14a911a36109d",
+    "catalogUnionSize": 242,
+    "filesystemFallbackAllowed": false,
+    "pcRuntimeEvidenceStatus": "BLOCKED",
+    "policyId": "skill-port-runtime-policy-gate0-blocked-v1",
+    "runtimeParityClaimed": false,
+    "sourceTool": "vltktool"
+  },
+  "schemaVersion": 1,
+  "signature": "hJ7AgHb2iYtumL0Usw3UyIjY+eKnYiNilPR7JdQCR1IpQ3PYq9iUHDDL72a5KXsapaJqaa/NrPlz0HW4KKvWDQ==",
+  "signingKeyId": "test-only-skill-port-ed25519-fixture-v1",
+  "sourceSnapshot": {
+    "capturedAt": "1970-01-01T00:00:00Z",
+    "catalogGeneratorRevision": "skill_port_compiler_py_protobuf_ed25519/v2",
+    "snapshotId": "skillport-gate0-dev-snapshot",
+    "sourceRoot": "/var/www/jx-pc",
+    "treeSha256": "acb651dac32aa145ed762022b39520ede6010015558a99893bdb293c6b8be779",
+    "vcsRevision": "0000000-test-only-dev-artifact"
+  },
+  "userFacingLocale": "vi",
+  "version": "skill-port-dev-19700101"
+}

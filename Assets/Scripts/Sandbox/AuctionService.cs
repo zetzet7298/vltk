@@ -48,6 +48,7 @@ namespace VLTK.Sandbox
         public const string LogTag = "Auction";
 
         private PcAuctionConfigRegistry _config;
+        private IAuctionHost _host;
         private readonly Dictionary<int, AuctionListing> _activeListings = new();
 
         public event Action<AuctionListing> OnListed;
@@ -58,12 +59,17 @@ namespace VLTK.Sandbox
         public int Count => _config != null ? _config.Count : 0;
         public int ActiveListingCount => _activeListings.Count;
 
-        public AuctionService() : this(null) { }
+        public AuctionService() : this(null, null) { }
 
-        public AuctionService(PcAuctionConfigRegistry config)
+        public AuctionService(PcAuctionConfigRegistry config) : this(config, null) { }
+
+        public AuctionService(PcAuctionConfigRegistry config, IAuctionHost host)
         {
             _config = config;
+            _host = host;
         }
+
+        public void AttachHost(IAuctionHost host) { _host = host; }
 
         public void RegisterConfig(PcAuctionConfigRegistry config)
         {
@@ -116,13 +122,24 @@ namespace VLTK.Sandbox
             SubsystemLog.Info(LogTag,
                 $"Rao Bán listing={listingId} item={itemId} bid={startingBid} buyout={buyoutPrice}");
             OnListed?.Invoke(listing);
+            if (_host != null) _host.OnItemListed(listingId, itemId, listing.sellerName, startingBid, buyoutPrice);
             return listing;
         }
 
         /// <summary>Hủy rao bán (chỉ seller).</summary>
         public bool CancelListing(int listingId)
         {
-            return _activeListings.Remove(listingId);
+            var l = GetListing(listingId);
+            if (l == null) return false;
+            int sellerId = l.sellerId;
+            int itemId = l.itemId;
+            bool removed = _activeListings.Remove(listingId);
+            if (removed)
+            {
+                SubsystemLog.Info(LogTag, $"Hủy rao bán listing={listingId} bởi seller={sellerId}");
+                if (_host != null) _host.OnListingCancelled(listingId, sellerId, itemId);
+            }
+            return removed;
         }
 
         /// <summary>Tra cứu listing theo id.</summary>
@@ -148,15 +165,33 @@ namespace VLTK.Sandbox
             if (l.IsExpired)
             {
                 OnExpired?.Invoke(listingId);
+                if (_host != null) _host.OnListingExpired(listingId, l.sellerId, l.itemId);
                 return AuctionBidResult.Expired;
             }
             int minBid = l.currentBid > 0 ? l.currentBid : l.bidPrice;
             if (bidAmount <= minBid) return AuctionBidResult.BidTooLow;
+
+            // Trừ tiền bidder qua host (PC Pay)
+            if (_host != null && !_host.TryDeductPlayerMoney(bidderId, bidAmount))
+                return AuctionBidResult.BidTooLow;
+
+            int previousBidder = l.currentBidder;
+            int previousBid = l.currentBid;
             l.currentBid = bidAmount;
             l.currentBidder = bidderId;
             SubsystemLog.Info(LogTag,
                 $"Trả Giá listing={listingId} bidder={bidderId} bid={bidAmount}");
             OnBidPlaced?.Invoke(l, bidderId, bidAmount);
+            if (_host != null)
+            {
+                // Hoàn tiền cho bidder cũ (nếu có)
+                if (previousBidder > 0 && previousBid > 0)
+                {
+                    _host.GrantPlayerMoney(previousBidder, previousBid);
+                    _host.OnOutBid(listingId, previousBidder, bidderId, bidAmount);
+                }
+                _host.OnBidWon(listingId, bidderId, bidAmount);
+            }
             return AuctionBidResult.Success;
         }
 
@@ -166,14 +201,56 @@ namespace VLTK.Sandbox
             var l = GetListing(listingId);
             if (l == null || l.sold || l.IsExpired) return null;
             if (l.buyoutPrice <= 0) return null;
+
+            // Trừ tiền buyer qua host (PC Pay buyout)
+            if (_host != null && !_host.TryDeductPlayerMoney(buyerId, l.buyoutPrice))
+                return null;
+
+            int previousBidder = l.currentBidder;
+            int previousBid = l.currentBid;
+            int sellerId = l.sellerId;
+            int itemId = l.itemId;
             l.sold = true;
             l.currentBidder = buyerId;
             l.currentBid = l.buyoutPrice;
             SubsystemLog.Info(LogTag,
                 $"Mua Ngay listing={listingId} buyer={buyerId} price={l.buyoutPrice}");
             OnSold?.Invoke(l, buyerId);
+            if (_host != null)
+            {
+                // Hoàn tiền cho bidder cũ nếu có
+                if (previousBidder > 0 && previousBidder != buyerId && previousBid > 0)
+                {
+                    _host.GrantPlayerMoney(previousBidder, previousBid);
+                }
+                // Cộng tiền cho seller
+                _host.GrantPlayerMoney(sellerId, l.buyoutPrice);
+                _host.OnItemSold(listingId, sellerId, buyerId, l.buyoutPrice);
+            }
             _activeListings.Remove(listingId);
             return l;
+        }
+
+        /// <summary>Quét và đánh dấu các listing đã hết hạn. Trả về danh sách listing id đã expire.</summary>
+        public List<int> ExpireDueListings()
+        {
+            var expired = new List<int>();
+            var toRemove = new List<int>();
+            foreach (var kv in _activeListings)
+            {
+                if (kv.Value.IsExpired) toRemove.Add(kv.Key);
+            }
+            foreach (var id in toRemove)
+            {
+                var l = _activeListings[id];
+                int sellerId = l.sellerId;
+                int itemId = l.itemId;
+                _activeListings.Remove(id);
+                OnExpired?.Invoke(id);
+                if (_host != null) _host.OnListingExpired(id, sellerId, itemId);
+                expired.Add(id);
+            }
+            return expired;
         }
 
         /// <summary>Load từ StreamingAssets/Reference/PcAuction.</summary>

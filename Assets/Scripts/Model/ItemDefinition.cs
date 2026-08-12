@@ -31,10 +31,20 @@ namespace VLTK.Model
     public class ItemDefinition
     {
         public int itemId;
+        public int resId;
         public string nameRaw;
         public string nameNormalized;
         public int setId;             // 0 = not part of a set
         public int refineLevel;       // Enchance/Point derived
+
+        // PC item tuple. Script/magic items (e.g. GM token 6/1/4890) are
+        // addressed by genre/detail/particular in Lua rather than synthetic id.
+        public int itemGenre;
+        public int detailType;
+        public int particularType;
+        public string description;
+        public string scriptPath;
+
         public SourceAssetId iconSourceId;
         public bool iconResolved;
         public List<ItemStatDelta> statDeltas = new();

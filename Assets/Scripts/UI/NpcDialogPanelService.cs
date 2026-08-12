@@ -69,7 +69,13 @@ namespace VLTK.UI
         /// <summary>Dựng snapshot hộp thoại bắt đầu với NPC.</summary>
         public static NpcDialogSnapshot BuildSnapshot(NpcSpawnService svc, int npcId, int startDialogId = 0)
         {
-            return new NpcDialogSnapshot { options = System.Array.Empty<NpcDialogOption>(), rows = System.Array.Empty<NpcDialogRow>() };
+            return new NpcDialogSnapshot
+            {
+                npcId = npcId,
+                currentDialogId = startDialogId,
+                options = System.Array.Empty<NpcDialogOption>(),
+                rows = System.Array.Empty<NpcDialogRow>()
+            };
         }
 
         public static NpcDialogRow? GetNext(int currentDialogId)

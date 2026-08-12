@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------------
 
 using NUnit.Framework;
+using VLTK.Sandbox;
 using VLTK.UI;
 
 namespace VLTK.Tests.EditMode
@@ -19,7 +20,7 @@ namespace VLTK.Tests.EditMode
             {
                 var snap = InventoryPanelService.BuildSnapshot(null, 1);
                 Assert.IsNotNull(snap);
-                Assert.AreEqual(30, snap.totalSlots);
+                Assert.AreEqual(28, snap.totalSlots);
                 Assert.AreEqual(0, snap.usedSlots);
             });
         }
@@ -30,7 +31,15 @@ namespace VLTK.Tests.EditMode
             var order = InventoryPanelService.GetPcInventoryOrder();
             Assert.IsNotNull(order);
             Assert.Greater(order.Count, 0);
-            Assert.AreEqual(30, order.Count);
+            Assert.AreEqual(60, order.Count);
+        }
+
+        [Test]
+        public void GetMobileInventoryOrder_Is4x7()
+        {
+            var order = InventoryPanelService.GetMobileInventoryOrder();
+            Assert.IsNotNull(order);
+            Assert.AreEqual(28, order.Count);
         }
 
         [Test]
@@ -90,6 +99,19 @@ namespace VLTK.Tests.EditMode
                 Assert.IsNotNull(snap);
                 Assert.AreEqual(4, snap.totalBags);
             });
+        }
+
+        [Test]
+        public void BuildSnapshot_WithRuntimeInventory_UsesMobileInventorySlots()
+        {
+            var inv = new InventoryService(null);
+
+            var snap = BagPanelService.BuildSnapshot(1, inv);
+
+            Assert.AreEqual(1, snap.totalBags);
+            Assert.AreEqual(InventoryService.MaxInventorySlots, snap.totalSlots);
+            Assert.AreEqual(0, snap.usedSlots);
+            Assert.AreEqual("Hành trang đang mang", snap.rows[0].name);
         }
 
         [Test]
@@ -175,12 +197,23 @@ namespace VLTK.Tests.EditMode
         }
 
         [Test]
-        public void GetPcSkillTreeOrder_NonEmpty()
+          public void GetPcSkillTreeOrder_NonEmpty()
         {
             var order = SkillTreePanelService.GetPcSkillTreeOrder(VLTK.Model.CombatFaction.CaiBang);
             Assert.IsNotNull(order);
-            Assert.Greater(order.Count, 0);
-        }
+              Assert.Greater(order.Count, 0);
+          }
+
+          [Test]
+          public void TangMenSkillTreeOrder_UsesCanonicalPlayerLearnedRoots()
+          {
+              var order = SkillTreePanelService.GetPcSkillTreeOrder(VLTK.Model.CombatFaction.TangMen);
+              CollectionAssert.AreEqual(PcSkillPanelService.PcTangMenSkillOrder, order);
+              Assert.AreEqual(23, order.Count);
+              CollectionAssert.DoesNotContain(order, 51);
+              CollectionAssert.DoesNotContain(order, 55);
+              CollectionAssert.DoesNotContain(order, 57);
+          }
 
         [Test]
         public void CanLearn_RejectsNoPrereq()

@@ -1,21 +1,43 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using VLTK.Core;
 using VLTK.Model;
 using VLTK.Sprites;
 
 namespace VLTK.Sandbox
 {
     /// <summary>
-    /// PC-accurate skill effect visual renderer for Cái Bang combat skills.
-    /// Plays PreCastSpr animation on caster, spawns missile projectile sprites,
-    /// and renders impact effects. Visuals sourced exclusively from JXWin PC data.
+    /// PC-accurate skill effect visual renderer for ALL combat skills.
+    /// Data-driven: reads missles1.txt + skills.txt -> auto-maps every skill's visual.
+    /// Plays PreCastSpr animation, spawns missile projectile sprites, renders impact.
+    /// No more per-faction hardcoded switch-cases — everything from PC data.
     /// </summary>
     public class SkillEffectVisualService
     {
+        private const float PcMissileTickSeconds = 1f / 18f;
+        private const int PcFollowRetargetCounterMax = 8;
+        private const int MaxPcMissileTicksPerUpdate = 512;
+
         private readonly SprRuntimeService _sprService;
         private readonly SkillCatalog _catalog;
         private readonly List<ActiveSkillEffect> _activeEffects = new();
+        private readonly Dictionary<CombatStateSourceKey, ActiveSkillEffect> _stateAuraEffects = new();
+        private readonly HashSet<CombatStateSourceKey> _stateAuraKeysInUse = new();
+        private readonly List<CombatStateSourceKey> _staleStateAuraKeys = new();
+        private readonly PcSkillVisualAutoMapper _autoMapper = new();
+        private bool _autoMapperReady;
+        /// <summary>
+        /// Callback fired when a PC skill sound should be played.
+        /// Wired by SandboxManager → AudioService.PlaySkillCast.
+        /// </summary>
+        public Action<string> OnCastSound;
+
+        /// <summary>
+        /// Fired once for every missile that collides. Consumers can apply the
+        /// corresponding PC collide event without waiting for the aggregate phase.
+        /// </summary>
+        public Action<ActiveSkillEffect, int, Vector2> OnMissileCollided;
 
         public SkillEffectVisualService(SprRuntimeService sprService)
             : this(sprService, null) { }
@@ -26,7 +48,444 @@ namespace VLTK.Sandbox
             _catalog = catalog;
         }
 
+
+        /// <summary>
+        /// Ensure the data-driven auto-mapper is initialized.
+        /// Lazy-init so it works even when constructed before StreamingAssets is ready.
+        /// </summary>
+        private void EnsureAutoMapperReady()
+        {
+            if (_autoMapperReady) return;
+            try
+            {
+                _autoMapper.Initialize(UnityEngine.Application.streamingAssetsPath);
+                if (_catalog != null) _autoMapper.PreCacheAll(_catalog);
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"[SkillVisual] AutoMapper init failed: {ex.Message}");
+            }
+            _autoMapperReady = true;
+        }
+
+        /// <summary>
+        /// Data-driven visual configuration: auto-resolves skill visual from PC missles1.txt.
+        /// Replaces hardcoded per-faction Configure*Visuals switch-cases.
+        /// Flow: skill.childSkillId -> missile -> SPR paths + anim info + light color.
+        /// </summary>
+          private void ConfigureDataDrivenVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+          {
+              EnsureAutoMapperReady();
+
+            if (PcTangMenLuaLevelService.Applies(skill.skillId))
+            {
+                fx.pcFlyEventEnabled = PcTangMenLuaLevelService.FlyEnabled(skill.skillId, level);
+                fx.pcFlyEventIntervalTicks = PcTangMenLuaLevelService.FlyInterval(skill.skillId, level);
+                fx.pcFlySkillId = PcTangMenLuaLevelService.FlySkillId(skill.skillId, level);
+            }
+            else if (skill.skillId == 1073 && skill.flySkillId == 1103 && skill.flyEventTime == 1)
+            {
+                // PC Skills.txt row 1073 emits child 1103 once per flying tick.
+                fx.pcFlyEventEnabled = true;
+                fx.pcFlyEventIntervalTicks = skill.flyEventTime;
+                fx.pcFlySkillId = skill.flySkillId;
+            }
+
+            var config = _autoMapper.GetVisualConfig(skill);
+            if (config == null) return;
+
+            int tangMenLifetimeTicks = PcTangMenLuaLevelService.MissileLifetime(skill.skillId, level);
+            int tangMenSpeedPerTick = PcTangMenLuaLevelService.MissileSpeed(skill.skillId, level);
+
+            // Apply faction default color
+            fx.color = config.lightColor;
+            fx.flightSoundPath = config.flightSoundPath;
+            fx.impactSoundPath = config.impactSoundPath;
+
+              // A state-only skill may present the attached aura immediately. Skills that
+              // also have a child missile must keep their cast/missile presentation; their
+              // persistent aura is materialized separately from the receiver's state source.
+              if (config.hasStateAura && skill.childSkillId <= 0)
+            {
+                fx.isAura = true;
+                fx.pcPreCastSpriteKey = PcSkillVisualAutoMapper.SprPathToKey(config.stateAuraSprPath);
+                fx.pcPreCastTotalFrames = config.stateAuraTotalFrames > 0 ? config.stateAuraTotalFrames : 16;
+                fx.pcPreCastDirections = config.stateAuraDirections > 0 ? config.stateAuraDirections : 1;
+                fx.pcPreCastIntervalTicks = config.stateAuraIntervalTicks > 0 ? config.stateAuraIntervalTicks : 1;
+                  fx.pcAuraFrameStart = config.stateAuraFrameStart;
+                  fx.pcAuraFrameEnd = config.stateAuraFrameEnd;
+                  fx.stateAuraPos = config.stateAuraPos;
+                  fx.auraDuration = ResolveStateAuraDurationSeconds(skill, level);
+                  fx.preCastDuration = fx.auraDuration;
+
+                if (_sprService != null && !string.IsNullOrEmpty(config.stateAuraSprPath))
+                {
+                    fx.preCastSprite = _sprService.ResolveSprite(config.stateAuraSprPath, 64, 64);
+                }
+                return;
+            }
+
+            // PreCast visual
+            if (config.hasPreCast && !string.IsNullOrEmpty(config.preCastSprPath))
+            {
+                var preCastKey = PcSkillVisualAutoMapper.SprPathToKey(config.preCastSprPath);
+                if (!string.IsNullOrEmpty(preCastKey))
+                {
+                    SetupPcPreCast(fx, preCastKey, 16, 1, 1);
+                }
+            }
+
+            // Stationary area effect (MoveKind=0)
+              if (config.isStationary)
+              {
+              if (config.HasFlightVisual)
+              {
+                    var key = PcSkillVisualAutoMapper.SprPathToKey(config.flightSprPath);
+                    SetupPcStationaryEffect(fx, key,
+                        config.flightFrames,
+                        System.Math.Max(1, config.flightDirections),
+                        System.Math.Max(1, config.flightIntervalTicks),
+                        config.lightColor);
+                }
+                  else if (config.HasExplodeVisual)
+                {
+                    var key = PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath);
+                    SetupPcStationaryEffect(fx, key,
+                        config.explodeFrames,
+                        System.Math.Max(1, config.explodeDirections),
+                        System.Math.Max(1, config.explodeIntervalTicks),
+                          config.lightColor);
+                  }
+                  // KMissle lifetime, not SPR frame count, owns stationary lifetime.
+                  // Missile 359: LifeTime=31, LoopPlay=0, 19 frames.
+                  int stationaryLifetimeTicks = tangMenLifetimeTicks > 0
+                      ? tangMenLifetimeTicks
+                      : config.missileLifetime;
+                  if (stationaryLifetimeTicks > 0)
+                      ApplyPcStationaryLifetime(fx, stationaryLifetimeTicks);
+                  if (fx.pcFlyEventEnabled)
+                      fx.missileFlyEventOrdinals = new int[1];
+                  return;
+              }
+
+            // Flight missile visual
+            if (config.HasFlightVisual)
+            {
+                var flightKey = PcSkillVisualAutoMapper.SprPathToKey(config.flightSprPath);
+                string explodeKey = config.HasExplodeVisual
+                    ? PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath)
+                    : null;
+
+                // PC gaibang.lua overrides: missle_speed_v takes priority over engine missles.txt Speed.
+                // Source: jx-pc bin/client/script/skill/gaibang.lua per-skill interpolation tables.
+                int missileSpeed = config.missileSpeed;
+                if (PcCaiBangLuaLevelService.Applies(skill.skillId))
+                {
+                    int luaSpeed = PcCaiBangLuaLevelService.GetMissileSpeed(skill.skillId, level);
+                    if (luaSpeed > 0) missileSpeed = luaSpeed;
+                }
+                if (tangMenSpeedPerTick > 0) missileSpeed = tangMenSpeedPerTick;
+                int missileLifetime = tangMenLifetimeTicks > 0 ? tangMenLifetimeTicks : config.missileLifetime;
+
+                  SetupPcMissile(fx,
+                    flightKey,
+                    config.flightFrames,
+                    System.Math.Max(1, config.flightDirections),
+                    System.Math.Max(1, config.flightIntervalTicks),
+                    missileSpeed,
+                    missileLifetime,
+                    explodeKey,
+                    config.explodeFrames,
+                    System.Math.Max(1, config.explodeDirections),
+                    System.Math.Max(1, config.explodeIntervalTicks),
+                      config.lightColor);
+                  fx.pcMissileMoveKind = config.moveKind;
+
+
+                // PC gaibang.lua: Single-form or fan-spread skills with skill_misslenum_v > 1 use dynamic spread.
+                // E.g. Phi Long (357) L20=4, Kháng Long Hữu Hối stock (128) L20=15.
+                bool luaSpreadConfigured = false;
+                if (PcCaiBangLuaLevelService.Applies(skill.skillId))
+                {
+                    int luaCount = PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, level);
+                    if (luaCount > 0)
+                    {
+                        luaSpreadConfigured = true;
+                        if (luaCount > 1)
+                        {
+                            int missileForm = PcCaiBangLuaLevelService.GetMissileForm(skill.skillId, level);
+                            if (missileForm == 2)
+                            {
+                                int angleStep = PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, level, "skill_param1_v", 1);
+                                SetupPcKangLongSpread(fx, luaCount, angleStep, 0);
+                            }
+                            else
+                            {
+                                // PC gaibang.lua: Phi Long 357 has no skill_param1_v, but PC skills.txt
+                                // Param1=32 and missile 166 MoveKind=5. Therefore luaCount>1 still needs
+                                // parallel lane offsets for the level-20 four homing dragons. Only a single
+                                // missile remains straight-line/no-spread.
+                                int rawParam = PcCaiBangLuaLevelService.GetSingleValue(
+                                    skill.skillId, level, "skill_param1_v", 32);
+                                int stepWu = rawParam > 0 ? rawParam : 32;
+                                SetupPcPhiLongSpread(fx, luaCount, stepWu);
+                            }
+                        }
+                    }
+                }
+
+                // Multi-missile spread for other fan/surround forms
+                  if (!luaSpreadConfigured && (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround || skill.missileForm == SkillMissileForm.Zone))
+                {
+                    int count = System.Math.Max(1, skill.childSkillNum);
+                    if (skill.missileForm == SkillMissileForm.Surround)
+                        SetupSurroundMissiles(fx, count);
+                    else if (skill.missileForm == SkillMissileForm.Zone)
+                        SetupPcZoneMissiles(fx, count, skill.attackRadius);
+                    else
+                          SetupPcFanMissiles(skill, fx, count);
+                  }
+                  if (fx.pcFlyEventEnabled && fx.missileCount > 0)
+                      fx.missileFlyEventOrdinals = new int[fx.missileCount];
+                  return;
+            }
+
+            // Explosion-only (no flight) — common for buff/aura skills
+            if (config.HasExplodeVisual)
+            {
+                var key = PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath);
+                SetupPcStationaryEffect(fx, key,
+                    config.explodeFrames,
+                    System.Math.Max(1, config.explodeDirections),
+                    System.Math.Max(1, config.explodeIntervalTicks),
+                    config.lightColor);
+                return;
+            }
+
+            // Melee: no missile, just show impact at target
+            if (config.isMelee)
+            {
+                fx.preCastDuration = Mathf.Max(0.1f, skill.timePerCast > 0 ? skill.timePerCast * 0.055f : 0.15f);
+                fx.impactDuration = 0.3f;
+                return;
+            }
+
+            // Has missile data but no SPR resolved — use speed/timing from PC data
+            if (config.missileSpeed > 0)
+            {
+                fx.missileSpeed = config.SpeedWorldPerSec;
+                fx.missileDuration = config.FlightDurationSeconds;
+            }
+        }
         public int ActiveEffectCount => _activeEffects.Count;
+
+        /// <summary>Cancel all in-flight local and authoritative presentation for a GM state transition.</summary>
+        public int ClearActiveEffects()
+        {
+            int cleared = _activeEffects.Count;
+            _activeEffects.Clear();
+            _stateAuraEffects.Clear();
+            return cleared;
+        }
+
+        public int RemoveStateAurasForActor(int actorId)
+        {
+            _staleStateAuraKeys.Clear();
+            foreach (var pair in _stateAuraEffects)
+                if (pair.Key.actorId == actorId)
+                    _staleStateAuraKeys.Add(pair.Key);
+
+            int removed = 0;
+            foreach (var key in _staleStateAuraKeys)
+            {
+                if (_stateAuraEffects.TryGetValue(key, out var effect) &&
+                    _activeEffects.Remove(effect))
+                    removed++;
+                _stateAuraEffects.Remove(key);
+            }
+            _staleStateAuraKeys.Clear();
+            return removed;
+        }
+
+        /// <summary>Reconcile source-owned local-player combat states with exact mapped PC aura SPRs.</summary>
+        public int SynchronizeStateAuras(
+            CombatActorState actor,
+            Vector2 position,
+            Func<Vector2> getCurrentActorPos = null)
+        {
+            if (actor == null || _catalog == null) return 0;
+
+            actor.SynchronizeCompatibilityStates();
+            _stateAuraKeysInUse.Clear();
+            foreach (var source in actor.stateSources)
+            {
+                var key = source.Key;
+                if (key.skillId == CombatActorState.CompatibilityStateSourceSkillId) continue;
+
+                SkillDefinition skill = _catalog.Resolve(key.skillId);
+                if (skill == null || skill.stateSpecialId <= 0) continue;
+
+                var aura = PcSkillVisualAutoMapper.GetStateAuraData(skill.stateSpecialId);
+                if (string.IsNullOrEmpty(aura.sprPath)) continue;
+
+                float remaining = ResolveStateSourceAuraDurationSeconds(source.Value);
+                if (remaining <= 0f) continue;
+
+                _stateAuraKeysInUse.Add(key);
+                ActiveSkillEffect effect = ResolveStateAuraEffect(
+                    key, skill, source.Value, aura, position, remaining,
+                    getCurrentActorPos, actor.rideHorse);
+                RemoveDuplicateStateAuras(key, effect);
+            }
+
+            RemoveStaleStateAuras(actor.actorId);
+            int actorAuraCount = 0;
+            foreach (var pair in _stateAuraEffects)
+                if (pair.Key.actorId == actor.actorId)
+                    actorAuraCount++;
+            return actorAuraCount;
+        }
+
+        private ActiveSkillEffect ResolveStateAuraEffect(
+            CombatStateSourceKey key,
+            SkillDefinition skill,
+            CombatStateSourceNode node,
+            PcSkillVisualAutoMapper.PcStateAuraData aura,
+            Vector2 position,
+            float remainingSeconds,
+            Func<Vector2> getCurrentActorPos,
+            bool stateOwnerMounted)
+        {
+            if (!_stateAuraEffects.TryGetValue(key, out var effect) || !_activeEffects.Contains(effect))
+            {
+                effect = FindUnownedStateAura(skill.skillId, position) ??
+                    CreateStateAuraEffect(
+                        key, skill, aura, position, getCurrentActorPos, stateOwnerMounted);
+                _stateAuraEffects[key] = effect;
+            }
+
+            effect.hasStateSourceKey = true;
+            effect.stateSourceKey = key;
+            effect.skillLevel = Mathf.Max(1, node?.sourceLevel ?? effect.skillLevel);
+            effect.casterPos = position;
+            effect.targetPos = position;
+            effect.currentMissilePos = position;
+            effect.getCurrentTargetPos = getCurrentActorPos;
+            effect.stateOwnerMounted = stateOwnerMounted;
+            effect.phase = SkillEffectPhase.PreCast;
+            effect.auraDuration = remainingSeconds;
+            effect.preCastDuration = remainingSeconds;
+            return effect;
+        }
+
+        private ActiveSkillEffect FindUnownedStateAura(int skillId, Vector2 position)
+        {
+            for (int i = _activeEffects.Count - 1; i >= 0; i--)
+            {
+                ActiveSkillEffect effect = _activeEffects[i];
+                if (effect.isAura && effect.skillId == skillId && !effect.hasStateSourceKey &&
+                    (effect.targetPos - position).sqrMagnitude <= 0.0001f)
+                    return effect;
+            }
+            return null;
+        }
+
+        private ActiveSkillEffect CreateStateAuraEffect(
+            CombatStateSourceKey key,
+            SkillDefinition skill,
+            PcSkillVisualAutoMapper.PcStateAuraData aura,
+            Vector2 position,
+            Func<Vector2> getCurrentActorPos,
+            bool stateOwnerMounted)
+        {
+            var effect = new ActiveSkillEffect
+            {
+                skillId = skill.skillId,
+                skillLevel = 1,
+                skillName = skill.DisplayName,
+                casterPos = position,
+                targetPos = position,
+                currentMissilePos = position,
+                startTime = Time.time,
+                elapsed = 0f,
+                phase = SkillEffectPhase.PreCast,
+                phaseStart = 0f,
+                isAura = true,
+                hasStateSourceKey = true,
+                stateSourceKey = key,
+                getCurrentTargetPos = getCurrentActorPos,
+                stateOwnerMounted = stateOwnerMounted,
+                pcPreCastSpriteKey = PcSkillVisualAutoMapper.SprPathToKey(aura.sprPath),
+                pcPreCastTotalFrames = aura.totalFrames > 0 ? aura.totalFrames : 16,
+                pcPreCastDirections = aura.directions > 0 ? aura.directions : 1,
+                pcPreCastIntervalTicks = aura.intervalTicks > 0 ? aura.intervalTicks : 1,
+                pcAuraFrameStart = aura.frameStart,
+                pcAuraFrameEnd = aura.frameEnd,
+                stateAuraPos = aura.position,
+            };
+            if (_sprService != null)
+                effect.preCastSprite = _sprService.ResolveSprite(aura.sprPath, 64, 64);
+            _activeEffects.Add(effect);
+            return effect;
+        }
+
+        private void RemoveDuplicateStateAuras(CombatStateSourceKey sourceKey, ActiveSkillEffect keep)
+        {
+            _staleStateAuraKeys.Clear();
+            for (int i = _activeEffects.Count - 1; i >= 0; i--)
+            {
+                ActiveSkillEffect effect = _activeEffects[i];
+                if (ReferenceEquals(effect, keep) || !effect.isAura || effect.skillId != sourceKey.skillId)
+                    continue;
+                if (effect.hasStateSourceKey && effect.stateSourceKey.actorId != sourceKey.actorId)
+                    continue;
+                if (!effect.hasStateSourceKey &&
+                    (effect.targetPos - keep.targetPos).sqrMagnitude > 0.0001f)
+                    continue;
+                _activeEffects.RemoveAt(i);
+                foreach (var pair in _stateAuraEffects)
+                    if (ReferenceEquals(pair.Value, effect))
+                        _staleStateAuraKeys.Add(pair.Key);
+            }
+            foreach (var key in _staleStateAuraKeys)
+                _stateAuraEffects.Remove(key);
+            _staleStateAuraKeys.Clear();
+        }
+
+        private void RemoveStaleStateAuras(int actorId)
+        {
+            _staleStateAuraKeys.Clear();
+            foreach (var pair in _stateAuraEffects)
+                if (pair.Key.actorId == actorId &&
+                    (!_stateAuraKeysInUse.Contains(pair.Key) || !_activeEffects.Contains(pair.Value)))
+                    _staleStateAuraKeys.Add(pair.Key);
+
+            foreach (var key in _staleStateAuraKeys)
+            {
+                if (_stateAuraEffects.TryGetValue(key, out var effect))
+                    _activeEffects.Remove(effect);
+                _stateAuraEffects.Remove(key);
+            }
+            _staleStateAuraKeys.Clear();
+            _stateAuraKeysInUse.Clear();
+        }
+
+        internal static float ResolveStateSourceAuraDurationSeconds(CombatStateSourceNode node)
+        {
+            if (node == null || node.attributes == null || node.attributes.Count == 0) return 0f;
+            if (node.isPermanentPassive) return float.MaxValue;
+
+            int maxDurationTicks = 0;
+            foreach (var attribute in node.attributes.Values)
+            {
+                if (attribute == null) continue;
+                if (attribute.value2 < 0) return float.MaxValue;
+                if (attribute.value2 > maxDurationTicks)
+                    maxDurationTicks = attribute.value2;
+            }
+
+            return maxDurationTicks > 0 ? maxDurationTicks / 18f : float.MaxValue;
+        }
 
         /// <summary>
         /// Spawn immediate target hit flash. Used by melee hits, missile impacts,
@@ -53,8 +512,8 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
-        /// Spawn buff/aura pulse at world position. Intended for passive buffs,
-        /// stance skills, and temporary self effects. No fake art: clean fallback ring.
+        /// Spawn a generic aura lifecycle at a world position. Renderers deliberately
+        /// fail closed for aura visuals until exact PC art is attached.
         /// </summary>
         public ActiveSkillEffect PlayBuffAura(Vector2 centerPos, Color color, float durationSeconds = 1.2f, float radius = 48f, string label = "BuffAura")
         {
@@ -91,7 +550,7 @@ namespace VLTK.Sandbox
             Vector2 targetPos,
             int skillLevel)
         {
-            return PlaySkillCast(skill, casterPos, targetPos, skillLevel, null);
+            return PlaySkillCast(skill, casterPos, targetPos, skillLevel, null, null);
         }
 
         /// <summary>
@@ -104,23 +563,36 @@ namespace VLTK.Sandbox
             Vector2 casterPos,
             Vector2 targetPos,
             int skillLevel,
-            Func<Vector2> getCurrentTargetPos)
+            Func<Vector2> getCurrentTargetPos,
+            Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null,
+            bool suppressCastAudio = false)
         {
             if (skill == null) return null;
+
+            // [DEBUG 2026-07-16] KangLong visual: entry log.
+            if (skill.skillId == 128)
+                SubsystemLog.Info("SkillFx", $"[KangLongEntry] PlaySkillCast skill=128 level={skillLevel} caster={casterPos} target={targetPos} " +
+                    $"effectKey={skill.effectSourceId?.ToKey() ?? "<null>"} form={skill.missileForm} childNum={skill.childSkillNum} appliesLua={PcCaiBangLuaLevelService.Applies(128)}");
 
             var effect = new ActiveSkillEffect
             {
                 skillId = skill.skillId,
+                skillLevel = skillLevel,
+                lifecycleSkillIds = new HashSet<int> { skill.skillId },
                 skillName = skill.DisplayName,
                 casterPos = casterPos,
                 targetPos = targetPos,
                 startTime = Time.time,
                 phase = SkillEffectPhase.PreCast,
             };
+              effect.onMissileCollided = onMissileCollided;
 
             // Phase durations based on PC skill data
-            // PreCast: ensure visible (min 0.25s); PC timePerCast is in ticks (~55ms each)
-            effect.preCastDuration = Mathf.Max(0.25f, skill.timePerCast > 0 ? skill.timePerCast * 0.055f : 0.25f);
+            // PC parity [2026-06-19]: PreCast = PC WaitTime (Skills.txt col 25) / 16f seconds.
+            //   Trước fix: timePerCast * 0.055f (~PC ticks * 55ms — sai field).
+            //   PC WaitTime là cast anim duration; timePerCast là cooldown. Khác nhau.
+            //   Min 0.25s để giữ visual luôn thấy được trên mobile.
+            effect.preCastDuration = Mathf.Max(0.25f, skill.waitTime > 0 ? skill.waitTime / 16f : 0.25f);
             effect.missileSpeed = 324f; // PC missile 48: Speed=18 game units/tick × 18 ticks/sec
             effect.missileForm = skill.missileForm;
 
@@ -141,21 +613,183 @@ namespace VLTK.Sandbox
             effect.missileDistance = Vector2.Distance(casterPos, targetPos);
             effect.missileDuration = effect.missileDistance / Mathf.Max(0.1f, effect.missileSpeed);
             effect.currentMissilePos = casterPos;
+            // PC data-driven visual: auto-resolve from missles1.txt
+              ConfigureDataDrivenVisuals(skill, effect, skillLevel);
 
-            // PC-specific visual parameters from Skills.txt/Missles.txt.
-            ConfigureCaiBangVisuals(skill, effect, skillLevel);
-            ConfigureWuDangVisuals(skill, effect, skillLevel);
-            ConfigureShaolinVisuals(skill, effect, skillLevel);
-            ConfigureTangMenVisuals(skill, effect, skillLevel);
-            ConfigureEMeiVisuals(skill, effect, skillLevel);
-            ConfigureTianWangVisuals(skill, effect, skillLevel);
-            ConfigureWuDuVisuals(skill, effect, skillLevel);
-            ConfigureCuiYanVisuals(skill, effect, skillLevel);
+            if (!effect.isAura &&
+                !effect.HasPcPreCastSprite &&
+                !effect.HasPcMissileSprite &&
+                !effect.HasPcImpactSprite)
+            {
+                // ponytail: no canonical PC art. Fail closed, not fake a timeline.
+                effect.preCastDuration = 0f;
+                effect.impactDuration = 0f;
+                effect.missileDuration = 0f;
+                effect.missileCount = 0;
+                effect.phase = SkillEffectPhase.Finished;
+            }
+
+            // [CaiBang-SoundParity 2026-06-18] PC KSkill::Cast fires the SKILL cast sound
+            // (skills.txt col 7 ManCastSnd / col 8 FMCastSnd) at the cast frame, BEFORE
+            // the missile spawns. This is distinct from the missile status sounds
+            // (PC missles.txt SndFile2/SndFile4) fired during flight/collision.
+            //
+            // PC skill cast sound fires at the cast frame. Missile status sounds
+            // are dispatched later at their own flight/collision phases.
+            if (!string.IsNullOrEmpty(skill.manCastSndPath))
+                effect.castSoundPath = skill.manCastSndPath;
+            // Trigger the PC Skills.txt ManCastSnd only at the cast frame.
+            // Lifecycle sub-effects (collide/vanish/fly fallback) suppress it: PC KSkill::OnMissleEvent
+            // dispatches via CastMissles, not the full KSkill::Cast, so the sub-skill's ManCastSnd
+            // is NOT replayed. The runtime combat layer owns the sub-skill's audio as a separate event.
+            if (!suppressCastAudio && !string.IsNullOrEmpty(effect.castSoundPath))
+                OnCastSound?.Invoke(effect.castSoundPath);
+
+            // (Legacy per-faction visual overrides removed: skill visuals are now
+            //  data-driven entirely from PC missles1.txt via ConfigureDataDrivenVisuals)
+
+            // (All per-faction visual overrides removed; data-driven from PC missles1.txt only)
+
+
+
+
+
+            // If casting a permanent aura, remove any existing aura for the same skill first to avoid duplication
+            if (effect.isAura)
+            {
+                for (int i = _activeEffects.Count - 1; i >= 0; i--)
+                {
+                    if (_activeEffects[i].skillId == effect.skillId &&
+                        (_activeEffects[i].targetPos - effect.targetPos).sqrMagnitude <= 0.0001f)
+                    {
+                        _activeEffects.RemoveAt(i);
+                    }
+                }
+            }
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
+
+              if (effect.missileCount > 0)
+              {
+                  effect.missileExplodeStartTime = new float[effect.missileCount];
+                  effect.missileVanishEventFired = new bool[effect.missileCount];
+                for (int midx = 0; midx < effect.missileCount; midx++)
+                    effect.missileExplodeStartTime[midx] = -1f;
+
+                if (effect.missileArrived == null)
+                    effect.missileArrived = new bool[effect.missileCount];
+            }
+
             return effect;
         }
+
+        /// <summary>
+        /// Creates a server-owned missile visual without enabling the local
+        /// fly/collision/vanish simulation or its damage callbacks.
+        /// </summary>
+        public ActiveSkillEffect SpawnAuthoritativeMissile(
+            string missileInstanceId,
+            SkillDefinition skill,
+            Vector2 casterPos,
+            Vector2 targetPos,
+            int skillLevel)
+        {
+            if (string.IsNullOrEmpty(missileInstanceId) || skill == null ||
+                FindAuthoritativeMissile(missileInstanceId) != null)
+                return null;
+
+            ActiveSkillEffect effect = PlaySkillCast(
+                skill,
+                casterPos,
+                targetPos,
+                Mathf.Max(1, skillLevel),
+                null,
+                null,
+                suppressCastAudio: true);
+            if (effect == null || effect.phase == SkillEffectPhase.Finished || !effect.HasMissile)
+            {
+                if (effect != null)
+                    _activeEffects.Remove(effect);
+                return null;
+            }
+
+            effect.authoritativeLifecycle = true;
+            effect.authoritativeMissileInstanceId = missileInstanceId;
+            effect.phase = SkillEffectPhase.Missile;
+            effect.phaseStart = effect.elapsed;
+            effect.currentMissilePos = casterPos;
+            if (effect.missilePositions != null)
+            {
+                for (int i = 0; i < effect.missilePositions.Length; i++)
+                    effect.missilePositions[i] = casterPos;
+            }
+            return effect;
+        }
+
+        public bool UpdateAuthoritativeMissile(
+            string missileInstanceId,
+            Vector2 worldPosition,
+            bool playFlightSound)
+        {
+            ActiveSkillEffect effect = FindAuthoritativeMissile(missileInstanceId);
+            if (effect == null)
+                return false;
+
+            effect.phase = SkillEffectPhase.Missile;
+            effect.currentMissilePos = worldPosition;
+            if (effect.missilePositions != null)
+            {
+                for (int i = 0; i < effect.missilePositions.Length; i++)
+                    effect.missilePositions[i] = worldPosition;
+            }
+            if (playFlightSound && !string.IsNullOrEmpty(effect.flightSoundPath))
+                OnCastSound?.Invoke(effect.flightSoundPath);
+            return true;
+        }
+
+        public bool CollideAuthoritativeMissile(
+            string missileInstanceId,
+            Vector2 worldPosition,
+            bool playConfiguredImpactSound = true)
+        {
+            ActiveSkillEffect effect = FindAuthoritativeMissile(missileInstanceId);
+            if (effect == null)
+                return false;
+
+            effect.currentMissilePos = worldPosition;
+            effect.targetPos = worldPosition;
+            effect.phase = SkillEffectPhase.Impact;
+            effect.phaseStart = effect.elapsed;
+            if (playConfiguredImpactSound && !string.IsNullOrEmpty(effect.impactSoundPath))
+                OnCastSound?.Invoke(effect.impactSoundPath);
+            return true;
+        }
+
+        public bool VanishAuthoritativeMissile(string missileInstanceId)
+        {
+            ActiveSkillEffect effect = FindAuthoritativeMissile(missileInstanceId);
+            if (effect == null)
+                return false;
+
+            effect.phase = SkillEffectPhase.Finished;
+            return _activeEffects.Remove(effect);
+        }
+
+        private ActiveSkillEffect FindAuthoritativeMissile(string missileInstanceId)
+        {
+            if (string.IsNullOrEmpty(missileInstanceId))
+                return null;
+            for (int i = 0; i < _activeEffects.Count; i++)
+            {
+                ActiveSkillEffect effect = _activeEffects[i];
+                if (effect.authoritativeLifecycle &&
+                    string.Equals(effect.authoritativeMissileInstanceId, missileInstanceId, StringComparison.Ordinal))
+                    return effect;
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Update all active effects. Returns finished effects for cleanup.
@@ -167,9 +801,21 @@ namespace VLTK.Sandbox
                 var fx = _activeEffects[i];
                 fx.elapsed += dt;
 
+                // Server lifecycle events exclusively advance these effects.
+                // Never run local fly/collision/vanish callbacks for them.
+                if (fx.authoritativeLifecycle)
+                {
+                    if (fx.phase == SkillEffectPhase.Finished)
+                        _activeEffects.RemoveAt(i);
+                    continue;
+                }
+
                 if (fx.isAura)
                 {
-                    if (fx.elapsed >= fx.auraDuration)
+                    // Source-owned state auras are removed by SynchronizeStateAuras when
+                    // their exact receiver/source node expires. Let elapsed advance so the
+                    // PC SPR animation keeps looping instead of resetting every sync tick.
+                    if (!fx.hasStateSourceKey && fx.elapsed >= fx.auraDuration)
                         fx.phase = SkillEffectPhase.Finished;
                     if (fx.phase == SkillEffectPhase.Finished)
                     {
@@ -185,11 +831,23 @@ namespace VLTK.Sandbox
                         {
                             fx.phase = fx.HasMissile ? SkillEffectPhase.Missile : SkillEffectPhase.Impact;
                             fx.phaseStart = fx.elapsed;
+                            if (!string.IsNullOrEmpty(fx.flightSoundPath))
+                            {
+                                // PC KMissle::Activate calls MS_DoFly per spawned missile.
+                                // Stationary effects enter Impact directly but still activate once.
+                                int missileInstances = fx.phase == SkillEffectPhase.Missile
+                                    ? Mathf.Max(1, fx.missileCount)
+                                    : 1;
+                                for (int mi = 0; mi < missileInstances; mi++)
+                                    OnCastSound?.Invoke(fx.flightSoundPath);
+                            }
                         }
                         break;
 
                     case SkillEffectPhase.Missile:
-                        UpdateMultiMissile(fx, dt);
+                        bool collisionCheckedPerTick = UpdateMultiMissile(fx, dt);
+                        if (!collisionCheckedPerTick)
+                            ResolveMissileCollisions(fx);
 
                         bool allArrived;
                         if (fx.missilePositions != null && fx.missilePositions.Length > 0)
@@ -197,44 +855,52 @@ namespace VLTK.Sandbox
                             allArrived = true;
                             for (int mi = 0; mi < fx.missilePositions.Length; mi++)
                             {
-                                Vector2 targetPos = ResolveMissileTarget(fx, mi);
-                                if (Vector2.Distance(fx.missilePositions[mi], targetPos) > fx.arrivalRadius)
+                                bool arrived = fx.missileArrived != null && mi < fx.missileArrived.Length && fx.missileArrived[mi];
+                                float explodeTime = arrived && fx.missileExplodeStartTime != null && mi < fx.missileExplodeStartTime.Length
+                                    ? fx.elapsed - fx.missileExplodeStartTime[mi]
+                                    : 0f;
+                                if (!arrived || explodeTime < fx.impactDuration)
                                     allArrived = false;
                             }
                         }
                         else
                         {
-                            // Single missile: keep flying until it actually reaches the target.
-                            allArrived = Vector2.Distance(fx.currentMissilePos, ResolveMissileTarget(fx, -1)) <= fx.arrivalRadius;
+                            // Single missile: keep flying until it reaches the target.
+                            allArrived = Vector2.Distance(fx.currentMissilePos, fx.ResolveMissileTarget(-1)) <= fx.arrivalRadius;
                         }
 
-                        bool timeout = (fx.elapsed - fx.phaseStart) >= fx.missileDuration * 1.5f;
-                        if (allArrived || timeout)
-                        {
-                            fx.phase = SkillEffectPhase.Impact;
+                          bool timeout = (fx.elapsed - fx.phaseStart) >= fx.missileDuration * 1.5f;
+                          if (allArrived || timeout)
+                          {
+                              TriggerVanishEvents(fx);
+                              fx.phase = SkillEffectPhase.Impact;
                             fx.phaseStart = fx.elapsed;
                         }
-
-                        for (int si = 0; si < (fx.missileArrived?.Length ?? 0); si++)
-                        {
-                            if (fx.missileArrived[si]) continue;
-                            Vector2 targetPos = ResolveMissileTarget(fx, si);
-                            Vector2 mp = si < fx.missilePositions.Length ? fx.missilePositions[si] : fx.currentMissilePos;
-                            if (Vector2.Distance(mp, targetPos) <= fx.rendRadius)
-                            {
-                                fx.missileArrived[si] = true;
-                                TriggerSauXe(fx, mp);
-                                SpawnCollideSubEffect(fx, mp);
-                            }
-                        }
                         break;
 
-                    case SkillEffectPhase.Impact:
-                        if (fx.elapsed - fx.phaseStart >= fx.impactDuration)
-                        {
-                            fx.phase = SkillEffectPhase.Finished;
-                        }
-                        break;
+
+                      case SkillEffectPhase.Impact:
+                      {
+                          // KMissle checks CurrentLife >= LifeTime before OnFly.
+                          // Stationary TangMen missiles use Impact phase as flight lifecycle.
+                          int stationaryLifeTick = Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f + 0.0001f);
+                          if (fx.pcStationaryLifetimeOverride && stationaryLifeTick >= fx.pcMissileLifeTicks)
+                          {
+                              TriggerStationaryCollision(fx);
+                              fx.phase = SkillEffectPhase.Finished;
+                              break;
+                          }
+                          TriggerFlyEvents(fx);
+                          if (fx.elapsed - fx.phaseStart >= fx.impactDuration)
+                          {
+                              // Flight missiles already dispatched collision on arrival.
+                              // Only stationary KMissle lifetime owns a terminal collision.
+                              if (fx.pcStationaryLifetimeOverride)
+                                  TriggerStationaryCollision(fx);
+                              fx.phase = SkillEffectPhase.Finished;
+                          }
+                          break;
+                      }
                 }
 
                 if (fx.phase == SkillEffectPhase.Finished)
@@ -244,32 +910,79 @@ namespace VLTK.Sandbox
             }
         }
 
-        public List<ActiveSkillEffect> GetActiveEffects() => new(_activeEffects);
+          public List<ActiveSkillEffect> GetActiveEffects() => new(_activeEffects);
 
-        private void UpdateMultiMissile(ActiveSkillEffect fx, float dt)
-        {
-            if (fx.missilePositions == null)
+          /// <summary>
+          /// PC state durations are stored in 18 Hz ticks in state attribute value2.
+          /// Active aura visuals expire with their longest finite state; learned passive
+          /// states use -1 and therefore remain visible until the passive is removed.
+          /// </summary>
+          internal static float ResolveStateAuraDurationSeconds(SkillDefinition skill, int level)
+          {
+              var stateAttributes = skill?.GetPcLevelData(level)?.state;
+              if (stateAttributes == null || stateAttributes.Count == 0)
+                  return float.MaxValue;
+
+              int maxDurationTicks = 0;
+              foreach (var attribute in stateAttributes)
+              {
+                  if (attribute == null) continue;
+                  if (attribute.value2 < 0) return float.MaxValue;
+                  if (attribute.value2 > maxDurationTicks)
+                      maxDurationTicks = attribute.value2;
+              }
+
+              return maxDurationTicks > 0
+                  ? maxDurationTicks / 18f
+                  : float.MaxValue;
+          }
+
+            private bool UpdateMultiMissile(ActiveSkillEffect fx, float dt)
             {
-                // Single missile: velocity-based toward target
-                Vector2 liveTarget = fx.getCurrentTargetPos != null ? fx.getCurrentTargetPos() : fx.targetPos;
-                Vector2 dir = liveTarget - fx.currentMissilePos;
-                float dist = dir.magnitude;
-                if (dist > fx.arrivalRadius)
+                TriggerFlyEvents(fx);
+                if (fx.missilePositions == null)
+              {
+                  // Single missile: velocity-based toward target
+                  Vector2 liveTarget = fx.getCurrentTargetPos != null ? fx.getCurrentTargetPos() : fx.targetPos;
+                  Vector2 dir = liveTarget - fx.currentMissilePos;
+                  float dist = dir.magnitude;
+                  if (dist > fx.arrivalRadius)
+                  {
+                      float step = fx.missileSpeed * dt;
+                      fx.currentMissilePos = step >= dist ? liveTarget : fx.currentMissilePos + (dir / dist) * step;
+                  }
+                  else
+                  {
+                      fx.currentMissilePos = fx.ResolveMissileTarget(-1);
+                  }
+                return false;
+            }
+
+            if (UsesPcFollowTickSimulation(fx))
+            {
+                fx.missileTickAccumulator += Mathf.Max(0f, dt);
+                int simulatedTicks = 0;
+                while (fx.missileTickAccumulator + 0.000001f >= PcMissileTickSeconds &&
+                       simulatedTicks < MaxPcMissileTicksPerUpdate)
                 {
-                    float step = fx.missileSpeed * dt;
-                    fx.currentMissilePos = step >= dist ? liveTarget : fx.currentMissilePos + (dir / dist) * step;
+                    fx.missileTickAccumulator -= PcMissileTickSeconds;
+                    if (fx.missileTickAccumulator < 0f)
+                        fx.missileTickAccumulator = 0f;
+
+                    AdvancePcFollowMissilesOneTick(fx);
+                    ResolveMissileCollisions(fx);
+                    simulatedTicks++;
                 }
-                else
-                {
-                    fx.currentMissilePos = ResolveMissileTarget(fx, -1);
-                }
-                return;
+                return true;
             }
 
             for (int i = 0; i < fx.missilePositions.Length; i++)
             {
+                if (fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i])
+                    continue;
+
                 Vector2 pos = fx.missilePositions[i];
-                Vector2 target = ResolveMissileTarget(fx, i);
+                Vector2 target = fx.ResolveMissileTarget(i);
                 Vector2 dir = target - pos;
                 float dist = dir.magnitude;
 
@@ -283,24 +996,154 @@ namespace VLTK.Sandbox
                     fx.missilePositions[i] = step >= dist ? target : pos + (dir / dist) * step;
                 }
             }
+            return false;
         }
 
-        private static Vector2 ResolveMissileTarget(ActiveSkillEffect fx, int index)
+          private static void TriggerFlyEvents(ActiveSkillEffect fx)
         {
-            bool hasLiveTarget = fx.getCurrentTargetPos != null;
-            Vector2 target = hasLiveTarget ? fx.getCurrentTargetPos() : fx.targetPos;
-
-            if (index >= 0)
+            if (!fx.pcFlyEventEnabled || fx.pcFlyEventIntervalTicks <= 0)
+                return;
+            int tick = Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f + 0.0001f);
+            int ordinal = tick / fx.pcFlyEventIntervalTicks;
+            if (ordinal <= 0 || fx.missileFlyEventOrdinals == null) return;
+            for (int i = 0; i < fx.missileFlyEventOrdinals.Length; i++)
             {
-                if (hasLiveTarget && fx.missileTargetOffsets != null && index < fx.missileTargetOffsets.Length)
-                    return target + fx.missileTargetOffsets[index];
+                if ((fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i]) ||
+                    ordinal <= fx.missileFlyEventOrdinals[i]) continue;
+                fx.missileFlyEventOrdinals[i] = ordinal;
+                  fx.onMissileFlyEvent?.Invoke(fx, i, fx.missilePositions != null && i < fx.missilePositions.Length
+                      ? fx.missilePositions[i] : fx.targetPos);
+              }
+          }
 
-                if (!hasLiveTarget && fx.missileTargets != null && index < fx.missileTargets.Length)
-                    return fx.missileTargets[index];
-            }
+          private void TriggerVanishEvents(ActiveSkillEffect fx)
+          {
+              if (fx.missileVanishEventFired == null) return;
+              for (int i = 0; i < fx.missileVanishEventFired.Length; i++)
+              {
+                  if (fx.missileVanishEventFired[i]) continue;
+                  fx.missileVanishEventFired[i] = true;
+                  Vector2 point = fx.missilePositions != null && i < fx.missilePositions.Length
+                      ? fx.missilePositions[i]
+                      : fx.ResolveMissileTarget(i);
+                  // Runtime callback owns nested visuals when present; service is fallback.
+                  fx.onMissileVanishEvent?.Invoke(fx, i, point);
+                  if (fx.onMissileVanishEvent == null)
+                      SpawnVanishSubEffect(fx, point);
+              }
+          }
 
-            return target;
+        private static bool UsesPcFollowTickSimulation(ActiveSkillEffect fx)
+        {
+            int count = fx.missilePositions?.Length ?? 0;
+            return fx.pcMissileMoveKind == 5 &&
+                   count > 0 &&
+                   fx.missileDirections != null &&
+                   fx.missileDirections.Length == count &&
+                   fx.missileFollowTickCounters != null &&
+                   fx.missileFollowTickCounters.Length == count;
         }
+
+        private static void AdvancePcFollowMissilesOneTick(ActiveSkillEffect fx)
+        {
+            float step = fx.pcMissileSpeedPerTick > 0
+                ? fx.pcMissileSpeedPerTick
+                : fx.missileSpeed * PcMissileTickSeconds;
+
+            for (int i = 0; i < fx.missilePositions.Length; i++)
+            {
+                if (fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i])
+                    continue;
+
+                Vector2 pos = fx.missilePositions[i];
+                if (fx.getCurrentTargetPos != null)
+                {
+                    // PC KMissle.cpp: if (m_nTempParam1++ >= 8), retarget before moving tick 9.
+                    if (fx.missileFollowTickCounters[i] >= PcFollowRetargetCounterMax)
+                    {
+                        Vector2 toTarget = fx.ResolveMissileTarget(i) - pos;
+                        if (toTarget.sqrMagnitude > 0.000001f)
+                            fx.missileDirections[i] = toTarget.normalized;
+                        fx.missileFollowTickCounters[i] = 0;
+                    }
+                    else
+                    {
+                        fx.missileFollowTickCounters[i]++;
+                    }
+                }
+
+                Vector2 direction = fx.missileDirections[i];
+                if (direction.sqrMagnitude <= 0.000001f)
+                    continue;
+                direction.Normalize();
+                fx.missileDirections[i] = direction;
+
+                Vector2 next = pos + direction * step;
+                Vector2 target = fx.ResolveMissileTarget(i);
+                if (PassesWithinRadius(pos, next, target, fx.rendRadius))
+                    next = target;
+                fx.missilePositions[i] = next;
+            }
+        }
+
+        private static bool PassesWithinRadius(Vector2 from, Vector2 to, Vector2 point, float radius)
+        {
+            Vector2 segment = to - from;
+            float segmentLengthSq = segment.sqrMagnitude;
+            if (segmentLengthSq <= 0.000001f)
+                return Vector2.Distance(from, point) <= radius;
+
+            float t = Mathf.Clamp01(Vector2.Dot(point - from, segment) / segmentLengthSq);
+            Vector2 closest = from + segment * t;
+            return (closest - point).sqrMagnitude <= radius * radius;
+        }
+
+        private void ResolveMissileCollisions(ActiveSkillEffect fx)
+        {
+            for (int si = 0; si < (fx.missileArrived?.Length ?? 0); si++)
+            {
+                if (fx.missileArrived[si]) continue;
+                Vector2 targetPos = fx.ResolveMissileTarget(si);
+                Vector2 mp = fx.missilePositions != null && si < fx.missilePositions.Length
+                    ? fx.missilePositions[si]
+                    : fx.currentMissilePos;
+                Vector2 origin = fx.missileOrigins != null && si < fx.missileOrigins.Length
+                    ? fx.missileOrigins[si]
+                    : fx.casterPos;
+
+                bool isHomingMissile = fx.getCurrentTargetPos != null && fx.pcMissileMoveKind == 5;
+                bool collided;
+                if (!isHomingMissile)
+                {
+                    float targetDist = Vector2.Distance(fx.targetPos, origin);
+                    float traveled = Vector2.Distance(mp, origin);
+                    collided = traveled >= targetDist - fx.rendRadius;
+                }
+                else
+                {
+                    collided = Vector2.Distance(mp, targetPos) <= fx.rendRadius;
+                }
+
+                if (!collided) continue;
+
+                fx.missileArrived[si] = true;
+                if (fx.missileExplodeStartTime != null && si < fx.missileExplodeStartTime.Length)
+                    fx.missileExplodeStartTime[si] = fx.elapsed;
+                Vector2 collidePos = !isHomingMissile
+                    ? origin + (targetPos - origin).normalized * Vector2.Distance(fx.targetPos, origin)
+                    : mp;
+                TriggerSauXe(fx, collidePos);
+                fx.onMissileCollided?.Invoke(fx, si, collidePos);
+                OnMissileCollided?.Invoke(fx, si, collidePos);
+                if (!string.IsNullOrEmpty(fx.impactSoundPath))
+                    OnCastSound?.Invoke(fx.impactSoundPath);
+                // Runtime callback owns nested visuals when present; service is fallback.
+                if (fx.onMissileCollided == null)
+                    SpawnCollideSubEffect(fx, collidePos);
+            }
+        }
+
+
 
         private void TriggerSauXe(ActiveSkillEffect fx, Vector2 position)
         {
@@ -311,40 +1154,67 @@ namespace VLTK.Sandbox
             fx.rendPositions.Add(position);
         }
 
+        private void TriggerStationaryCollision(ActiveSkillEffect fx)
+        {
+            if (fx.stationaryCollisionFired) return;
+            fx.stationaryCollisionFired = true;
+            var skill = _catalog?.Resolve(fx.skillId);
+            if (skill == null || skill.collideSkillId <= 0) return;
+            Vector2 position = fx.casterPos;
+            fx.onMissileCollided?.Invoke(fx, 0, position);
+            OnMissileCollided?.Invoke(fx, 0, position);
+            if (fx.onMissileCollided == null)
+                SpawnCollideSubEffect(fx, position);
+        }
+
+        private void SpawnVanishSubEffect(ActiveSkillEffect parentFx, Vector2 position)
+        {
+            var parentSkill = _catalog?.Resolve(parentFx.skillId);
+            SpawnLifecycleSubEffect(parentSkill?.vanishSkillId ?? 0, parentFx, position);
+        }
+
         private void SpawnCollideSubEffect(ActiveSkillEffect parentFx, Vector2 position)
         {
-            // PC gaibang.lua skill_collideevent[3] sub-skills: each skill declares which
-            // sub-skill to cast when the main missile arrives at the target.
-            // 357 Phi Long → 389 Long Chiến Ư Dã (already in catalog, runtime handles damage).
-            // 1073 Thời Thặng Lục Long → 1072 Ngũ Diệu Càn Khôn (visual stationary flash).
-            int subSkillId = parentFx.skillId switch
-            {
-                1073 => 1072,
-                _    => 0,
-            };
-            if (subSkillId == 0) return;
+            var parentSkill = _catalog?.Resolve(parentFx.skillId);
+            SpawnLifecycleSubEffect(parentSkill?.collideSkillId ?? 0, parentFx, position);
+        }
 
+        private void SpawnLifecycleSubEffect(int subSkillId, ActiveSkillEffect parentFx, Vector2 position)
+        {
+            if (subSkillId <= 0) return;
             var subSkill = _catalog?.Resolve(subSkillId);
             if (subSkill == null) return;
-
-            var subFx = CreateSubEffect(subSkill, parentFx, position);
-            if (subFx != null) _activeEffects.Add(subFx);
+            CreateSubEffect(subSkill, parentFx, position);
         }
 
         private ActiveSkillEffect CreateSubEffect(SkillDefinition subSkill, ActiveSkillEffect parentFx, Vector2 position)
         {
-            var subFx = new ActiveSkillEffect
-            {
-                skillId       = subSkill.skillId,
-                skillName     = subSkill.DisplayName,
-                casterPos     = position,
-                targetPos     = position,
-                startTime     = Time.time,
-                phase         = SkillEffectPhase.PreCast,
-                color         = parentFx.color,
-                impactDuration = 0.6f,
-            };
-            ConfigureCaiBangVisuals(subSkill, subFx, 20);
+            const int maxLifecycleDepth = 8;
+            if (parentFx.lifecycleDepth >= maxLifecycleDepth ||
+                parentFx.lifecycleSkillIds != null && parentFx.lifecycleSkillIds.Contains(subSkill.skillId))
+                return null;
+
+            // KSkills::OnMissleEvent casts at missile position; it does not replay cast animation.
+            // suppressCastAudio=true: PC OnMissleEvent uses CastMissles, not KSkill::Cast, so the
+            // sub-skill's ManCastSnd is NOT replayed. Flight/impact status audio is also nulled
+            // below: the runtime combat layer owns the collide/vanish/fly event sub-skill audio as
+            // a distinct temporal event, so the visual fallback must not double-count the parent's
+            // status sounds in the same frame.
+            var subFx = PlaySkillCast(subSkill, position, position, parentFx.skillLevel, null, null, suppressCastAudio: true);
+            if (subFx == null) return null;
+            subFx.flightSoundPath = null;
+            subFx.impactSoundPath = null;
+            subFx.color = parentFx.color;
+            subFx.lifecycleDepth = parentFx.lifecycleDepth + 1;
+            if (subFx.phase == SkillEffectPhase.Finished)
+                return subFx;
+            subFx.lifecycleSkillIds = parentFx.lifecycleSkillIds != null
+                ? new HashSet<int>(parentFx.lifecycleSkillIds)
+                : new HashSet<int> { parentFx.skillId };
+            subFx.lifecycleSkillIds.Add(subSkill.skillId);
+            subFx.preCastDuration = 0f;
+            subFx.phase = subFx.HasMissile ? SkillEffectPhase.Missile : SkillEffectPhase.Impact;
+            subFx.phaseStart = subFx.elapsed;
             return subFx;
         }
 
@@ -355,392 +1225,6 @@ namespace VLTK.Sandbox
             // Fallback to a generic projectile sprite.
             string missileKey = $"missile_{skill.childSkillId}";
             return _sprService?.ResolveSprite(missileKey, 32, 32);
-        }
-
-        private void ConfigureWuDangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/missles.txt
-            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/skills.txt
-            // Keys are PC path hashes used by StreamingAssets/Sprites/{uid}.spr when extracted.
-            switch (skill.skillId)
-            {
-                case 153: // 怒雷指, missile 24: Speed=20, LifeTime=16, AnimFile2 wd_01_怒雷指
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "5698379e", 64, 16, 1, 20, 16, "55542141", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 155: // 沧海明月, missile 25: Speed=20, LifeTime=16, AnimFile2 wd_02_沧海明月
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "55542141", 64, 16, 1, 20, 16, "8de48699", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 158: // 剑飞惊天, missile 26: Speed=0, LifeTime=16, stationary area thunder
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "7bcefae7", 16, 1, 1, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 159: // 七星阵, child missile 211: Speed=20, LifeTime=6
-                    SetupPcMissile(fx, "8de48699", 8, 1, 2, 20, 6, "8de48699", 8, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 164: // 搏击二复, missile 28: Speed=0, LifeTime=12, stationary range damage
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 165: // 无我无剑, missile 29: Speed=20, LifeTime=16, ChildSkillNum=16 fan/surround burst
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "7bcefae7", 64, 16, 1, 20, 16, "8de48699", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    SetupPcCircleOutwardMissiles(fx, Math.Max(1, skill.childSkillNum));
-                    break;
-            }
-        }
-
-        private void ConfigureShaolinVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsShaolinSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 10: // Kim Cang Phục Ma
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 20, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 11: // Hoành Tảo Lục Hợp
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 13: // Lập Địa Thành Phật
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 14: // Hàng Long Bất Vũ
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 15: // Bất Động Minh Vương
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 16: // La Hán Trận
-                    fx.color = new Color(255f/255f, 215f/255f, 0f);
-                    fx.isAura = true;
-                    break;
-                case 17: // Long Trảo Hổ Trảo
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 26, 20, "8a1df06d", 8, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 18: // Huệ Nhãn Chú
-                    SetupPcStationaryEffect(fx, "ea9d621d", 15, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 19: // Ma Ha Vô Lượng
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 28, 20, "c33e96c2", 6, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    SetupPcCircleOutwardMissiles(fx, 2);
-                    break;
-                case 20: // Sư Tử Hống
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-            }
-        }
-
-        private void ConfigureTangMenVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsTangMenSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 45: // Tích Lịch Đơn
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 47: // Đoạt Hồn Tiêu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 24, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 50: // Truy Tâm Tiễn
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 24, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    if (skill.childSkillNum > 1)
-                        SetupPcCircleOutwardMissiles(fx, skill.childSkillNum);
-                    break;
-                case 54: // Mạn Thiên Hoa Vũ
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 55: // Thối Độc Thuật
-                case 57: // Băng Phách Hàn Quang
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 58: // Thiên La Địa Võng
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 26, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-            }
-        }
-
-
-        private void ConfigureCaiBangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            // Each CaiBang skill has unique visual from PC source.
-            // SkillId mappings from PC Skills.txt:
-            switch (skill.skillId)
-            {
-                // === ACTIVE COMBAT SKILLS (damage dealers) ===
-                case 117: // 投石问路 - missile 44
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 40, "2ed0ae8f", 16, 1, 2, new Color(123f/255f, 113f/255f, 107f/255f));
-                    break;
-
-                case 119: // 沿门托钵 - missile 45 (PC: Speed=31, LifeTime=16)
-                    SetupPcMissile(fx, "c723e35a", 64, 16, 1, 31, 16, "8a1df06d", 8, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    break;
-
-                case 122: // 见人伸手 - missile 46 (PC: Speed=31, LifeTime=16)
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 31, 16, "8a1df06d", 8, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    break;
-
-                case 125: // 天下无狗 - missile 47, Circle, 16 missiles, MslsGenerateData=5 (PC: Speed=31, LifeTime=16)
-                    SetupPcMissile(fx, "04e27976", 64, 16, 1, 31, 16, "b91ab706", 18, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcCircleOutwardMissiles(fx, 16); // PC CastCircle: 16 line missiles fly outward around caster.
-                    break;
-
-                case 1539: // Thiên Hạ Vô Cẩu (NPC variant) - missile 47, Surround, 16 missiles, MslsGenerateData=5
-                    SetupPcMissile(fx, "04e27976", 64, 16, 1, 31, 16, "b91ab706", 18, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcCircleOutwardMissiles(fx, 16);
-                    break;
-
-                case 128: // Kháng Long Hữu Hối (亢龙有悔) - missile 48, PC dragon SPR (PC: Speed=10, LifeTime=16)
-                    SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 10, 16, "c33e96c2", 6, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    var kangLong = PcKangLongYouHuiTuning.AtLevel(level);
-                    fx.missileForm = kangLong.missileForm;
-                    fx.pcMissileSpeedPerTick = kangLong.missileSpeed;
-                    fx.missileSpeed = kangLong.missileSpeed * 18f; // VM gaibang.lua missle_speed_v is PC units/tick.
-                    fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-                    if (kangLong.missileForm == SkillMissileForm.Fan)
-                        SetupPcKangLongSpread(fx, kangLong.missileCount, kangLong.param1, 1);
-                    else
-                        fx.missileCount = 1;
-                    break;
-
-                // === RESISTANCE BUFFS (PreCastSpr: mag_tr_16) ===
-                case 118: // 孤木遁雷 - missile 49 stationary buff effect
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(1f, 1f, 214f/255f));
-                    break;
-
-                case 120: // 奔流到海 - missile 50 stationary buff effect
-                    SetupPcStationaryEffect(fx, "3ab94121", 15, 1, 2, new Color(165f/255f, 170f/255f, 1f));
-                    break;
-
-                case 123: // 奎木星照 - missile 51 stationary buff effect
-                    SetupPcStationaryEffect(fx, "ea9d621d", 15, 1, 2, new Color(123f/255f, 1f, 189f/255f));
-                    break;
-
-                case 126: // 金乌映雪 - missile 52 stationary buff effect
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(247f/255f, 154f/255f, 41f/255f));
-                    break;
-
-                case 129: // 化险为夷 - missile 53 stationary buff effect
-                    SetupPcStationaryEffect(fx, "82fe32c1", 15, 1, 2, new Color(247f/255f, 154f/255f, 41f/255f));
-                    break;
-
-                // === UTILITY SKILLS ===
-                case 121: // Diệu Thủ Không Không (妙手空空) - Surround
-                    fx.color = new Color(0.6f, 0.3f, 0.8f);
-                    SetupSurroundMissiles(fx, 4);
-                    break;
-
-                case 124: // Đả Cẩu Trận (打狗阵) - Aura
-                    fx.color = new Color(0.9f, 0.7f, 0.2f);
-                    fx.isAura = true;
-                    break;
-
-                case 130: // Túy Điệp Cuồng Vũ (醉蝶狂舞) - Self buff
-                    fx.color = new Color(0.8f, 0.4f, 0.9f);
-                    fx.isAura = true;
-                    break;
-
-                // === PASSIVES (no cast visual) ===
-                case 115: // Cái Bang Bổng Pháp
-                case 116: // Cái Bang Chưởng Pháp
-                case 127: // Hoạt Bất Lưu Thủ
-                // MOD passives
-                case 274: // Giương Long Chưởng (MOD passive combat mastery)
-                case 360: // Tiêu Dao Công (MOD passive combat mastery)
-                case 714: // Hỗn Thiên Khí Công 120 (passive)
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-
-                // === MOD active skills (StreamingAssets/Reference/) ===
-                // 277 Hoành Bách Lộ Thiên (MOD 40-level speed buff, same PC skill as 127).
-                // PC Skills.txt: MisslesForm=6 (stationary), ChildSkillId=114.
-                // Missile 114: mag_gb_07_金乌映雪.spr (20,1,1) color (255,219,99) — same SPR as skill 126.
-                case 277:
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 1, new Color(1f, 219f/255f, 99f/255f));
-                    break;
-
-                // 357 Phi Long Tại Thiên (MOD feilong_zaitian).
-                // PC gaibang.lua::feilong_zaitian:
-                //   skill_misslesform_v: L1-10=1(Single), L11+=0(Single/parallel spread)
-                //   skill_misslenum_v: L1-11=1, L12-15=2, L16-19=3, L20+=4
-                //   skill_param1_v: L1-10=0, L11+=32 (180° spread between parallel missiles)
-                //   missle_speed_v: 20 (PC units/tick)
-                // PC MisslesForm=0 = Single/parallel. The "LINE" visual comes from
-                // param1 spread with misslenum>1, NOT from a separate form value.
-                // PC missles.txt missile 166: MoveKind=5 → target-tracking (dí).
-                //   Each dragon missile updates its direction toward the live target each tick.
-                // CollideEvent triggers skill 389 (Long Chiến Ư Dã)
-                // ChildSkillId=166: same SPR as Kháng Long (mag_gb_05_亢龙有悔.spr)
-                case 357:
-                    // PC missles.txt missile 166: Speed=30, LifeTime=24, MoveKind=5 (homing).
-                    SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 30, 24, "c33e96c2", 6, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    {
-                        int count = level >= 20 ? 4 : (level >= 16 ? 3 : (level >= 12 ? 2 : 1));
-                        int luaForm = level >= 11 ? 0 : 1;
-                        fx.missileForm = SkillMissileForm.Single;
-                        fx.arrivalRadius = 2f;
-                        fx.rendRadius = 5f;
-                        if (luaForm == 0 && count > 1)
-                        {
-                            SetupPcPhiLongSpread(fx, count, 32);
-                        }
-                        else
-                        {
-                            fx.missileCount = count;
-                        }
-                    }
-                    break;
-
-                // 359 Thiên Hạ Vô Cẩu (player MOD): 1→3 target-seeking missiles.
-                // PC gaibang.lua::tianxia_wugou skill_misslenum_v: L1=1, L20=3.
-                // NOT 16 circle outward (that's NPC 125/1539 with ChildSkillNum=16).
-                // ChildSkillId=168: mag_gb_04_天下无狗.spr (same as NPC 125).
-                case 359:
-                    // PC tianxia_wugou (gaibang.lua): skill_misslenum_v={{{1,1},{20,3}}}.
-                    // PC missles.txt missile 168: Speed=24, LifeTime=32, MoveKind=5 (homing).
-                    // PC has no skill_misslesform_v and no skill_param1_v — defaults to Form=0 (parallel).
-                    // Use PhiLong parallel spread with same param=32 as Phi Long so 3 missiles stay
-                    // visible instead of collapsing onto the homing target point.
-                    int thvcCount = level >= 20 ? 3 : 1;
-                    SetupPcMissile(fx, "04e27976", 64, 16, 1, 24, 32, "b91ab706", 18, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    fx.arrivalRadius = 2f;
-                    if (thvcCount > 1)
-                    {
-                        SetupPcPhiLongSpread(fx, thvcCount, 32);
-                    }
-                    else
-                    {
-                        fx.missileCount = 1;
-                    }
-                    break;
-
-                // 1073 Thần Thủ Lệnh Long (MOD Thời Thừa Lục Long 150-tier):
-                // PC Skills.txt: MisslesForm=1 (single guided), ChildSkillId=335.
-                //   3-phase event chain: StartEvent→1101(z-Thời Thừa Lục Long, missle 363),
-                //   FlyEvent→1103(z-Thời Thống Lục Long Hỏa, missle 344),
-                //   CollideEvent→1072(Ngũ Diệu Càn Khôn, missle 334).
-                // PreCast: \spr\skill\150\gb\gb_150_shichengjiulong_a.spr (70d46004, 150x160, 26,1,35)
-                // FlyEvent: \spr\skill\1502\gb\gb_150_zhanggai_huo.spr (0b96acfa, 120x130, 6,1,100)
-                // Missile 335: \spr\skill\1502\gb\gb_150_zhanggai_zd.spr (377228dc, 200x200, 16,16,1)
-                case 1073:
-                    // PC missles.txt missile 335: Speed=30, LifeTime=16, MoveKind=1 (straight, NOT homing).
-                    SetupPcMissile(fx, "377228dc", 16, 16, 1, 30, 16, "ffb0b7f7", 11, 1, 1, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcPreCast(fx, "70d46004", 26, 1, 35);
-                    fx.missileForm = SkillMissileForm.Single;
-                    fx.pcMissileSpeedPerTick = 30;
-                    fx.missileSpeed = 30 * 18f;
-                    fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-                    fx.missileCount = 1;
-                    break;
-
-                // 1074 Bổng Hoành Lược Mã (MOD Bổng Hoành Lược Địa 150-tier):
-                // PC gaibang.lua::gungaibang150 skill_misslenum_v: L1=1, L20=5.
-                // ChildSkillId=336: \spr\skill\1502\gb\gb_150_gungai_zd.spr (e46d8c0d, 170x170, 16,16,1)
-                // Impact: \spr\skill\1502\gb\gb_150_gungai_bz.spr (8d06da90, 150x140, 15,1,40)
-                // Missiles are target-seeking guided (MisslesForm=1), NOT surround.
-                case 1074:
-                    // PC missles.txt missile 336: Speed=28, LifeTime=24, MoveKind=5 (homing).
-                    // PC gaibang.lua gungaibang150: skill_misslenum_v={{{1,1},{20,5},{21,5}}}.
-                    int bhCount = Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(1f, 5f, (level - 1) / 19f)), 1, 5);
-                    SetupPcMissile(fx, "e46d8c0d", 16, 16, 1, 28, 24, "8d06da90", 15, 1, 1, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcPreCast(fx, "3cae8f47", 16, 1, 2);
-                    fx.pcMissileSpeedPerTick = 28;
-                    fx.missileSpeed = 28 * 18f;
-                    fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-                    if (bhCount > 1)
-                    {
-                        fx.missileCount = bhCount;
-                        SetupPcKangLongSpread(fx, bhCount, 2, 1);
-                    }
-                    else
-                    {
-                        fx.missileCount = 1;
-                    }
-                    break;
-
-                case 389: // Long Chiến Ư Dã (Collide sub-skill for Phi Long lvl >= 11)
-                    SetupPcStationaryEffect(fx, "b91ab706", 6, 1, 1, new Color(239f/255f, 146f/255f, 82f/255f));
-                    fx.preCastDuration = 0f;
-                    break;
-
-                case 1072: // Ngũ Diệu Càn Khôn (CollideEvent[3] sub-skill for Thời Thặng Lục Long 1073)
-                    // PC missles.txt missile 334: MoveKind=0, LifeTime=10, Speed=0, DmgInterval=5.
-                    // 1 frame, 1 dir, 1 tick (AnimFileInfo 11,1,1). Stationary flash at 335 impact.
-                    SetupPcStationaryEffect(fx, "ffb0b7f7", 11, 1, 1, new Color(239f/255f, 146f/255f, 82f/255f, 90f/255f));
-                    fx.preCastDuration = 0f;
-                    break;
-
-                case 720: // Hỗn Thiên Khí Công nguyền rủa
-                    SetupPcMissile(fx, null, 1, 1, 1, 0, 5, null, 0, 1, 1, new Color(255f/255f, 219f/255f, 99f/255f));
-                    break;
-
-                // === DEFAULT (any unconfigured active skill) ===
-                // Use a neutral golden visual so the user always sees feedback even for
-                // skills we haven't fully tuned. PC skill with missile form gets a basic
-                // outward missile; non-missile (None) gets no visual.
-                default:
-                    if (skill.missileForm != SkillMissileForm.None && PcMissileRegistry.TryGet(skill.childSkillId, out var mEntry))
-                    {
-                        string sprHash = SprRuntimeService.ComputePathUidHex(mEntry.sprFile);
-                        if (string.IsNullOrEmpty(sprHash))
-                        {
-                            sprHash = skill.missileForm switch
-                            {
-                                SkillMissileForm.Surround => "04e27976",
-                                SkillMissileForm.Fan => "a31b9f04",
-                                _ => "883bff8c"
-                            };
-                        }
-                        SetupPcMissile(fx, sprHash, 1, 1, 1, mEntry.speed, mEntry.lifetime, "2ed0ae8f", 12, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                        if (skill.missileForm == SkillMissileForm.Surround)
-                        {
-                            SetupPcCircleOutwardMissiles(fx, System.Math.Max(1, skill.childSkillNum));
-                        }
-                        else if (skill.missileForm == SkillMissileForm.Fan)
-                        {
-                            SetupPcKangLongSpread(fx, System.Math.Max(1, skill.childSkillNum), 2, 1);
-                        }
-                    }
-                    else
-                    {
-                        if (skill.missileForm == SkillMissileForm.Surround)
-                        {
-                            SetupPcMissile(fx, "04e27976", 64, 16, 1, 12, 30, "b91ab706", 16, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                            SetupSurroundMissiles(fx, System.Math.Max(1, skill.childSkillNum));
-                        }
-                        else if (skill.missileForm == SkillMissileForm.Fan)
-                        {
-                            SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 16, 22, "c33e96c2", 7, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                            SetupPcKangLongSpread(fx, System.Math.Max(1, skill.childSkillNum), 2, 1);
-                        }
-                        else if (skill.missileForm == SkillMissileForm.Single)
-                        {
-                            SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                        }
-                    }
-                    break;
-            }
         }
 
         private static void SetupPcMissile(ActiveSkillEffect fx, string missileKey, int missileFrames, int missileDirs, int missileIntervalTicks, int speedPerTick, int lifeTicks, string impactKey, int impactFrames, int impactDirs, int impactIntervalTicks, Color color)
@@ -757,17 +1241,23 @@ namespace VLTK.Sandbox
             fx.pcImpactTotalFrames = impactFrames;
             fx.pcImpactDirections = impactDirs;
             fx.pcImpactIntervalTicks = impactIntervalTicks;
-            fx.missileSpeed = speedPerTick * 18f;
-            fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-            fx.impactDuration = impactFrames > 0 ? (impactFrames * Mathf.Max(1, impactIntervalTicks)) / 18f : 0.25f;
+            fx.impactDuration = impactFrames > 0
+                ? (impactFrames * Mathf.Max(1, impactIntervalTicks)) / 18f
+                : fx.impactDuration;
+            // PC KMissle: m_nXFactor is Q10 (≈±1024) direction cosine.
+            // nDOffsetX = m_nSpeed * m_nXFactor → actual pixel step per tick = m_nSpeed.
+            // All positions (casterPos/targetPos) are in raw PC pixel coords (PPU=1f),
+            // so speed in pixels/s = speedPerTick × 18fps — no PPU conversion needed.
+            fx.missileSpeed = speedPerTick * 18f; // PC pixels per second (world units = PC pixels at PPU=1f)
+            fx.missileDuration = lifeTicks / 18f;
         }
 
         private static void SetupPcPreCast(ActiveSkillEffect fx, string key, int frames, int dirs, int intervalTicks)
         {
             fx.pcPreCastSpriteKey = key;
             fx.pcPreCastTotalFrames = frames;
-            fx.pcPreCastDirections = Mathf.Max(1, dirs);
-            fx.pcPreCastIntervalTicks = Mathf.Max(1, intervalTicks);
+            fx.pcPreCastDirections = dirs;
+            fx.pcPreCastIntervalTicks = intervalTicks;
         }
 
         private static void SetupPcStationaryEffect(ActiveSkillEffect fx, string key, int frames, int dirs, int intervalTicks, Color color)
@@ -786,29 +1276,47 @@ namespace VLTK.Sandbox
             fx.impactDuration = (frames * Mathf.Max(1, intervalTicks)) / 18f;
         }
 
+        private static void ApplyPcStationaryLifetime(ActiveSkillEffect fx, int lifeTicks)
+        {
+            fx.pcMissileLifeTicks = lifeTicks;
+            fx.missileDuration = lifeTicks / 18f;
+            fx.impactDuration = fx.missileDuration;
+            fx.pcStationaryLifetimeOverride = true;
+        }
+
         private void SetupPcKangLongSpread(ActiveSkillEffect fx, int count, int angleStep64, int firstStep)
         {
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
+            fx.missileOrigins = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-
+            fx.missileArrived = new bool[count];
             Vector2 baseDir = fx.targetPos - fx.casterPos;
-            float distance = Mathf.Max(1f, baseDir.magnitude);
-            baseDir /= distance;
+            float targetDist = Mathf.Max(1f, baseDir.magnitude);
+            baseDir /= targetDist;
 
-            // PC KSkill::CastSpread: nCurMSRadius starts ChildSkillNum/2 and decrements.
-            // nDSubDir = Param1 * radius, then +48 in 64-dir space for target-guided spread.
-            int radius = count / 2;
+            // PC parity: non-homing missiles fly their full lifetime range (speed * duration)
+            float distance = fx.missileSpeed * fx.missileDuration;
+            if (distance < targetDist) distance = targetDist;
+
+            // [DEBUG 2026-07-16] KangLong visual: chỉ render 1 quả cầu thay vì 15. Log setup.
+            SubsystemLog.Info("SkillFx", $"[KangLongSetup] skill={fx.skillId} count={count} angleStep64={angleStep64} firstStep={firstStep} " +
+                $"speed={fx.missileSpeed} duration={fx.missileDuration} pcSpeedPerTick={fx.pcMissileSpeedPerTick} pcLifeTicks={fx.pcMissileLifeTicks} " +
+                $"targetDist={targetDist} distance={distance} caster={fx.casterPos} target={fx.targetPos}");
+
             for (int i = 0; i < count; i++)
             {
-                int dSubDir = angleStep64 * radius;
+                float offset = (count - 1) / 2f - i;
+                float dSubDir = angleStep64 * offset;
                 float angleDeg = dSubDir * 360f / 64f;
                 Vector2 dir = Rotate(baseDir, angleDeg);
-                fx.missilePositions[i] = fx.casterPos + dir * Mathf.Max(0f, firstStep);
+                Vector2 startPos = fx.casterPos + dir * Mathf.Max(0f, firstStep);
+                fx.missileOrigins[i] = startPos;
+                fx.missilePositions[i] = startPos;
                 fx.missileTargets[i] = fx.casterPos + dir * distance;
-                radius--;
             }
         }
+
 
         private static Vector2 Rotate(Vector2 v, float degrees)
         {
@@ -818,246 +1326,118 @@ namespace VLTK.Sandbox
             return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
         }
 
-        /// <summary>
-        /// PC feilong_zaitian parallel missile spread (L11+ MissilesForm=0, misslenum>1).
-        /// PC gaibang_server.lua: skill_param1_v(L11+)=32 -- "khoang cach 2 tia" (spacing between missiles).
-        /// Form=0 (Line/Parallel): missiles fly parallel toward target, spaced perpendicularly.
-        /// </summary>
-        private void SetupPcPhiLongSpread(ActiveSkillEffect fx, int count, int param64)
+        private void SetupPcPhiLongSpread(ActiveSkillEffect fx, int count, int spacing)
         {
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
             fx.missileOrigins = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-            fx.missileTargetOffsets = new Vector2[count];
+            fx.missileDirections = new Vector2[count];
+            fx.missileFollowTickCounters = new int[count];
             fx.missileArrived = new bool[count];
-
             Vector2 baseDir = fx.targetPos - fx.casterPos;
-            float distance = Mathf.Max(1f, baseDir.magnitude);
-            baseDir /= distance;
+            float targetDist = Mathf.Max(1f, baseDir.magnitude);
+            baseDir /= targetDist;
 
-            // Perpendicular (horizontal) direction relative to flight path
+            // PC parity: non-homing/fallback uses full range
+            float distance = fx.missileSpeed * fx.missileDuration;
+            if (distance < targetDist) distance = targetDist;
+
             Vector2 perpDir = new Vector2(-baseDir.y, baseDir.x);
-
-            // PC param1=32 = perpendicular spacing in PC world units between missiles.
-            // 4 missiles at level 20: halfSpan = (4-1)*32/2 = 48 units from center.
-            float halfSpan = count > 1 ? (count - 1) * param64 * 0.5f : 0f;
-
+            // PC KSkill::CastWall starts at -Param1 * count / 2, then adds Param1.
+            float currentOffset = -spacing * count / 2f;
             for (int i = 0; i < count; i++)
             {
-                float offset = count > 1 ? Mathf.Lerp(-halfSpan, halfSpan, i / (count - 1f)) : 0f;
-                Vector2 perp = perpDir * offset;
+                Vector2 perp = perpDir * currentOffset;
                 fx.missileOrigins[i] = fx.casterPos + perp;
                 fx.missilePositions[i] = fx.casterPos + perp;
-                fx.missileTargetOffsets[i] = perp;
                 fx.missileTargets[i] = fx.casterPos + baseDir * distance + perp;
+                fx.missileDirections[i] = baseDir;
+                currentOffset += spacing;
             }
         }
 
-        private void SetupPcCircleOutwardMissiles(ActiveSkillEffect fx, int count)
+        // PC KSkills.cpp CastSpread (SKILL_MF_Spread, e.g. 165 "Vô Ngã Vô Kiếm" wudang.lua):
+        // missiles fan around castDir (caster->target). nCurMSRadius = childNum/2,
+        // dir_i = nDir + Value1*(i - half) in MaxMissleDir=64 dir units; spawn offset
+        // nFirstStep = Value2 px along dir_i (0 = at caster). Trước fix: full 360° xoay
+        // quanh caster không theo castDir (tia bay lung tung, "quạt quay" sai PC).
+        private void SetupPcFanMissiles(SkillDefinition skill, ActiveSkillEffect fx, int count)
         {
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-
-            float angleStep = 360f / count;
-            // PC missile travel: MoveKind line advances Speed each game tick until LifeTime expires.
+            fx.missileDirections = new Vector2[count];
+            Vector2 baseDir = fx.targetPos - fx.casterPos;
+            float targetDist = Mathf.Max(1f, baseDir.magnitude);
+            baseDir /= targetDist;
+            float stepRad = Mathf.Deg2Rad * (360f / 64f) * (skill != null && skill.missileDirStep > 0 ? skill.missileDirStep : 1);
+            int half = count / 2;
+            float firstStep = skill != null ? Mathf.Max(0, skill.missileFirstStep) : 0f;
             float distance = Mathf.Max(1f, fx.pcMissileSpeedPerTick * fx.pcMissileLifeTicks);
-            fx.missileDuration = fx.pcMissileLifeTicks / 18f; // stable PC tick lifetime, independent of auto-target distance.
-
+            if (distance < targetDist) distance = targetDist;
+            fx.missileDuration = fx.pcMissileLifeTicks / 18f;
             for (int i = 0; i < count; i++)
             {
-                float angle = Mathf.Deg2Rad * (i * angleStep);
-                var dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                float angle = (i - half) * stepRad;
+                float c = Mathf.Cos(angle), sn = Mathf.Sin(angle);
+                var dir = new Vector2(baseDir.x * c - baseDir.y * sn,
+                                      baseDir.x * sn + baseDir.y * c);
+                fx.missilePositions[i] = fx.casterPos + dir * firstStep;
+                fx.missileTargets[i] = fx.casterPos + dir * (firstStep + distance);
+                fx.missileDirections[i] = dir;
+            }
+        }
+
+        // PC KSkills.cpp CastCircle (SKILL_MF_Circle, e.g. gaibang.lua bangda_egou 125 "Bổng Đả Ác Cẩu"):
+        // m_nChildSkillNum missiles evenly spaced over full 360° (nDirPerNum = MaxMissleDir/ChildSkillNum),
+        // missile 0 along caster→target dir, spawn at caster (nFirstStep=Value2=0), fly full lifetime range.
+        // Trước fix (2026-07-17): radius cố định 1.5 → 16 tia bổng chụm quanh player thay vì tỏa ra.
+        private void SetupSurroundMissiles(ActiveSkillEffect fx, int count)
+        {
+            fx.missileCount = count;
+            fx.missilePositions = new Vector2[count];
+            fx.missileOrigins = new Vector2[count];
+            fx.missileTargets = new Vector2[count];
+            Vector2 baseDir = fx.targetPos - fx.casterPos;
+            float targetDist = Mathf.Max(1f, baseDir.magnitude);
+            baseDir /= targetDist;
+
+            // PC parity: non-homing missiles fly their full lifetime range (speed * duration).
+            float distance = fx.missileSpeed * fx.missileDuration;
+            if (distance < targetDist) distance = targetDist;
+
+            float angleStep = 360f / Mathf.Max(1, count);
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 dir = Rotate(baseDir, i * angleStep);
+                fx.missileOrigins[i] = fx.casterPos;
                 fx.missilePositions[i] = fx.casterPos;
                 fx.missileTargets[i] = fx.casterPos + dir * distance;
             }
         }
 
-        private void SetupSurroundMissiles(ActiveSkillEffect fx, int count)
+        // PC SKILL_MF_Zone (form 5): missiles phân bố đều quanh caster tại góc cố định,
+        // bay trong bán kính attackRadius. Dùng cho Cái Bang skill 125 (天下无狗) + NPC variant 1539.
+        // PC gaibang.lua::tianxia_wugou: skill_misslenum_v L1=1, L20=3 (Unity base 3), attackradius L20=512.
+        private void SetupPcZoneMissiles(ActiveSkillEffect fx, int count, int radiusWu)
         {
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-
-            float angleStep = 360f / count;
-            float radius = 1.5f; // Non-PC utility fallback only.
-
+            fx.missileOrigins = new Vector2[count];
+            float angleStep = 360f / Mathf.Max(1, count);
+            float radius = Mathf.Max(1f, radiusWu);
             for (int i = 0; i < count; i++)
             {
                 float angle = Mathf.Deg2Rad * (i * angleStep);
-                var offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+                var dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 fx.missilePositions[i] = fx.casterPos;
-                fx.missileTargets[i] = fx.casterPos + offset;
+                fx.missileOrigins[i] = fx.casterPos;
+                fx.missileTargets[i] = fx.casterPos + dir * radius;
             }
         }
 
-        private void ConfigureEMeiVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsEMeiSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 80: // Phiêu Tuyết Xuyên Vân (峨嵋-飞雪) - single guided water missile
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 82: // Tứ Tượng Đồng Quy - single water missile
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 85: // Nhất Diệp Tri Thu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 88: // Bất Diệt Bất Tuyệt
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 20, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 91: // Phật Quang Phổ Chiếu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 22, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 81: // Thu Phong Diệp (buff/aura)
-                case 83: // Vọng Nguyệt (buff/aura)
-                case 84: // Phong Vũ Phiêu Hương (buff/aura)
-                case 86: // Lưu Thủy (buff/aura)
-                case 89: // Mộng Điệp (buff/aura)
-                case 90: // Mê Tung Ảo Ảnh (buff/aura)
-                case 92: // Phật Tâm Từ Hữu (buff/aura)
-                case 93: // Từ Hàng Phổ Độ (buff/aura)
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-            }
-        }
-
-        private void ConfigureTianWangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsTianWangSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 32: // Vô Tâm Trảm
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 34: // Kinh Lôi Trảm
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 40: // Đoạn Hồn Thích
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 28, 20, "8a1df06d", 8, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 30: // Hồi Phong Lạc Nhạn
-                case 37: // Bát Phong Trảm
-                case 41: // Huyết Chiến Bát Phương
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 29: // Trảm Long Quyết
-                case 35: // Dương Quan Tam Điệp
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 42: // Kim Chung Tráo
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-            }
-        }
-
-        private void ConfigureWuDuVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsWuDuSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 63: // Độc Sa Chưởng
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 65: // Huyết Đao Độc Sát
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 68: // U Minh Khô Lâu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 18, 30, "8a1df06d", 8, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 69: // Vô Hình Độc
-                case 71: // Thiên Cương Địa Sát
-                case 74: // Chu Cáp Thanh Minh
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 64: // Băng Lam Huyền Tinh
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 67: // Cửu Thiên Cuồng Lôi
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(200f/255f, 100f/255f, 255f/255f));
-                    break;
-                case 70: // Chích Dương Thệ Thiên
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(255f/255f, 100f/255f, 50f/255f));
-                    break;
-                case 72: // Xuyên Tâm Độc Thích
-                case 73: // Vạn Độc Thực Tâm
-                case 76: // Di Hoa Tiếp Ngọc
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-            }
-        }
-
-        private void ConfigureCuiYanVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsCuiYanSkill(skill.skillId)) return;
-
-            var waterColor = new Color(100f/255f, 180f/255f, 255f/255f);
-            switch (skill.skillId)
-            {
-                case 99: // Phong Hoa Tuyết Nguyệt
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, waterColor);
-                    break;
-                case 102: // Phong Quyển Tàn Tuyết
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, waterColor);
-                    break;
-                case 105: // Vũ Đả Lê Hoa
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 18, 30, "8a1df06d", 8, 1, 2, waterColor);
-                    break;
-                case 108: // Mục Dã Lưu Tinh
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, waterColor);
-                    break;
-                case 111: // Bích Hải Triều Sinh
-                case 113: // Phù Vân Tán Tuyết
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, waterColor);
-                    break;
-                case 100: // Hộ Thể Hàn Băng
-                case 101: // Trị Liệu Thuật
-                case 103: // Thiên Lý Băng Phong
-                case 109: // Tuyết Ảnh
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, waterColor);
-                    break;
-                default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-            }
-        }
     }
 
     public enum SkillEffectPhase
@@ -1068,9 +1448,15 @@ namespace VLTK.Sandbox
         Finished,
     }
 
-    public class ActiveSkillEffect
-    {
-        public int skillId;
+      public class ActiveSkillEffect
+      {
+          public bool authoritativeLifecycle;
+          public string authoritativeMissileInstanceId;
+          public int skillId;
+        public int skillLevel;
+        public int lifecycleDepth;
+        public HashSet<int> lifecycleSkillIds;
+        public bool stationaryCollisionFired;
         public string skillName;
         public Vector2 casterPos;
         public Vector2 targetPos;
@@ -1095,10 +1481,18 @@ namespace VLTK.Sandbox
         public Vector2[] missileOrigins;
         public Vector2[] missileTargets;
         public Vector2[] missileTargetOffsets;
+        public Vector2[] missileDirections;
+        public int[] missileFollowTickCounters;
+        public float missileTickAccumulator;
         public bool[] missileArrived;
+        public float[] missileExplodeStartTime;
         public float arrivalRadius = 1f;
+
         public float rendRadius = 4f;
         public List<Vector2> rendPositions;
+        // Multiplier for PC missile/impact/precast SpriteRenderer.localScale.
+        // PC visual rows provide no scale field; native SPR size is canonical.
+        public float pcSpriteRenderScale = 1f;
 
         /// <summary>
         /// Optional live target position getter for homing missiles.
@@ -1117,6 +1511,9 @@ namespace VLTK.Sandbox
         public Color color = Color.white;
         public bool trailEnabled;
         public bool isAura;
+          public bool hasStateSourceKey;
+          public CombatStateSourceKey stateSourceKey;
+          public bool stateOwnerMounted;
         public bool isHitFlash;
         public float auraDuration = 1.2f;
         public float auraRadius = 48f;
@@ -1137,10 +1534,66 @@ namespace VLTK.Sandbox
         public int pcImpactTotalFrames;
         public int pcImpactDirections;
         public int pcImpactIntervalTicks = 1;
+        public int pcMissileMoveKind = 1;
+        public bool pcStationaryLifetimeOverride;
 
+
+        // (pcAuraFrameStart/End kept as no-op fields for backward compat with SkillEffectWorldOverlay; not used in default data-driven visuals)
+        public int pcAuraFrameStart;
+        public int pcAuraFrameEnd;
+        public int stateAuraPos;
         public bool HasPcMissileSprite => !string.IsNullOrEmpty(pcMissileSpriteKey) && pcMissileTotalFrames > 0 && pcMissileDirections > 0;
         public bool HasPcImpactSprite => !string.IsNullOrEmpty(pcImpactSpriteKey) && pcImpactTotalFrames > 0;
         public bool HasPcPreCastSprite => !string.IsNullOrEmpty(pcPreCastSpriteKey) && pcPreCastTotalFrames > 0 && pcPreCastDirections > 0;
         public bool HasMissile => missileForm != SkillMissileForm.None && missileCount > 0;
+        public string castSoundPath;  // PC skills.txt ManCastSnd/FMCastSnd.
+        public string flightSoundPath; // PC SndFile2/MS_DoFly, played per missile instance.
+        public string impactSoundPath; // PC SndFile4/MS_DoCollision, played per collision.
+            public Action<ActiveSkillEffect, int, Vector2> onMissileCollided;
+            public Action<ActiveSkillEffect, int, Vector2> onMissileFlyEvent;
+            public Action<ActiveSkillEffect, int, Vector2> onMissileVanishEvent;
+          public bool pcFlyEventEnabled;
+          public int pcFlyEventIntervalTicks;
+          public int pcFlySkillId;
+            public int[] missileFlyEventOrdinals;
+            public bool[] missileVanishEventFired;
+
+        public static Vector2 ResolveMissileTarget(ActiveSkillEffect fx, int index)
+        {
+            return fx.ResolveMissileTarget(index);
+        }
+
+        public Vector2 ResolveMissileTarget(int index)
+        {
+            bool isHomingMissile = getCurrentTargetPos != null && pcMissileMoveKind == 5;
+            Vector2 target = isHomingMissile ? getCurrentTargetPos() : targetPos;
+
+            if (index >= 0)
+            {
+                if (missileTargets != null && index < missileTargets.Length)
+                    return isHomingMissile ? target : missileTargets[index];
+            }
+
+            return target;
+        }
+
+        public Vector2 ResolveMissileDirection(int index)
+        {
+            if (index >= 0 &&
+                missileDirections != null &&
+                index < missileDirections.Length &&
+                missileDirections[index].sqrMagnitude > 0.000001f)
+            {
+                return missileDirections[index].normalized;
+            }
+
+            Vector2 from = index >= 0 && missilePositions != null && index < missilePositions.Length
+                ? missilePositions[index]
+                : currentMissilePos;
+            Vector2 direction = ResolveMissileTarget(index) - from;
+            return direction.sqrMagnitude > 0.000001f ? direction.normalized : Vector2.zero;
+        }
+
     }
 }
+// recompile

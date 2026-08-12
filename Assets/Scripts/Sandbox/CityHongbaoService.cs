@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcCityHongbaoRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public CityHongbaoService() : this(null) { }
+
         public CityHongbaoService(PcCityHongbaoRegistry reg) { _reg = reg ?? new PcCityHongbaoRegistry(); }
 
         public static CityHongbaoService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

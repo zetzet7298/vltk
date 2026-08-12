@@ -47,18 +47,11 @@ namespace VLTK.Sandbox
                 result.perFileCounts["npcs"] = 0;
             }
 
-            // Load rare templates (480)
-            string rarePath = Path.Combine(npcDir, "rare.txt");
-            if (File.Exists(rarePath))
-            {
-                var rareEntries = PcRareSpawnParser.ParseFile(rarePath);
-                result.perFileCounts["rare"] = rareEntries.Count;
-                result.totalTemplates += rareEntries.Count;
-            }
-            else
-            {
-                result.perFileCounts["rare"] = 0;
-            }
+            // NOTE (fix #14, 2026-06-12): PC rare.txt is NOT an NPC spawn/template
+            // file — it is a RARE MAGIC-ATTRIBUTE / WEAPON-ENCHANT ROLL TABLE
+            // (NAME, MAGIC_ID, MAG_P1_MIN/MAX, per-weapon/-slot/-element weights).
+            // It is loaded by RareEnchantService, not the NPC batch loader, so it
+            // is intentionally not read here and not counted as NPC templates.
 
             // Load gold boss templates (32)
             string bossPath = Path.Combine(npcDir, "goldboss.txt");

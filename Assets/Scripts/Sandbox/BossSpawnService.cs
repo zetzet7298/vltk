@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcBossSpawnRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public BossSpawnService() : this(null) { }
+
         public BossSpawnService(PcBossSpawnRegistry reg) { _reg = reg ?? new PcBossSpawnRegistry(); }
 
         public static BossSpawnService LoadFromStreamingAssets(string subDir = "Reference/PcSpawn")

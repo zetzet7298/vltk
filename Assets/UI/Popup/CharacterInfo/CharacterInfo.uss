@@ -1,0 +1,89 @@
+/* =============================================================================
+   VLTK Mobile — HUD-003 Character Info combined PC panel (CharacterInfo.uss)
+   Panel 428×430 (config UID 2711122c). The panel sprite
+   (panel_male.png/panel_female.png) bakes in every Vietnamese label, the
+   character silhouette and the equipment slot frames. USS only styles the
+   overlaid live values, hit-zone tints and footer buttons.
+   ========================================================================== */
+
+.char-info-body {
+    position: relative;
+    flex-grow: 1;
+    padding: 0;
+}
+
+/* ---- PC panel sprite background (428×430) ---- */
+.char-panel {
+    background-image: url("Art/panel_male.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+.char-panel--female {
+    background-image: url("Art/panel_female.png");
+}
+
+/* ---- Stat value labels (overlaid on the baked PC label sprite) ---- */
+.char-stat-value-green {
+    color: rgb(110, 255, 110);
+    font-size: 12px;
+    -unity-text-align: middle-left;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    overflow: hidden;
+}
+.char-stat-value-gold {
+    color: rgb(255, 220, 95);
+    font-size: 12px;
+    -unity-text-align: middle-left;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    overflow: hidden;
+}
+
+/* ---- Equipment hit-zones (transparent overlay; slot frame is in the sprite) ---- */
+.char-equip-zone {
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: scale-to-fit;
+}
+.char-equip-zone--bindable {
+    /* invisible until equipped/empty tint applied */
+}
+.char-equip-zone--equipped {
+    background-color: rgba(80, 200, 120, 0.30);
+    border-width: 1px;
+    border-color: rgba(140, 230, 150, 0.55);
+}
+.char-equip-zone--empty {
+    background-color: rgba(0, 0, 0, 0.18);
+}
+
+/* ---- +/- spend buttons (状态加点按钮改.spr) ---- */
+.char-add-point {
+    background-image: url("Art/btn_addpoint_up.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+.char-add-point--disabled {
+    opacity: 0.4;
+}
+
+/* ---- Backend-missing equipment action buttons ---- */
+.char-equip-btn {
+    color: rgb(220, 240, 255);
+    background-color: rgba(60, 40, 20, 0.8);
+    border-width: 1px;
+    border-color: rgba(180, 140, 60, 0.7);
+    font-size: 11px;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+/* ---- Footer Item + Close hit targets (captions/borders baked into SPR) ---- */
+.char-footer-btn {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+.char-footer-btn:hover {
+    background-color: rgba(255, 220, 80, 0.08);
+}

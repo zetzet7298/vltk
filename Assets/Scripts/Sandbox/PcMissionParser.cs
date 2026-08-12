@@ -26,19 +26,17 @@ namespace VLTK.Sandbox
             var rows = new List<PcMissionEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
             var lines = PcItemCommon.ReadServerLines(path);
-            bool headerSkipped = false;
-            int idCursor = 0;
+            int physicalLineNumber = 0;
             foreach (var line in lines)
             {
+                physicalLineNumber++;
+                if (physicalLineNumber <= 2) continue;
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
                 if (cols.Length < 3) continue;
                 int first = PcItemCommon.Int(cols, TaskIdFirstCol);
                 int last = PcItemCommon.Int(cols, TaskIdLastCol);
                 if (last <= 0) last = first;
-                if (first <= 0) first = ++idCursor;
-                else idCursor = last;
                 var entry = new PcMissionEntry
                 {
                     taskIdFirst = first,
@@ -78,13 +76,18 @@ namespace VLTK.Sandbox
 
     public sealed class PcMissionRegistry
     {
+        private readonly List<PcMissionEntry> _all = new();
         private readonly Dictionary<int, PcMissionEntry> _byFirst = new();
         private readonly Dictionary<int, PcMissionEntry> _byId = new();
-        public int Count => _byFirst.Count;
+        // Count reflects every parsed row. Some first-ids repeat legitimately
+        // (e.g. tournament 预选赛/决赛 reuse the same TASK_ID_FIRST), so dedup by
+        // first-id would drop valid task definitions — keep them all in _all.
+        public int Count => _all.Count;
 
         public void Register(PcMissionEntry e)
         {
             if (e == null || e.taskIdFirst <= 0) return;
+            _all.Add(e);
             _byFirst[e.taskIdFirst] = e;
             for (int id = e.taskIdFirst; id <= e.taskIdLast; id++)
                 _byId[id] = e;
@@ -92,6 +95,6 @@ namespace VLTK.Sandbox
 
         public PcMissionEntry GetByFirstId(int id) => _byFirst.TryGetValue(id, out var v) ? v : null;
         public PcMissionEntry ResolveId(int id) => _byId.TryGetValue(id, out var v) ? v : null;
-        public IEnumerable<PcMissionEntry> All => _byFirst.Values;
+        public IEnumerable<PcMissionEntry> All => _all;
     }
 }

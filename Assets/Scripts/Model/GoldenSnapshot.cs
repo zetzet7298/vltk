@@ -3,35 +3,43 @@ using System.Collections.Generic;
 
 namespace VLTK.Model
 {
-    /// <summary>
-    /// M1.11 — A reproducible snapshot of a converted map render: dimensions, a
-    /// deterministic content signature (perceptual buckets / pixel digest), and
-    /// metadata describing how/when it was produced. Pure data, fully serializable
-    /// so it can round-trip through JSON for golden comparison.
-    /// </summary>
+    /// <summary>Serializable RGBA32 visual-regression snapshot contract.</summary>
     [Serializable]
     public class GoldenSnapshot
     {
+        public const string SchemaV2 = "vltk.golden-snapshot/v2";
+        public const string ComparerV1 = "ssim-bucket-rec709-v1";
+        public const string AlphaPremultiplyTransparentBlack = "premultiply_transparent_black";
+        public const string ColorRec709LumaBuckets = "rec709_luma_buckets";
+        public const string PayloadRgba32U8 = "rgba32_u8";
+
+        public string schema;
+        public string comparerVersion;
         public string mapId;
+        public string caseId;
         public int width;
         public int height;
+        public int gridX;
+        public int gridY;
+        public string alphaMode;
+        public string colorSpace;
+        public string unityColorSpace;
+        public string payload;
 
-        /// <summary>
-        /// Deterministic perceptual signature: coarse average-color buckets over a
-        /// fixed grid. Order is row-major (y outer, x inner). Comparison is done on
-        /// this signature, not the raw pixels, so trivial encoding noise does not
-        /// trip a false regression.
-        /// </summary>
+        /// <summary>Row-major 5-bit RGB bucket signature derived from payload.</summary>
         public List<int> signature = new();
-
-        /// <summary>Stable digest string derived from the signature (for quick equality).</summary>
         public string contentHash;
 
-        // Metadata
+        // Required capture provenance. Comparer rejects unset/default values.
+        public int skillId = -1;
+        public string faction;
+        public int frame = -1;
+        public long tick = -1;
+        public int skillFxLayer = -1;
+        public string skillFxLayerName;
+        public int nonTransparentPixelCount;
         public long generatedAt;
         public string toolVersion;
-
-        /// <summary>AC#4 — populated only when this snapshot is an intentional golden update.</summary>
         public string goldenUpdateReason;
 
         public int SignatureLength => signature?.Count ?? 0;

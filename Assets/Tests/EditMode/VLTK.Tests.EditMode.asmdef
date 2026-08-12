@@ -6,10 +6,19 @@
         "UnityEditor.TestRunner",
         "VLTK.Core",
         "VLTK.Model",
-        "VLTK.Sandbox",
+        "VLTK.Gameplay.Domain",
+        "VLTK.Combat",
+        "VLTK.PortData",
+        "VLTK.Sandbox.Runtime",
+        "VLTK.Survivor.Runtime",
+        "VLTK.World",
         "VLTK.UI",
         "VLTK.Resources",
-        "VLTK.Sprites"
+        "VLTK.Sprites",
+        "VLTK.Backend",
+        "VLTK.Generated.GameV1",
+        "VLTK.Generated.ContentV1",
+        "VLTK.SkillPort"
     ],
     "includePlatforms": [
         "Editor"
@@ -18,7 +27,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Google.Protobuf.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

@@ -1,10 +1,17 @@
 {
-    "name": "VLTK.Sandbox",
+    "name": "VLTK.Sandbox.Runtime",
     "rootNamespace": "VLTK.Sandbox",
     "references": [
         "VLTK.Core",
         "VLTK.Model",
-        "VLTK.Sprites"
+        "VLTK.Gameplay.Domain",
+        "VLTK.Combat",
+        "VLTK.PortData",
+        "VLTK.World",
+        "VLTK.Sprites",
+        "VLTK.SkillPort",
+        "VLTK.Generated.GameV1",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

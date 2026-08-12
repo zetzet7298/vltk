@@ -18,6 +18,12 @@ namespace VLTK.Tests.Sandbox
             var svc = ObjDataService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
+            var chest = svc.Get(1);
+            Assert.IsNotNull(chest);
+            Assert.AreEqual("Bảo rương 1", chest.name.Trim());
+            Assert.AreEqual(@"\spr\obj\box\box001.spr", chest.imageName);
+            Assert.AreEqual(161, chest.imageCgXpos);
+            Assert.AreEqual(210, chest.imageCgYpos);
         }
     }
 
@@ -30,6 +36,10 @@ namespace VLTK.Tests.Sandbox
             var svc = ObjectSettingService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
+            var chest = svc.Get(1);
+            Assert.IsNotNull(chest);
+            Assert.AreEqual("宝箱1", chest.name.Trim());
+            Assert.AreEqual(@"\spr\obj\box\box001.spr", chest.imageName);
         }
     }
 

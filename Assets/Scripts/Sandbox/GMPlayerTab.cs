@@ -141,105 +141,41 @@ namespace VLTK.Sandbox
                 return;
             }
 
-            // Initialize progression faction
-            manager.GrantFactionSkillPanelProgression(faction);
-
-            // Re-apply to gameplay actor
-            var loop = manager.GameplayLoop;
-            if (loop != null && loop.Player != null)
+            if (!manager.TrySwitchRuntimeFaction(faction, out string detail))
             {
-                var player = loop.Player;
-                player.combat.faction = faction;
-                player.combat.knownSkills.Clear();
-                foreach (var id in manager.PlayerProgression.knownSkills)
-                    player.combat.knownSkills.Add(id);
-                player.combat.skillLevels.Clear();
-                foreach (var kv in manager.PlayerProgression.skillLevels)
-                    player.combat.skillLevels[kv.Key] = kv.Value > 0 ? kv.Value : 1;
+                SubsystemLog.Warn("GMPlayerTab", $"Không thể chuyển sang {faction}: {detail}");
+                return;
             }
 
-            // Auto-assign default slots in CombatSkillSlotController
-            var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, Assembly-CSharp");
-            if (slotsType != null)
-            {
-                var slotsObj = Object.FindAnyObjectByType(slotsType);
-                if (slotsObj != null)
-                {
-                    var assignMethod = slotsType.GetMethod("AssignSkill");
-                    if (assignMethod != null)
-                    {
-                        if (faction == CombatFaction.CaiBang)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 357 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 359 });
-                        }
-                        else if (faction == CombatFaction.WuDang)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 153 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 155 });
-                        }
-                        else if (faction == CombatFaction.Shaolin)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 10 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 11 });
-                        }
-                        else if (faction == CombatFaction.TangMen)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 47 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 58 });
-                        }
-                        else if (faction == CombatFaction.EMei)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 80 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 91 });
-                        }
-                        else if (faction == CombatFaction.TianWang)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 40 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 41 });
-                        }
-                        else if (faction == CombatFaction.WuDu)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 63 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 65 });
-                        }
-                        else if (faction == CombatFaction.CuiYan)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 99 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 105 });
-                        }
-                        else if (faction == CombatFaction.TianRen)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 142 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 148 });
-                        }
-                        else if (faction == CombatFaction.KunLun)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 172 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 182 });
-                        }
-                    }
-                }
-            }
+            // Restore the HUD before opening its skill popup. Opening the popup while the GM
+            // panel is still hiding GameHud makes the successful transition look like a broken HUD.
+            manager.GmPanel?.Close();
 
-            // Refresh UI GameHudController
-            var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
+            // Auto-open the canonical skill popup after the manager-owned transition.
+            // CombatSkillSlotController listens to RuntimeFactionSwitched and rebuilds its decks.
+            var hudType = System.Type.GetType("VLTK.UI.GameHudController, VLTK.UI");
             if (hudType != null)
             {
                 var hudObj = Object.FindAnyObjectByType(hudType);
                 if (hudObj != null)
                 {
-                    var isVisibleProp = hudType.GetProperty("IsSkillPanelVisible");
-                    bool isVisible = isVisibleProp != null && (bool)isVisibleProp.GetValue(hudObj, null);
-                    if (isVisible)
+                    var openMethod = hudType.GetMethod("OnSkillsClick", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                    if (openMethod != null)
                     {
-                        var openMethod = hudType.GetMethod("OpenSkillPanel");
-                        if (openMethod != null) openMethod.Invoke(hudObj, null);
+                        try
+                        {
+                            openMethod.Invoke(hudObj, null);
+                            UnityEngine.Debug.Log($"[GM] Auto-opened skill popup for faction {faction}");
+                        }
+                        catch (System.Exception ex)
+                        {
+                            SubsystemLog.Warn("GMPlayerTab", $"Faction switched, but skill popup failed: {ex.Message}");
+                        }
                     }
                 }
             }
 
-            SubsystemLog.Info("GM", $"Chuyển phái thành công: {faction}");
+            SubsystemLog.Info("GMPlayerTab", $"Chuyển phái thành công: {detail}");
         }
 
         private void MaxAllStats()
@@ -269,7 +205,7 @@ namespace VLTK.Sandbox
                 }
 
                 // Refresh visual slots
-                var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, Assembly-CSharp");
+                var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, VLTK.UI");
                 if (slotsType != null)
                 {
                     var slotsObj = Object.FindAnyObjectByType(slotsType);
@@ -289,17 +225,25 @@ namespace VLTK.Sandbox
                 }
 
                 // Refresh UI
-                var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
+                var hudType = System.Type.GetType("VLTK.UI.GameHudController, VLTK.UI");
                 if (hudType != null)
                 {
                     var hudObj = Object.FindAnyObjectByType(hudType);
                     if (hudObj != null)
                     {
-                        var isVisibleProp = hudType.GetProperty("IsSkillPanelVisible");
-                        bool isVisible = isVisibleProp != null && (bool)isVisibleProp.GetValue(hudObj, null);
-                        if (isVisible)
+                        // Refresh the skill popup if it is currently open. BtnSkills now opens a
+                        // SkillContent popup via PopupManager (the inline IsSkillPanelVisible/
+                        // OpenSkillPanel HUD surface was retired in migrate-skill-panel-popup).
+                        // Reflect over PopupManager to detect a currently-open SkillContent.
+                        var pmType = System.Type.GetType("VLTK.UI.Popup.PopupManager, VLTK.UI");
+                        var pmInstanceProp = pmType?.GetProperty("Instance");
+                        object pmInstance = pmInstanceProp?.GetValue(null, null);
+                        var currentContentProp = pmType?.GetProperty("CurrentContent");
+                        object currentContent = pmInstance != null ? currentContentProp?.GetValue(pmInstance, null) : null;
+                        bool isSkillPopupOpen = currentContent != null && currentContent.GetType().Name == "SkillContent";
+                        if (isSkillPopupOpen)
                         {
-                            var openMethod = hudType.GetMethod("OpenSkillPanel");
+                            var openMethod = hudType.GetMethod("OnSkillsClick", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
                             if (openMethod != null) openMethod.Invoke(hudObj, null);
                         }
                     }

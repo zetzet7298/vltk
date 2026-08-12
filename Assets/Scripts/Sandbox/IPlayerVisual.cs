@@ -17,10 +17,15 @@ namespace VLTK.Sandbox
         PlayerVisualAction currentAction { get; set; }
         PcWeaponType currentWeapon { get; set; }
         bool isMounted { get; set; }
+        // PC walk/run mode toggle: when true and moving, the visual plays Walk (WK01) instead of Move/Run (RN01).
+        bool walkMode { get; set; }
+        // PC 打坐 (meditate): when true, the visual is forced to the Sit (ZZ01) action and ignores move input.
+        bool isMeditating { get; set; }
         int direction { get; set; }
         bool playAutomatically { get; set; }
 
         int LoadedPartCount { get; }
+        int ActionPartsRefreshCount { get; }
         int CurrentFrameInDirection { get; }
         bool HasAllRequiredParts { get; }
         int MissingRequiredPartCount { get; }
@@ -35,7 +40,11 @@ namespace VLTK.Sandbox
         void SetAction(PlayerVisualAction action);
         void SetMounted(bool mounted);
         void SetWeapon(PcWeaponType weapon);
+        void SetWeapon(PcWeaponType weapon, int exactVariant);
         void SetDirection(int nextDirection);
+        void SetEquipVariant(PlayerEquipSlot slot, int variant);
+        /// <summary>Set controller-owned normalized cast progress. Pass a negative value to resume Tick cadence.</summary>
+        void SetLogicalActionProgress(float normalizedProgress);
         void Tick(float deltaTime);
     }
 }

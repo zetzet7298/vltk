@@ -1,0 +1,113 @@
+{
+  "canonical_sources": {
+    "progression": {
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
+      "provides": "PC active-category progression membership",
+      "sha256": "7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3"
+    },
+    "skillbook": {
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
+      "provides": "level 90/120/150 skillbook grants",
+      "sha256": "4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9"
+    },
+    "static_rows": {
+      "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+      "provides": "canonical static skill rows (parsed only via exact-byte vltktool slices)",
+      "sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c"
+    }
+  },
+  "learned_relationship_target_ids": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    12,
+    111,
+    112,
+    146,
+    147,
+    326,
+    327,
+    338,
+    398,
+    1064,
+    1093,
+    1102
+  ],
+  "membership_sha256": "b045ad3292ca61820d947ff2c3d37e8876ad9b0027f437234eacfda5beb1eac1",
+  "membership_source": "harness/docs/stories/SKL-CY-PROOF-001/membership-classification.json",
+  "observed_unity_display_ids": [
+    95,
+    97,
+    99,
+    100,
+    101,
+    102,
+    103,
+    105,
+    108,
+    109,
+    111,
+    113,
+    114
+  ],
+  "pc_learned_only_ids": [
+    269,
+    336,
+    337,
+    713,
+    1063,
+    1065
+  ],
+  "pc_learned_skill_ids": [
+    95,
+    97,
+    99,
+    100,
+    102,
+    105,
+    108,
+    109,
+    111,
+    113,
+    114,
+    269,
+    336,
+    337,
+    713,
+    1063,
+    1065
+  ],
+  "provenance_sha256": "7a083344d3b695f303c97f88667198ffefc0fa593d13eddd12f0c67d8724a3c1",
+  "provenance_source": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanSkills.provenance.json",
+  "relationship_self_reference_learned_ids": [
+    111
+  ],
+  "relationship_target_provenance_sha256": "55483818ec1a367821bafc693ca86edfed6d51f61e447823c12853d54c3d7f5c",
+  "relationship_target_provenance_source": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanRelationshipTargets.provenance.json",
+  "relationship_target_slice_sha256": "71811809f8eaf4e23948b6cc06cbaa37386556ce7a1e1694b4ba16c71fbd96dd",
+  "relationship_target_slice_source": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanRelationshipTargets.txt",
+  "schema": "vltk.cuiyan.static-catalog-proof/v1",
+  "shared_ids": [
+    95,
+    97,
+    99,
+    100,
+    102,
+    105,
+    108,
+    109,
+    111,
+    113,
+    114
+  ],
+  "slice_sha256": "cb784d8a10416f83fcbf1ba39a6d137fb5a3f3f22bc6453e27d227259e428e84",
+  "slice_source": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanSkills.txt",
+  "ui_order": null,
+  "unity_only_relationship_target_ids": [],
+  "unity_only_unresolved_ids": [
+    101,
+    103
+  ]
+}

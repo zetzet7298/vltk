@@ -1,0 +1,7159 @@
+{
+  "schema": "vltk.all-faction.membership-matrix/v1",
+  "generated_by": "scripts/audit_skill_coverage.py",
+  "canonical_sources": {
+    "static_rows": {
+      "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+      "sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c",
+      "provides": "canonical static skill rows (parsed only via the exact-byte slice)"
+    },
+    "progression": {
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
+      "sha256": "7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3",
+      "provides": "PC active-category progression membership (skills_table.lua)"
+    },
+    "skillbook": {
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
+      "sha256": "4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9",
+      "provides": "level 90/120/150 skillbook grants (skillbook.lua)"
+    }
+  },
+  "generated_artifacts": {
+    "slice": {
+      "path": "Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.txt",
+      "sha256": "4886dcaedb1dbe7c61b9ce357f3fdc4037515dc0a00b55e731399739e3340189",
+      "bytes": 169258
+    },
+    "provenance": {
+      "path": "Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.provenance.json",
+      "sha256": "bf49efe6917ccf2f89e63608ae8be8d9cfb83a250a806e09b98c1fa121797c25",
+      "schema": "vltk.table-slice-provenance/v1"
+    }
+  },
+  "selection_authority": "PC progression (skills_table.lua) and skillbook (skillbook.lua) are canonical learned-membership evidence; Unity PcSkillPanelService arrays are observed display only.",
+  "membership_caveat": "These sources prove learned-membership evidence and observed display scope; they do not prove UI slot order, runtime/platform parity, or child/support/event resolution.",
+  "ui_order_caveat": "UI order is never inferred: PC tiers and skillbook grants prove membership, not panel slot order.",
+  "global_union_size": 242,
+  "global_union_skill_ids": [
+    3,
+    4,
+    6,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    23,
+    24,
+    26,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    40,
+    41,
+    42,
+    43,
+    45,
+    47,
+    48,
+    50,
+    54,
+    58,
+    60,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    95,
+    97,
+    99,
+    100,
+    101,
+    102,
+    103,
+    105,
+    108,
+    109,
+    111,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    249,
+    252,
+    267,
+    269,
+    271,
+    273,
+    274,
+    275,
+    277,
+    282,
+    302,
+    303,
+    318,
+    319,
+    321,
+    322,
+    323,
+    324,
+    325,
+    328,
+    332,
+    336,
+    337,
+    339,
+    341,
+    342,
+    343,
+    345,
+    347,
+    349,
+    351,
+    353,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    364,
+    365,
+    368,
+    372,
+    375,
+    380,
+    384,
+    385,
+    390,
+    391,
+    392,
+    393,
+    394,
+    630,
+    708,
+    709,
+    710,
+    711,
+    712,
+    713,
+    714,
+    715,
+    716,
+    717,
+    720,
+    1055,
+    1056,
+    1057,
+    1058,
+    1059,
+    1060,
+    1061,
+    1062,
+    1063,
+    1065,
+    1066,
+    1067,
+    1069,
+    1070,
+    1071,
+    1073,
+    1074,
+    1075,
+    1076,
+    1078,
+    1079,
+    1080,
+    1081,
+    1110,
+    1114
+  ],
+  "factions": [
+    {
+      "key": "Shaolin",
+      "name": "Thiếu Lâm",
+      "faction_index": 0,
+      "pc_progression": {
+        "skill_ids": [
+          10,
+          14,
+          4,
+          6,
+          8,
+          15,
+          16,
+          20,
+          11,
+          19,
+          271,
+          21,
+          273,
+          318,
+          319,
+          321,
+          709
+        ],
+        "by_tier": {
+          "1": [
+            10,
+            14
+          ],
+          "2": [
+            4,
+            6,
+            8
+          ],
+          "3": [
+            15
+          ],
+          "4": [
+            16
+          ],
+          "5": [
+            20
+          ],
+          "6": [
+            11,
+            19,
+            271
+          ],
+          "7": [
+            21,
+            273
+          ],
+          "9": [
+            318,
+            319,
+            321,
+            709
+          ]
+        },
+        "source": {
+          "line_start": 1386,
+          "line_end": 1396,
+          "faction": "shaolin",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          318,
+          319,
+          321,
+          709,
+          1055,
+          1056,
+          1057
+        ],
+        "by_level": {
+          "90": [
+            318,
+            319,
+            321
+          ],
+          "120": [
+            709
+          ],
+          "150": [
+            1055,
+            1056,
+            1057
+          ]
+        },
+        "source": {
+          "line": 2,
+          "faction_index": 0,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        4,
+        6,
+        8,
+        10,
+        11,
+        14,
+        15,
+        16,
+        19,
+        20,
+        21,
+        271,
+        273,
+        318,
+        319,
+        321,
+        709,
+        1055,
+        1056,
+        1057
+      ],
+      "unity_display_skill_ids": [
+        3,
+        4,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "union_skill_ids": [
+        3,
+        4,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        271,
+        273,
+        318,
+        319,
+        321,
+        709,
+        1055,
+        1056,
+        1057
+      ],
+      "shared_count": 11,
+      "pc_learned_only_count": 9,
+      "unity_display_only_unresolved_count": 6,
+      "symmetric_gap_count": 15,
+      "relationship_bearing_union_row_count": 17,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 3,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 4
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 4,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 5
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 6,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 7
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 8,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 9
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 9,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 10
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 10,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 11
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 216
+          }
+        },
+        {
+          "skill_id": 11,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 12
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 86
+          }
+        },
+        {
+          "skill_id": 12,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 13
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 13,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 14
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 76,
+            "vanished_skill_id": 188
+          }
+        },
+        {
+          "skill_id": 14,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 15
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 66
+          }
+        },
+        {
+          "skill_id": 15,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 16
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 76,
+            "vanished_skill_id": 186
+          }
+        },
+        {
+          "skill_id": 16,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 17
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 202
+          }
+        },
+        {
+          "skill_id": 17,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 18
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 218
+          }
+        },
+        {
+          "skill_id": 18,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 19
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 76,
+            "vanished_skill_id": 185
+          }
+        },
+        {
+          "skill_id": 19,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 20
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 61
+          }
+        },
+        {
+          "skill_id": 20,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 21
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 77,
+            "start_skill_id": 22
+          }
+        },
+        {
+          "skill_id": 21,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 22
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 271,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 272
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 272
+          }
+        },
+        {
+          "skill_id": 273,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 274
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 318,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 319
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 317
+          }
+        },
+        {
+          "skill_id": 319,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 320
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 135
+          }
+        },
+        {
+          "skill_id": 321,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 322
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 136
+          }
+        },
+        {
+          "skill_id": 709,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 711
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 1055,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1055
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 1083
+          }
+        },
+        {
+          "skill_id": 1056,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1056
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 318
+          }
+        },
+        {
+          "skill_id": 1057,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1057
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 319,
+            "start_skill_id": 1085
+          }
+        }
+      ]
+    },
+    {
+      "key": "TianWang",
+      "name": "Thiên Vương",
+      "faction_index": 1,
+      "pc_progression": {
+        "skill_ids": [
+          29,
+          30,
+          34,
+          23,
+          24,
+          26,
+          33,
+          31,
+          35,
+          37,
+          40,
+          42,
+          32,
+          36,
+          41,
+          324,
+          322,
+          323,
+          325,
+          708
+        ],
+        "by_tier": {
+          "1": [
+            29,
+            30,
+            34
+          ],
+          "2": [
+            23,
+            24,
+            26
+          ],
+          "3": [
+            33
+          ],
+          "4": [
+            31,
+            35,
+            37
+          ],
+          "5": [
+            40
+          ],
+          "6": [
+            42
+          ],
+          "7": [
+            32,
+            36,
+            41,
+            324
+          ],
+          "9": [
+            322,
+            323,
+            325,
+            708
+          ]
+        },
+        "source": {
+          "line_start": 1397,
+          "line_end": 1407,
+          "faction": "tianwang",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          322,
+          325,
+          323,
+          708,
+          1058,
+          1059,
+          1060
+        ],
+        "by_level": {
+          "90": [
+            322,
+            325,
+            323
+          ],
+          "120": [
+            708
+          ],
+          "150": [
+            1058,
+            1059,
+            1060
+          ]
+        },
+        "source": {
+          "line": 3,
+          "faction_index": 1,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        23,
+        24,
+        26,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        40,
+        41,
+        42,
+        322,
+        323,
+        324,
+        325,
+        708,
+        1058,
+        1059,
+        1060
+      ],
+      "unity_display_skill_ids": [
+        23,
+        24,
+        26,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        40,
+        41,
+        42
+      ],
+      "union_skill_ids": [
+        23,
+        24,
+        26,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        40,
+        41,
+        42,
+        322,
+        323,
+        324,
+        325,
+        708,
+        1058,
+        1059,
+        1060
+      ],
+      "shared_count": 15,
+      "pc_learned_only_count": 8,
+      "unity_display_only_unresolved_count": 0,
+      "symmetric_gap_count": 8,
+      "relationship_bearing_union_row_count": 16,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 23,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 24
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 24,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 25
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 26,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 27
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 29,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 30
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 405
+          }
+        },
+        {
+          "skill_id": 30,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 31
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 219
+          }
+        },
+        {
+          "skill_id": 31,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 32
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 406
+          }
+        },
+        {
+          "skill_id": 32,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 33
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 220
+          }
+        },
+        {
+          "skill_id": 33,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 34
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 34,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 35
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 404
+          }
+        },
+        {
+          "skill_id": 35,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 36
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 221
+          }
+        },
+        {
+          "skill_id": 36,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 37
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 37,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 38
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 222
+          }
+        },
+        {
+          "skill_id": 40,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 41
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 224
+          }
+        },
+        {
+          "skill_id": 41,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 42
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 225
+          }
+        },
+        {
+          "skill_id": 42,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 43
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 322,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 323
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 326
+          }
+        },
+        {
+          "skill_id": 323,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 324
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 327
+          }
+        },
+        {
+          "skill_id": 324,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 325
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 407
+          }
+        },
+        {
+          "skill_id": 325,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 326
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 408
+          }
+        },
+        {
+          "skill_id": 708,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 710
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 1058,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1058
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 1084
+          }
+        },
+        {
+          "skill_id": 1059,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1059
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 1087
+          }
+        },
+        {
+          "skill_id": 1060,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1060
+          },
+          "categories": [
+            "melee_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 1088
+          }
+        }
+      ]
+    },
+    {
+      "key": "TangMen",
+      "name": "Đường Môn",
+      "faction_index": 2,
+      "pc_progression": {
+        "skill_ids": [
+          45,
+          43,
+          347,
+          303,
+          47,
+          50,
+          54,
+          343,
+          345,
+          349,
+          48,
+          58,
+          249,
+          341,
+          302,
+          339,
+          342,
+          710
+        ],
+        "by_tier": {
+          "1": [
+            45
+          ],
+          "2": [
+            43,
+            347
+          ],
+          "3": [
+            303
+          ],
+          "4": [
+            47,
+            50,
+            54,
+            343
+          ],
+          "5": [
+            345
+          ],
+          "6": [
+            349
+          ],
+          "7": [
+            48,
+            58,
+            249,
+            341
+          ],
+          "9": [
+            302,
+            339,
+            342,
+            710
+          ]
+        },
+        "source": {
+          "line_start": 1408,
+          "line_end": 1418,
+          "faction": "tangmen",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          339,
+          302,
+          342,
+          351,
+          710,
+          1069,
+          1070,
+          1071,
+          1110
+        ],
+        "by_level": {
+          "90": [
+            339,
+            302,
+            342,
+            351
+          ],
+          "120": [
+            710
+          ],
+          "150": [
+            1069,
+            1070,
+            1071,
+            1110
+          ]
+        },
+        "source": {
+          "line": 4,
+          "faction_index": 2,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        43,
+        45,
+        47,
+        48,
+        50,
+        54,
+        58,
+        249,
+        302,
+        303,
+        339,
+        341,
+        342,
+        343,
+        345,
+        347,
+        349,
+        351,
+        710,
+        1069,
+        1070,
+        1071,
+        1110
+      ],
+      "unity_display_skill_ids": [
+        43,
+        45,
+        47,
+        48,
+        50,
+        54,
+        58,
+        249,
+        302,
+        303,
+        339,
+        341,
+        342,
+        343,
+        345,
+        347,
+        349,
+        351,
+        710,
+        1069,
+        1070,
+        1071,
+        1110
+      ],
+      "union_skill_ids": [
+        43,
+        45,
+        47,
+        48,
+        50,
+        54,
+        58,
+        249,
+        302,
+        303,
+        339,
+        341,
+        342,
+        343,
+        345,
+        347,
+        349,
+        351,
+        710,
+        1069,
+        1070,
+        1071,
+        1110
+      ],
+      "shared_count": 23,
+      "pc_learned_only_count": 0,
+      "unity_display_only_unresolved_count": 0,
+      "symmetric_gap_count": 0,
+      "relationship_bearing_union_row_count": 20,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 43,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 44
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 45,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 46
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 35
+          }
+        },
+        {
+          "skill_id": 47,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 48
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 116
+          }
+        },
+        {
+          "skill_id": 48,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 49
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 50,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 51
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 37
+          }
+        },
+        {
+          "skill_id": 54,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 55
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 38
+          }
+        },
+        {
+          "skill_id": 58,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 59
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 67,
+            "collide_skill_id": 227
+          }
+        },
+        {
+          "skill_id": 249,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 250
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 106
+          }
+        },
+        {
+          "skill_id": 302,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 303
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "fly_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 96,
+            "fly_skill_id": 301
+          }
+        },
+        {
+          "skill_id": 303,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 304
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 127,
+            "collide_skill_id": 304
+          }
+        },
+        {
+          "skill_id": 339,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 340
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 149,
+            "collide_skill_id": 340
+          }
+        },
+        {
+          "skill_id": 341,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 342
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 151
+          }
+        },
+        {
+          "skill_id": 342,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 343
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 152
+          }
+        },
+        {
+          "skill_id": 343,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 344
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 153,
+            "collide_skill_id": 344
+          }
+        },
+        {
+          "skill_id": 345,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 346
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 155,
+            "collide_skill_id": 346
+          }
+        },
+        {
+          "skill_id": 347,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 348
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 157,
+            "collide_skill_id": 348
+          }
+        },
+        {
+          "skill_id": 349,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 350
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 159,
+            "collide_skill_id": 350
+          }
+        },
+        {
+          "skill_id": 351,
+          "classification": "shared",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 352
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 161,
+            "collide_skill_id": 352
+          }
+        },
+        {
+          "skill_id": 710,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 712
+          },
+          "categories": [
+            "melee_active"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 1069,
+          "classification": "shared",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1069
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 331,
+            "collide_skill_id": 1097
+          }
+        },
+        {
+          "skill_id": 1070,
+          "classification": "shared",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1070
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "fly_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 332,
+            "fly_skill_id": 1098
+          }
+        },
+        {
+          "skill_id": 1071,
+          "classification": "shared",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1071
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 333
+          }
+        },
+        {
+          "skill_id": 1110,
+          "classification": "shared",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1110
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 374,
+            "vanished_skill_id": 1113
+          }
+        }
+      ]
+    },
+    {
+      "key": "WuDu",
+      "name": "Ngũ Độc",
+      "faction_index": 3,
+      "pc_progression": {
+        "skill_ids": [
+          63,
+          65,
+          60,
+          62,
+          67,
+          66,
+          70,
+          64,
+          68,
+          69,
+          384,
+          73,
+          356,
+          72,
+          71,
+          74,
+          75,
+          353,
+          355,
+          711
+        ],
+        "by_tier": {
+          "1": [
+            63,
+            65
+          ],
+          "2": [
+            60,
+            62,
+            67
+          ],
+          "3": [
+            66,
+            70
+          ],
+          "4": [
+            64,
+            68,
+            69,
+            384
+          ],
+          "5": [
+            73,
+            356
+          ],
+          "6": [
+            72
+          ],
+          "7": [
+            71,
+            74,
+            75
+          ],
+          "9": [
+            353,
+            355,
+            711
+          ]
+        },
+        "source": {
+          "line_start": 1419,
+          "line_end": 1429,
+          "faction": "wudu",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          353,
+          355,
+          390,
+          711,
+          1066,
+          1067
+        ],
+        "by_level": {
+          "90": [
+            353,
+            355,
+            390
+          ],
+          "120": [
+            711
+          ],
+          "150": [
+            1066,
+            1067
+          ]
+        },
+        "source": {
+          "line": 5,
+          "faction_index": 3,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        60,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        353,
+        355,
+        356,
+        384,
+        390,
+        711,
+        1066,
+        1067
+      ],
+      "unity_display_skill_ids": [
+        60,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76
+      ],
+      "union_skill_ids": [
+        60,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        353,
+        355,
+        356,
+        384,
+        390,
+        711,
+        1066,
+        1067
+      ],
+      "shared_count": 15,
+      "pc_learned_only_count": 8,
+      "unity_display_only_unresolved_count": 1,
+      "symmetric_gap_count": 9,
+      "relationship_bearing_union_row_count": 18,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 60,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 61
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 62,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 63
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 63,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 64
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 30
+          }
+        },
+        {
+          "skill_id": 64,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 65
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 65,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 66
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 31
+          }
+        },
+        {
+          "skill_id": 66,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 67
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 67,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 68
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 68,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 69
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 32
+          }
+        },
+        {
+          "skill_id": 69,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 70
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 203
+          }
+        },
+        {
+          "skill_id": 70,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 71
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 71,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 72
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 33
+          }
+        },
+        {
+          "skill_id": 72,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 73
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 73,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 74
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 74,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 75
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 34
+          }
+        },
+        {
+          "skill_id": 75,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 76
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 76,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 77
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 353,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 354
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 163,
+            "vanished_skill_id": 354
+          }
+        },
+        {
+          "skill_id": 355,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 356
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 165,
+            "collide_skill_id": 383
+          }
+        },
+        {
+          "skill_id": 356,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 357
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 384,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 385
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 190
+          }
+        },
+        {
+          "skill_id": 390,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 391
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 711,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 713
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 1066,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1066
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 328,
+            "start_skill_id": 1094
+          }
+        },
+        {
+          "skill_id": 1067,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1067
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 329,
+            "collide_skill_id": 1095
+          }
+        }
+      ]
+    },
+    {
+      "key": "EMei",
+      "name": "Nga My",
+      "faction_index": 4,
+      "pc_progression": {
+        "skill_ids": [
+          80,
+          85,
+          77,
+          79,
+          93,
+          82,
+          89,
+          385,
+          86,
+          92,
+          88,
+          91,
+          252,
+          282,
+          328,
+          380,
+          712
+        ],
+        "by_tier": {
+          "1": [
+            80,
+            85
+          ],
+          "2": [
+            77,
+            79
+          ],
+          "3": [
+            93
+          ],
+          "4": [
+            82,
+            89,
+            385
+          ],
+          "5": [
+            86
+          ],
+          "6": [
+            92
+          ],
+          "7": [
+            88,
+            91,
+            252,
+            282
+          ],
+          "9": [
+            328,
+            380,
+            712
+          ]
+        },
+        "source": {
+          "line_start": 1430,
+          "line_end": 1440,
+          "faction": "emei",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          380,
+          328,
+          332,
+          712,
+          1061,
+          1062,
+          1114
+        ],
+        "by_level": {
+          "90": [
+            380,
+            328,
+            332
+          ],
+          "120": [
+            712
+          ],
+          "150": [
+            1061,
+            1062,
+            1114
+          ]
+        },
+        "source": {
+          "line": 6,
+          "faction_index": 4,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        77,
+        79,
+        80,
+        82,
+        85,
+        86,
+        88,
+        89,
+        91,
+        92,
+        93,
+        252,
+        282,
+        328,
+        332,
+        380,
+        385,
+        712,
+        1061,
+        1062,
+        1114
+      ],
+      "unity_display_skill_ids": [
+        77,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        91,
+        92,
+        93
+      ],
+      "union_skill_ids": [
+        77,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        91,
+        92,
+        93,
+        252,
+        282,
+        328,
+        332,
+        380,
+        385,
+        712,
+        1061,
+        1062,
+        1114
+      ],
+      "shared_count": 11,
+      "pc_learned_only_count": 10,
+      "unity_display_only_unresolved_count": 4,
+      "symmetric_gap_count": 14,
+      "relationship_bearing_union_row_count": 20,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 77,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 78
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 79,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 80
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 80,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 81
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 68
+          }
+        },
+        {
+          "skill_id": 81,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 82
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 204
+          }
+        },
+        {
+          "skill_id": 82,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 83
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 101,
+            "start_skill_id": 243
+          }
+        },
+        {
+          "skill_id": 83,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 84
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 205
+          }
+        },
+        {
+          "skill_id": 84,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 85
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 85,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 86
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 2
+          }
+        },
+        {
+          "skill_id": 86,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 87
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 206
+          }
+        },
+        {
+          "skill_id": 87,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 88
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 88,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 89
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 3
+          }
+        },
+        {
+          "skill_id": 89,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 90
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 207
+          }
+        },
+        {
+          "skill_id": 91,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 92
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 4
+          }
+        },
+        {
+          "skill_id": 92,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 93
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 208
+          }
+        },
+        {
+          "skill_id": 93,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 94
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 5
+          }
+        },
+        {
+          "skill_id": 252,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 253
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 282,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 283
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 281
+          }
+        },
+        {
+          "skill_id": 328,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 329
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 142,
+            "start_skill_id": 329
+          }
+        },
+        {
+          "skill_id": 332,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 333
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 333
+          }
+        },
+        {
+          "skill_id": 380,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 381
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 186,
+            "start_skill_id": 331
+          }
+        },
+        {
+          "skill_id": 385,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 386
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 191
+          }
+        },
+        {
+          "skill_id": 712,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 714
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 718
+          }
+        },
+        {
+          "skill_id": 1061,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1061
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 323,
+            "start_skill_id": 1089
+          }
+        },
+        {
+          "skill_id": 1062,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1062
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 324
+          }
+        },
+        {
+          "skill_id": 1114,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1114
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "fly_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 375,
+            "fly_skill_id": 1115
+          }
+        }
+      ]
+    },
+    {
+      "key": "CuiYan",
+      "name": "Thúy Yên",
+      "faction_index": 5,
+      "pc_progression": {
+        "skill_ids": [
+          99,
+          102,
+          95,
+          97,
+          269,
+          105,
+          113,
+          100,
+          109,
+          108,
+          111,
+          114,
+          336,
+          337,
+          713
+        ],
+        "by_tier": {
+          "1": [
+            99,
+            102
+          ],
+          "2": [
+            95,
+            97
+          ],
+          "3": [
+            269
+          ],
+          "4": [
+            105,
+            113
+          ],
+          "5": [
+            100
+          ],
+          "6": [
+            109
+          ],
+          "7": [
+            108,
+            111,
+            114
+          ],
+          "9": [
+            336,
+            337,
+            713
+          ]
+        },
+        "source": {
+          "line_start": 1441,
+          "line_end": 1451,
+          "faction": "cuiyan",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          336,
+          337,
+          713,
+          1063,
+          1065
+        ],
+        "by_level": {
+          "90": [
+            336,
+            337
+          ],
+          "120": [
+            713
+          ],
+          "150": [
+            1063,
+            1065
+          ]
+        },
+        "source": {
+          "line": 7,
+          "faction_index": 5,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        95,
+        97,
+        99,
+        100,
+        102,
+        105,
+        108,
+        109,
+        111,
+        113,
+        114,
+        269,
+        336,
+        337,
+        713,
+        1063,
+        1065
+      ],
+      "unity_display_skill_ids": [
+        95,
+        97,
+        99,
+        100,
+        101,
+        102,
+        103,
+        105,
+        108,
+        109,
+        111,
+        113,
+        114
+      ],
+      "union_skill_ids": [
+        95,
+        97,
+        99,
+        100,
+        101,
+        102,
+        103,
+        105,
+        108,
+        109,
+        111,
+        113,
+        114,
+        269,
+        336,
+        337,
+        713,
+        1063,
+        1065
+      ],
+      "shared_count": 11,
+      "pc_learned_only_count": 6,
+      "unity_display_only_unresolved_count": 2,
+      "symmetric_gap_count": 8,
+      "relationship_bearing_union_row_count": 12,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 95,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 96
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 97,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 98
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 99,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 100
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 6
+          }
+        },
+        {
+          "skill_id": 100,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 101
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 101,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 102
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 13
+          }
+        },
+        {
+          "skill_id": 102,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 103
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 7,
+            "start_skill_id": 398
+          }
+        },
+        {
+          "skill_id": 103,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 104
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 105,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 106
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 8
+          }
+        },
+        {
+          "skill_id": 108,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 109
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 9
+          }
+        },
+        {
+          "skill_id": 109,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 110
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 111,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 112
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 10,
+            "start_skill_id": 112
+          }
+        },
+        {
+          "skill_id": 113,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 114
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 12
+          }
+        },
+        {
+          "skill_id": 114,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 115
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 269,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 270
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 111
+          }
+        },
+        {
+          "skill_id": 336,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 337
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 146
+          }
+        },
+        {
+          "skill_id": 337,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 338
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "fly_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 147,
+            "fly_skill_id": 338
+          }
+        },
+        {
+          "skill_id": 713,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 715
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 1063,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1063
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 326,
+            "collide_skill_id": 1064
+          }
+        },
+        {
+          "skill_id": 1065,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1065
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "start_skill_id",
+            "fly_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 327,
+            "start_skill_id": 1102,
+            "fly_skill_id": 1093
+          }
+        }
+      ]
+    },
+    {
+      "key": "CaiBang",
+      "name": "Cái Bang",
+      "faction_index": 6,
+      "pc_progression": {
+        "skill_ids": [
+          119,
+          122,
+          115,
+          116,
+          129,
+          124,
+          274,
+          277,
+          125,
+          128,
+          130,
+          360,
+          357,
+          359,
+          714
+        ],
+        "by_tier": {
+          "1": [
+            119,
+            122
+          ],
+          "2": [
+            115,
+            116
+          ],
+          "3": [
+            129
+          ],
+          "4": [
+            124,
+            274
+          ],
+          "5": [
+            277
+          ],
+          "6": [
+            125,
+            128
+          ],
+          "7": [
+            130,
+            360
+          ],
+          "9": [
+            357,
+            359,
+            714
+          ]
+        },
+        "source": {
+          "line_start": 1452,
+          "line_end": 1462,
+          "faction": "gaibang",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          357,
+          359,
+          714,
+          1073,
+          1074
+        ],
+        "by_level": {
+          "90": [
+            357,
+            359
+          ],
+          "120": [
+            714
+          ],
+          "150": [
+            1073,
+            1074
+          ]
+        },
+        "source": {
+          "line": 8,
+          "faction_index": 6,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        115,
+        116,
+        119,
+        122,
+        124,
+        125,
+        128,
+        129,
+        130,
+        274,
+        277,
+        357,
+        359,
+        360,
+        714,
+        1073,
+        1074
+      ],
+      "unity_display_skill_ids": [
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        274,
+        277,
+        357,
+        358,
+        359,
+        360,
+        714,
+        720,
+        1073,
+        1074
+      ],
+      "union_skill_ids": [
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        274,
+        277,
+        357,
+        358,
+        359,
+        360,
+        714,
+        720,
+        1073,
+        1074
+      ],
+      "shared_count": 17,
+      "pc_learned_only_count": 0,
+      "unity_display_only_unresolved_count": 9,
+      "symmetric_gap_count": 9,
+      "relationship_bearing_union_row_count": 16,
+      "proof_state": "canonical_static_verified_display_scope",
+      "membership_rows": [
+        {
+          "skill_id": 115,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 116
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 116,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 117
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 117,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 118
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 44
+          }
+        },
+        {
+          "skill_id": 118,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 119
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 49
+          }
+        },
+        {
+          "skill_id": 119,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 120
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 45
+          }
+        },
+        {
+          "skill_id": 120,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 121
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 50
+          }
+        },
+        {
+          "skill_id": 121,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 122
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 122,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 123
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 46
+          }
+        },
+        {
+          "skill_id": 123,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 124
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 51
+          }
+        },
+        {
+          "skill_id": 124,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 125
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 125,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 126
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 47
+          }
+        },
+        {
+          "skill_id": 126,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 127
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 52
+          }
+        },
+        {
+          "skill_id": 127,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 128
+          },
+          "categories": [
+            "missile_active"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 128,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 129
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 48
+          }
+        },
+        {
+          "skill_id": 129,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 130
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 130,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 131
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 274,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 275
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 277,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 278
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 114
+          }
+        },
+        {
+          "skill_id": 357,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 358
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 166
+          }
+        },
+        {
+          "skill_id": 358,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 359
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 167
+          }
+        },
+        {
+          "skill_id": 359,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 360
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 168
+          }
+        },
+        {
+          "skill_id": 360,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 361
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 714,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 716
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 720,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 722
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 275
+          }
+        },
+        {
+          "skill_id": 1073,
+          "classification": "shared",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1073
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "start_skill_id",
+            "fly_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 335,
+            "start_skill_id": 1101,
+            "fly_skill_id": 1103
+          }
+        },
+        {
+          "skill_id": 1074,
+          "classification": "shared",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1074
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 336
+          }
+        }
+      ]
+    },
+    {
+      "key": "TianRen",
+      "name": "Thiên Nhẫn",
+      "faction_index": 7,
+      "pc_progression": {
+        "skill_ids": [
+          135,
+          145,
+          131,
+          132,
+          136,
+          137,
+          138,
+          140,
+          141,
+          364,
+          143,
+          142,
+          148,
+          150,
+          361,
+          362,
+          715
+        ],
+        "by_tier": {
+          "1": [
+            135,
+            145
+          ],
+          "2": [
+            131,
+            132,
+            136
+          ],
+          "3": [
+            137
+          ],
+          "4": [
+            138,
+            140,
+            141
+          ],
+          "5": [
+            364
+          ],
+          "6": [
+            143
+          ],
+          "7": [
+            142,
+            148,
+            150
+          ],
+          "9": [
+            361,
+            362,
+            715
+          ]
+        },
+        "source": {
+          "line_start": 1463,
+          "line_end": 1473,
+          "faction": "tianren",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          361,
+          362,
+          391,
+          715,
+          1075,
+          1076
+        ],
+        "by_level": {
+          "90": [
+            361,
+            362,
+            391
+          ],
+          "120": [
+            715
+          ],
+          "150": [
+            1075,
+            1076
+          ]
+        },
+        "source": {
+          "line": 9,
+          "faction_index": 7,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        131,
+        132,
+        135,
+        136,
+        137,
+        138,
+        140,
+        141,
+        142,
+        143,
+        145,
+        148,
+        150,
+        361,
+        362,
+        364,
+        391,
+        715,
+        1075,
+        1076
+      ],
+      "unity_display_skill_ids": [
+        131,
+        132,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150
+      ],
+      "union_skill_ids": [
+        131,
+        132,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        361,
+        362,
+        364,
+        391,
+        715,
+        1075,
+        1076
+      ],
+      "shared_count": 13,
+      "pc_learned_only_count": 7,
+      "unity_display_only_unresolved_count": 5,
+      "symmetric_gap_count": 12,
+      "relationship_bearing_union_row_count": 20,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 131,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 132
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 132,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 133
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 135,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 136
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 54
+          }
+        },
+        {
+          "skill_id": 136,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 137
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 137,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 138
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 138,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 139
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 55
+          }
+        },
+        {
+          "skill_id": 139,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 140
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 70
+          }
+        },
+        {
+          "skill_id": 140,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 141
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 141,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 142
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 56
+          }
+        },
+        {
+          "skill_id": 142,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 143
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 69
+          }
+        },
+        {
+          "skill_id": 143,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 144
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 144,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 145
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 145,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 146
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 57
+          }
+        },
+        {
+          "skill_id": 146,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 147
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 226
+          }
+        },
+        {
+          "skill_id": 147,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 148
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 71
+          }
+        },
+        {
+          "skill_id": 148,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 149
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 58,
+            "start_skill_id": 192
+          }
+        },
+        {
+          "skill_id": 149,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 150
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 150,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 151
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 361,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 362
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 169
+          }
+        },
+        {
+          "skill_id": 362,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 363
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 171,
+            "vanished_skill_id": 363
+          }
+        },
+        {
+          "skill_id": 364,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 365
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 391,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 392
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 715,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 717
+          },
+          "categories": [
+            "buff_state",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "start_skill_id": 723
+          }
+        },
+        {
+          "skill_id": 1075,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1075
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 337,
+            "start_skill_id": 1131
+          }
+        },
+        {
+          "skill_id": 1076,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1076
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 366,
+            "vanished_skill_id": 363
+          }
+        }
+      ]
+    },
+    {
+      "key": "WuDang",
+      "name": "Võ Đang",
+      "faction_index": 8,
+      "pc_progression": {
+        "skill_ids": [
+          153,
+          155,
+          151,
+          152,
+          159,
+          158,
+          164,
+          160,
+          157,
+          165,
+          166,
+          267,
+          365,
+          368,
+          716
+        ],
+        "by_tier": {
+          "1": [
+            153,
+            155
+          ],
+          "2": [
+            151,
+            152
+          ],
+          "3": [
+            159
+          ],
+          "4": [
+            158,
+            164
+          ],
+          "5": [
+            160
+          ],
+          "6": [
+            157
+          ],
+          "7": [
+            165,
+            166,
+            267
+          ],
+          "9": [
+            365,
+            368,
+            716
+          ]
+        },
+        "source": {
+          "line_start": 1474,
+          "line_end": 1484,
+          "faction": "wudang",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          365,
+          368,
+          716,
+          1078,
+          1079
+        ],
+        "by_level": {
+          "90": [
+            365,
+            368
+          ],
+          "120": [
+            716
+          ],
+          "150": [
+            1078,
+            1079
+          ]
+        },
+        "source": {
+          "line": 10,
+          "faction_index": 8,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        151,
+        152,
+        153,
+        155,
+        157,
+        158,
+        159,
+        160,
+        164,
+        165,
+        166,
+        267,
+        365,
+        368,
+        716,
+        1078,
+        1079
+      ],
+      "unity_display_skill_ids": [
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166
+      ],
+      "union_skill_ids": [
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        267,
+        365,
+        368,
+        716,
+        1078,
+        1079
+      ],
+      "shared_count": 11,
+      "pc_learned_only_count": 6,
+      "unity_display_only_unresolved_count": 5,
+      "symmetric_gap_count": 11,
+      "relationship_bearing_union_row_count": 14,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 151,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 152
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 152,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 153
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 153,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 154
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 24
+          }
+        },
+        {
+          "skill_id": 154,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 155
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 155,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 156
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 25
+          }
+        },
+        {
+          "skill_id": 156,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 157
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 157,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 158
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 158,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 159
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 26
+          }
+        },
+        {
+          "skill_id": 159,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 160
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 211
+          }
+        },
+        {
+          "skill_id": 160,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 161
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 161,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 162
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 162,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 163
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 27
+          }
+        },
+        {
+          "skill_id": 163,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 164
+          },
+          "categories": [
+            "buff_state",
+            "aura",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 215
+          }
+        },
+        {
+          "skill_id": 164,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 165
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 28
+          }
+        },
+        {
+          "skill_id": 165,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 166
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 29
+          }
+        },
+        {
+          "skill_id": 166,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 167
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 267,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 268
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 110
+          }
+        },
+        {
+          "skill_id": 365,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 366
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 173
+          }
+        },
+        {
+          "skill_id": 368,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 369
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 175,
+            "start_skill_id": 371
+          }
+        },
+        {
+          "skill_id": 716,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 718
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 274,
+            "start_skill_id": 738
+          }
+        },
+        {
+          "skill_id": 1078,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1078
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 340
+          }
+        },
+        {
+          "skill_id": 1079,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1079
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 341,
+            "start_skill_id": 1107
+          }
+        }
+      ]
+    },
+    {
+      "key": "KunLun",
+      "name": "Côn Luân",
+      "faction_index": 9,
+      "pc_progression": {
+        "skill_ids": [
+          169,
+          179,
+          167,
+          168,
+          171,
+          392,
+          174,
+          172,
+          173,
+          178,
+          393,
+          175,
+          181,
+          90,
+          176,
+          182,
+          275,
+          630,
+          372,
+          375,
+          717
+        ],
+        "by_tier": {
+          "1": [
+            169,
+            179
+          ],
+          "2": [
+            167,
+            168,
+            171,
+            392
+          ],
+          "3": [
+            174
+          ],
+          "4": [
+            172,
+            173,
+            178,
+            393
+          ],
+          "5": [
+            175,
+            181
+          ],
+          "6": [
+            90,
+            176
+          ],
+          "7": [
+            182,
+            275,
+            630
+          ],
+          "9": [
+            372,
+            375,
+            717
+          ]
+        },
+        "source": {
+          "line_start": 1485,
+          "line_end": 1495,
+          "faction": "kunlun",
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
+        }
+      },
+      "pc_skillbook": {
+        "skill_ids": [
+          372,
+          375,
+          394,
+          717,
+          1080,
+          1081
+        ],
+        "by_level": {
+          "90": [
+            372,
+            375,
+            394
+          ],
+          "120": [
+            717
+          ],
+          "150": [
+            1080,
+            1081
+          ]
+        },
+        "source": {
+          "line": 11,
+          "faction_index": 9,
+          "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"
+        }
+      },
+      "pc_learned_evidence_skill_ids": [
+        90,
+        167,
+        168,
+        169,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        178,
+        179,
+        181,
+        182,
+        275,
+        372,
+        375,
+        392,
+        393,
+        394,
+        630,
+        717,
+        1080,
+        1081
+      ],
+      "unity_display_skill_ids": [
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184
+      ],
+      "union_skill_ids": [
+        90,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        275,
+        372,
+        375,
+        392,
+        393,
+        394,
+        630,
+        717,
+        1080,
+        1081
+      ],
+      "shared_count": 13,
+      "pc_learned_only_count": 11,
+      "unity_display_only_unresolved_count": 5,
+      "symmetric_gap_count": 16,
+      "relationship_bearing_union_row_count": 20,
+      "proof_state": "canonical_static_verified_learned_scope",
+      "membership_rows": [
+        {
+          "skill_id": 90,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 91
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 167,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 168
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 168,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 169
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 169,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 170
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 14
+          }
+        },
+        {
+          "skill_id": 170,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 171
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 171,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 172
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 19
+          }
+        },
+        {
+          "skill_id": 172,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 173
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id",
+            "start_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 15,
+            "start_skill_id": 399
+          }
+        },
+        {
+          "skill_id": 173,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 174
+          },
+          "categories": [
+            "passive",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 174,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_3"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 175
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 175,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 176
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 176,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_6"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 177
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 16
+          }
+        },
+        {
+          "skill_id": 177,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 178
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 178,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 179
+          },
+          "categories": [
+            "passive",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 21
+          }
+        },
+        {
+          "skill_id": 179,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_1"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 180
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 17
+          }
+        },
+        {
+          "skill_id": 180,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 181
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 181,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_5"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 182
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 22
+          }
+        },
+        {
+          "skill_id": 182,
+          "classification": "shared",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 183
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 18
+          }
+        },
+        {
+          "skill_id": 183,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 184
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 23
+          }
+        },
+        {
+          "skill_id": 184,
+          "classification": "unity_display_only_unresolved",
+          "progression_evidence": [],
+          "skillbook_evidence": [],
+          "pc_learned": false,
+          "observed_display": true,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 185
+          },
+          "categories": [
+            "buff_state"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 275,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 276
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 372,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 373
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 178
+          }
+        },
+        {
+          "skill_id": 375,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 376
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "collide_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 181,
+            "collide_skill_id": 387
+          }
+        },
+        {
+          "skill_id": 392,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_2"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 393
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 290
+          }
+        },
+        {
+          "skill_id": 393,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_4"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 394
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 394,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_90"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 395
+          },
+          "categories": [
+            "missile_active",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 20
+          }
+        },
+        {
+          "skill_id": 630,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_7"
+          ],
+          "skillbook_evidence": [],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 632
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 717,
+          "classification": "pc_learned_only",
+          "progression_evidence": [
+            "progression_tier_9"
+          ],
+          "skillbook_evidence": [
+            "skillbook_120"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 719
+          },
+          "categories": [
+            "passive"
+          ],
+          "direct_relationships": {}
+        },
+        {
+          "skill_id": 1080,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1080
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 342
+          }
+        },
+        {
+          "skill_id": 1081,
+          "classification": "pc_learned_only",
+          "progression_evidence": [],
+          "skillbook_evidence": [
+            "skillbook_150"
+          ],
+          "pc_learned": true,
+          "observed_display": false,
+          "canonical_source": {
+            "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
+            "line": 1081
+          },
+          "categories": [
+            "missile_active",
+            "by_missile",
+            "child_skill_id",
+            "vanished_skill_id"
+          ],
+          "direct_relationships": {
+            "child_skill_id": 372,
+            "vanished_skill_id": 1109
+          }
+        }
+      ]
+    }
+  ],
+  "ranking": [],
+  "excluded_from_ranking": [
+    {
+      "key": "Shaolin",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-S-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-S-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "049c73b9e67f2a18dddbcc026ff8a6996ce1117210686e004eac07398be059a1",
+      "membership_path": "harness/docs/stories/SKL-S-PROOF-001/membership-classification.json",
+      "membership_sha256": "73bf4f791e37b2b63d276740ad5886b05c22286c2941cb521cdfc839f5e517a6"
+    },
+    {
+      "key": "EMei",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-EM-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-EM-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "002618cbfb3c79c0e7e57bc7669de37653dc437ff912ffc5349bf4676db8873d",
+      "membership_path": "harness/docs/stories/SKL-EM-PROOF-001/membership-classification.json",
+      "membership_sha256": "cafa206bbe716699e996dc15e5e892163c71e67ad3df34d08f955b9a19b89d62"
+    },
+    {
+      "key": "TianRen",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-TR-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-TR-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "d75fa4da27e66c51920db80273999d222547287ccf87c4bdf131b5136a2bef45",
+      "membership_path": "harness/docs/stories/SKL-TR-PROOF-001/membership-classification.json",
+      "membership_sha256": "466c38f90cf841ae279c2580f0b1b513e9573cf382da1b1eb70b27814c985685"
+    },
+    {
+      "key": "WuDang",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-WD-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-WD-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "1cbab681c8b4bc6ab808bace54e20620c8a5b4028c5f618de2838a4a3b3fd351",
+      "membership_path": "harness/docs/stories/SKL-WD-PROOF-001/membership-classification.json",
+      "membership_sha256": "35104b51d81ceb96934798ed6c79b19af42c1837ba786ab92fa8110712e45472"
+    },
+    {
+      "key": "WuDu",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-WDU-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-WDU-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "bdf78af995faff3448217fef3663a159b7f0581c7ad5b047bd2b456c5d03b59e",
+      "membership_path": "harness/docs/stories/SKL-WDU-PROOF-001/membership-classification.json",
+      "membership_sha256": "4cc693683e6112a6f299790d801fc1e8f856bf5b4a27597dc6665a6d4828194a"
+    },
+    {
+      "key": "TianWang",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-TW-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-TW-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "2601a8f03517ad07e930e0fd248f80b547315b4591a07a28a567407ea55a469e",
+      "membership_path": "harness/docs/stories/SKL-TW-PROOF-001/membership-classification.json",
+      "membership_sha256": "5cc932f515c69355179dfe485017288bc60d1134cba4c2cb8f74fde5c0a8cb67"
+    },
+    {
+      "key": "CuiYan",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-CY-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-CY-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "5e2123bf27ff82b6889260d9c14d4b598a81f41680c9f61667d0ed004cbf108a",
+      "membership_path": "harness/docs/stories/SKL-CY-PROOF-001/membership-classification.json",
+      "membership_sha256": "b045ad3292ca61820d947ff2c3d37e8876ad9b0027f437234eacfda5beb1eac1"
+    },
+    {
+      "key": "TangMen",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-TM-PROOF-001",
+        "SKL-TM-CATALOG-001"
+      ],
+      "oracle_path": "Assets/StreamingAssets/Reference/PcTangMenOracle.json",
+      "oracle_sha256": "e4270bd12a534b229c962c3fc322a9271aaefc6b99d062e3df0711a5b0f84f89",
+      "membership_path": "harness/docs/stories/SKL-TM-PROOF-001/membership-classification.json",
+      "membership_sha256": "5802e1abfd4df48b75e708baef9d4767adf0be5d02da771c37465142eb175f2a"
+    },
+    {
+      "key": "CaiBang",
+      "proof_state": "canonical_static_verified_display_scope",
+      "stories": [
+        "SKL-CB-PROOF-002"
+      ],
+      "oracle_path": "Assets/StreamingAssets/Reference/PcCaiBangOracle.json",
+      "oracle_sha256": "91d3251aef30f755f3480a2104a48227eaffd8e7ea8fbf495d189dd185ed84da"
+    },
+    {
+      "key": "KunLun",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-KL-PROOF-001"
+      ],
+      "oracle_path": "Assets/StreamingAssets/Reference/PcKunLunOracle.json",
+      "oracle_sha256": "3be6712946489b82d2595eae77894bcf022f0b6cd4d43977850572c700be399f",
+      "membership_path": "harness/docs/stories/SKL-KL-PROOF-001/membership-classification.json",
+      "membership_sha256": "1d2643f30287f3386dadefdb3dcceb0a1d6666e2497c68d9f9a7827be80d86ca"
+    }
+  ],
+  "recommended_next_story": {
+    "id": null,
+    "title": null,
+    "winner": null,
+    "symmetric_gap_count": null,
+    "reason": "Highest symmetric membership gap among non-completed factions: PC-learned and Unity-display membership must be reconciled against canonical sources before any oracle."
+  },
+  "summary_counts": {
+    "factions": 10,
+    "union_rows_total": 242,
+    "shared_total": 140,
+    "pc_learned_only_total": 65,
+    "unity_display_only_unresolved_total": 37
+  }
+}

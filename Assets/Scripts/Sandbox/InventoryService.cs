@@ -14,6 +14,14 @@ namespace VLTK.Sandbox
         Boots = 3,
         Necklace = 4,
         Ring = 5,
+        Mount = 6,   // Thú cưỡi — resId = horse SPR variant from horseres.txt
+        // PR-1 bind-accessory-equipment-slots — append-only (values 7–12)
+        Ring2 = 7,    // Nhẫn 2 (PC itempart_ring2)
+        Mask = 8,     // Mặt Nạ (PC mask.txt, equip_mask D11)
+        Pendant = 9,  // Hộ Thân Phù (PC pendant.txt, equip_pendant D9)
+        Belt = 10,    // Đai Lưng (PC belt.txt, equip_belt D6)
+        Trinket = 11, // Bội Kiện (PC shipin.txt, equip_shipin D14)
+        Trinket2 = 12,// Ngọc Bội — second ornament (PC shipin.txt, equip_shipin D14)
     }
 
     /// <summary>A stack of an item held in the test inventory.</summary>
@@ -32,6 +40,9 @@ namespace VLTK.Sandbox
     /// </summary>
     public class InventoryService
     {
+        // PC source 05ea8560 is 6×10; mobile Hành Trang capacity is user-requested 4×7.
+        public const int MaxInventorySlots = 28;
+
         private readonly ItemContractImporter _db;
         private readonly List<InventoryEntry> _inventory = new();
         private readonly Dictionary<EquipSlot, ItemDefinition> _equipped = new();
@@ -47,6 +58,20 @@ namespace VLTK.Sandbox
 
         public IReadOnlyList<InventoryEntry> Inventory => _inventory;
         public IReadOnlyDictionary<EquipSlot, ItemDefinition> Equipped => _equipped;
+
+        /// <summary>
+        /// PR-1 — read the equipped item for a canonical slot. Returns null if the
+        /// slot is empty. Safe empty state: never throws.
+        /// </summary>
+        public ItemDefinition GetEquipped(EquipSlot slot)
+            => _equipped.TryGetValue(slot, out var item) ? item : null;
+
+        /// <summary>PR-1 — check whether a canonical slot has an equipped item.</summary>
+        public bool IsSlotEquipped(EquipSlot slot)
+            => _equipped.ContainsKey(slot);
+
+        public ItemDefinition ResolvePcItem(int itemGenre, int detailType, int particularType)
+            => _db?.ResolvePcItem(itemGenre, detailType, particularType);
 
         /// <summary>AC#1 — search the item database by id or name substring.</summary>
         public List<ItemDefinition> Search(string query)
@@ -82,9 +107,65 @@ namespace VLTK.Sandbox
                 return false;
             }
             var existing = _inventory.Find(e => e.item.itemId == itemId);
-            if (existing != null) existing.count += count;
-            else _inventory.Add(new InventoryEntry { item = item, count = count });
+            if (existing != null)
+            {
+                existing.count += count;
+                return true;
+            }
+            if (_inventory.Count >= MaxInventorySlots)
+            {
+                SubsystemLog.Warn("Inventory", $"AddItem: mobile bag full ({MaxInventorySlots} slots)");
+                return false;
+            }
+            _inventory.Add(new InventoryEntry { item = item, count = count });
             return true;
+        }
+
+        public bool AddPcItem(int itemGenre, int detailType, int particularType, int count = 1)
+        {
+            var item = ResolvePcItem(itemGenre, detailType, particularType);
+            if (item == null)
+            {
+                SubsystemLog.Warn("Inventory", $"AddPcItem: unknown PC item {itemGenre}/{detailType}/{particularType}");
+                return false;
+            }
+            return AddItem(item.itemId, count);
+        }
+
+        public bool RemoveItem(int itemId, int count = 1)
+        {
+            var existing = _inventory.Find(e => e.item.itemId == itemId);
+            if (existing == null || existing.count < count) return false;
+            
+            existing.count -= count;
+            if (existing.count <= 0)
+                _inventory.Remove(existing);
+            return true;
+        }
+
+        public bool RemovePcItem(int itemGenre, int detailType, int particularType, int count = 1)
+        {
+            var item = ResolvePcItem(itemGenre, detailType, particularType);
+            if (item == null) return false;
+            return RemoveItem(item.itemId, count);
+        }
+
+        public int GetFreeSpace() => MaxInventorySlots - _inventory.Count;
+
+        public bool HasPcItem(int itemGenre, int detailType, int particularType)
+        {
+            foreach (var entry in _inventory)
+            {
+                var item = entry?.item;
+                if (item != null && item.itemGenre == itemGenre && item.detailType == detailType && item.particularType == particularType)
+                    return true;
+            }
+            return false;
+        }
+
+        public void ClearInventory()
+        {
+            _inventory.Clear();
         }
 
         /// <summary>AC#3 — equip an item into a slot; returns the recomputed stat preview.</summary>
@@ -97,21 +178,36 @@ namespace VLTK.Sandbox
                 return StatPreview();
             }
             _equipped[slot] = item;
+            bool isFemale = _equipment != null && _equipment.IsFemale;
             if (slot == EquipSlot.Weapon)
             {
-                int variant = PlayerEquipmentService.ItemToWeaponVariant(itemId);
+                int variant = item.resId > 0 
+                    ? PlayerAppearanceMapper.MapWeapon(isFemale, item.resId) 
+                    : PlayerEquipmentService.ItemToWeaponVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Weapon, variant, itemId);
-                OnWeaponTypeChanged?.Invoke(PlayerEquipmentService.WeaponVariantToType(variant));
+                OnWeaponTypeChanged?.Invoke(PlayerEquipmentService.GetWeaponType(itemId, variant));
             }
             else if (slot == EquipSlot.Helmet)
             {
-                int variant = PlayerEquipmentService.ItemToHelmetVariant(itemId);
+                int variant = item.resId > 0 
+                    ? PlayerAppearanceMapper.MapHead(isFemale, item.resId) 
+                    : PlayerEquipmentService.ItemToHelmetVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Head, variant, itemId);
             }
             else if (slot == EquipSlot.Armor)
             {
-                int variant = PlayerEquipmentService.ItemToBodyVariant(itemId);
+                int variant = item.resId > 0 
+                    ? PlayerAppearanceMapper.MapBody(isFemale, item.resId) 
+                    : PlayerEquipmentService.ItemToBodyVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Body, variant, itemId);
+            }
+            else if (slot == EquipSlot.Mount)
+            {
+                // item.resId = horse SPR variant (from horseres.txt via PcHorseParser)
+                // Default to variant 16 (普通黄马) if resId not set
+                int horseVariant = item.resId > 0 ? item.resId : MalePlayerSpriteCatalog.MountHorseVariant;
+                _equipment?.Equip(PlayerEquipSlot.Mount, horseVariant, itemId);
+                SubsystemLog.Info("Inventory", $"Equip mount: item={itemId} name={item.DisplayName} horseVariant={horseVariant}");
             }
             return StatPreview();
         }

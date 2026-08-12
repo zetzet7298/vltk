@@ -29,6 +29,13 @@
         "semble"
       ],
       "directTools": false
+    },
+    "blender-mcp": {
+      "command": "uvx",
+      "args": [
+        "blender-mcp"
+      ],
+      "directTools": false
     }
   }
 }

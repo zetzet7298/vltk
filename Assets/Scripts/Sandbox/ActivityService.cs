@@ -18,6 +18,7 @@ namespace VLTK.Sandbox
         public const string DefaultStreamingDir = "Reference/PcEvent";
 
         private PcActivityRegistry _registry;
+        private IActivityServiceHost _host;
 
         public event Action<int> OnActivityStarted; // (activityId)
         public event Action OnActivityCatalogLoaded;
@@ -25,30 +26,65 @@ namespace VLTK.Sandbox
         public int Count => _registry != null ? _registry.Count : 0;
 
         public ActivityService() { }
+        public ActivityService(IActivityServiceHost host) { _host = host; }
         public ActivityService(PcActivityRegistry registry) { AttachRegistry(registry); }
+
+        public void AttachHost(IActivityServiceHost host) { _host = host; }
 
         public void AttachRegistry(PcActivityRegistry registry)
         {
             _registry = registry ?? new PcActivityRegistry();
             SubsystemLog.Info(LogTag, $"Đã tải {_registry.Count} hoạt động");
             OnActivityCatalogLoaded?.Invoke();
+            if (_host != null)
+            {
+                _host.OnActivityRegistryAttached(_registry.Count);
+                _host.LogActivityEvent("load", 0, $"Loaded {_registry.Count} activities");
+                _host.PlayActivitySFX("load", 0);
+            }
         }
 
         public PcActivityEntry GetActivity(int activityId)
-            => _registry != null ? _registry.Get(activityId) : null;
+        {
+            var e = _registry != null ? _registry.Get(activityId) : null;
+            if (_host != null)
+            {
+                if (e != null)
+                    _host.OnActivityResolved(e.activityId, e.nameRaw, e.type, e.openHour, e.closeHour);
+                else
+                    _host.LogActivityEvent("query_missing", activityId, "Activity not found in registry");
+            }
+            return e;
+        }
 
         public IReadOnlyList<PcActivityEntry> GetByType(int type)
-            => _registry != null
+        {
+            var list = _registry != null
                 ? _registry.GetByType(type)
                 : (IReadOnlyList<PcActivityEntry>)Array.Empty<PcActivityEntry>();
+            if (_host != null)
+                _host.OnActivitiesByTypeQueried(type, list.Count, TypeNameVi(type));
+            return list;
+        }
 
         public IReadOnlyList<PcActivityEntry> GetActiveAtHour(int hour)
-            => _registry != null
+        {
+            var list = _registry != null
                 ? _registry.GetActiveByHour(hour)
                 : (IReadOnlyList<PcActivityEntry>)Array.Empty<PcActivityEntry>();
+            if (_host != null)
+                _host.OnActivitiesAtHourQueried(hour, list.Count);
+            return list;
+        }
 
         public IEnumerable<PcActivityEntry> GetAllActivities()
-            => _registry != null ? _registry.All : (IEnumerable<PcActivityEntry>)Array.Empty<PcActivityEntry>();
+        {
+            var list = _registry != null ? _registry.All : (IEnumerable<PcActivityEntry>)Array.Empty<PcActivityEntry>();
+            int n = 0;
+            foreach (var _ in list) n++;
+            if (_host != null) _host.OnAllActivitiesQueried(n);
+            return list;
+        }
 
         public void StartActivity(int activityId)
         {
@@ -57,11 +93,32 @@ namespace VLTK.Sandbox
             if (e == null)
             {
                 SubsystemLog.Warn(LogTag, $"Hoạt động {activityId} không tồn tại");
+                if (_host != null)
+                {
+                    _host.OnActivityStartDispatched(activityId, false, "Activity not found in registry");
+                    _host.LogActivityEvent("start_missing", activityId, "Activity not found");
+                }
                 return;
             }
             SubsystemLog.Info(LogTag, $"Bắt đầu hoạt động #{activityId} ({e.nameRaw})");
             OnActivityStarted?.Invoke(activityId);
+            if (_host != null)
+            {
+                _host.OnActivityStartDispatched(activityId, true, $"Started {e.nameRaw}");
+                _host.ShowActivityUI(e.activityId, e.nameRaw, e.type);
+                _host.LogActivityEvent("start", e.activityId, $"Started {e.nameRaw}");
+                _host.PlayActivitySFX("start", e.activityId);
+                _host.SaveActivityState(e.activityId, e.type, e.openHour);
+            }
         }
+
+        public static string TypeNameVi(int type) => type switch
+        {
+            0 => "Hằng Ngày",
+            1 => "Hằng Tuần",
+            2 => "Hằng Tháng",
+            _ => $"Khác ({type})",
+        };
 
         public static ActivityService LoadFromStreamingAssets(string subdir = null)
         {

@@ -118,13 +118,13 @@ namespace VLTK.Tests.Sandbox
             var reg = new PcBattleMapConfigRegistry();
             reg.Register(new PcBattleMapConfigEntry
             {
-                battleMapId = 1, battleType = BattleType.SongJin,
+                battleMapId = 1, battleType = (int)BattleType.TongKim,
             });
             reg.Register(new PcBattleMapConfigEntry
             {
-                battleMapId = 2, battleType = BattleType.NationalWar,
+                battleMapId = 2, battleType = (int)BattleType.QuocChien,
             });
-            var list = reg.GetByBattleType(BattleType.SongJin);
+            var list = reg.GetByBattleType((int)BattleType.TongKim);
             Assert.That(list.Count, Is.EqualTo(1));
         }
     }
@@ -171,13 +171,13 @@ namespace VLTK.Tests.Sandbox
             var reg = new PcBattleHonorRegistry();
             reg.Register(new PcBattleHonorEntry
             {
-                honorId = 1, battleType = BattleType.SongJin, name = "Tướng Quân",
+                honorId = 1, battleType = (int)BattleType.TongKim, name = "Tướng Quân",
             });
             reg.Register(new PcBattleHonorEntry
             {
-                honorId = 2, battleType = BattleType.CityWar, name = "Thành Chủ",
+                honorId = 2, battleType = (int)BattleType.Boss, name = "Thành Chủ",
             });
-            var list = reg.GetByBattleType(BattleType.SongJin);
+            var list = reg.GetByBattleType((int)BattleType.TongKim);
             Assert.That(list.Count, Is.EqualTo(1));
         }
     }

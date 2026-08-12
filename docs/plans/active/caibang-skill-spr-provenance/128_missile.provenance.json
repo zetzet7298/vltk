@@ -1,0 +1,31 @@
+{
+  "schema": "vltk.survivor-caibang-spr-provenance/v1",
+  "skill_id": 128,
+  "visual_kind": "missile",
+  "logical_path": "\\spr\\skill\\丐帮\\mag_gb_05_亢龙有悔.spr",
+  "uid": "a31b9f04",
+  "hash": {
+    "tool": "vltktool.jx_hash.hash_resource_path",
+    "encoding": "gbk",
+    "path_bytes_hex": "5c7370725c736b696c6c5cd8a4b0ef5c6d61675f67625f30355fbfbac1fad3d0bbda2e737072",
+    "signed_uid": "a31b9f04",
+    "unsigned_uid": "d5a8e99b"
+  },
+  "package": {
+    "index": 22,
+    "name": "skills.pak",
+    "priority_rule": "lowest package.ini index wins"
+  },
+  "source": "extracted from pak via vltktool.unpak_tool.decompress_entry (WSL Ubuntu-24.04, libucl1)",
+  "staged_path": "SpritesRuntime/a31b9f04.spr",
+  "bytes": 895965,
+  "sha256": "e5f21a6bce0066361adc90ebf9b7486d9acd08732b7914f3dcb24c9feba59784",
+  "spr": {
+    "parser": "vltktool.extract_item_spr",
+    "frames_total": 80,
+    "color_count": 256,
+    "decode_status": "ok"
+  },
+  "status": "staged",
+  "note": "skills.pak entry with same UID is a different/corrupt SPR (decode fails). Staged file decodes OK (80-frame dragon anim) and matches the logical path visual; pre-existing staging kept."
+}

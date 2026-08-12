@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcFactionConfigRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public FactionConfigService() : this(null) { }
+
         public FactionConfigService(PcFactionConfigRegistry reg) { _reg = reg ?? new PcFactionConfigRegistry(); }
 
         public static FactionConfigService LoadFromStreamingAssets(string subDir = "Reference/PcTong")

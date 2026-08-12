@@ -1,0 +1,20 @@
+{
+    "name": "VLTK.Production.Networking",
+    "rootNamespace": "VLTK.Production.Networking",
+    "references": [
+        "VLTK.SkillPort",
+        "VLTK.Generated.GameV1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

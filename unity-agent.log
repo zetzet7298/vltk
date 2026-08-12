@@ -1,0 +1,1506 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.5/staging' branch; Version is '6000.5.6f1 (0e0577a1a2ac) revision 918903'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Channel LicenseClient-zet doesn't exist
+OS: 'Windows 11  (10.0.26100) Core' Language: 'en' Physical Memory: 32472 MB
+BatchMode: 0, IsHumanControllingUs: 1, StartBugReporterOnCrash: 1, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-08-05T01:47:18Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 20676)
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.5.6f1\Editor\Unity.exe
+-projectPath
+C:\Projects\vltk-mobile
+-logFile
+C:\Projects\vltk-mobile\unity-agent.log
+Successfully changed project path to: C:\Projects\vltk-mobile
+C:/Projects/vltk-mobile
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=0"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.Player connection [22904]  Target information:
+
+Player connection [22904]  * "[IP] 172.30.0.1 [Port] 55504 [Flags] 2 [Guid] 2962445225 [EditorId] 2962445225 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L43I7BO) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [22904]  * "[IP] 100.100.116.74 [Port] 55504 [Flags] 2 [Guid] 2962445225 [EditorId] 2962445225 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L43I7BO) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [22904]  * "[IP] 192.168.1.6 [Port] 55504 [Flags] 2 [Guid] 2962445225 [EditorId] 2962445225 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-L43I7BO) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [22904] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [22904] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Starting IPC server.
+Waiting for clients to connect on \\.\pipe\Unity-LicenseClient-zet, press Ctrl-C to exit.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-zet" at "2026-08-05T01:47:18.8026199Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 20676, path: "C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.1+9fbee8e
+  Session Id:              5d285dd705eb47fe82110afe2d1f973c
+  Correlation Id:          49272a9519d319eec94301460d1e0dbb
+  External correlation Id: 7908530465879394054
+  Machine Id:              q25dd5PfKHrw0m8D1w39BjQnwwY=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-zet" (connect: 0.56s, validation: 0.20s, handshake: 0.06s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-zet-notifications" at "2026-08-05T01:47:19.0613072Z"
+[Licensing::Module] Connected to LicensingClient (PId: 20676, launch time: 0.03, total connection time: 0.82s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968363829597-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.02
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.91s
+[Package Manager] Connected to IPC stream "Upm-20272" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Refreshing native plugins compatible for Editor in 18.76 ms, found 0 plugins.
+Initialize engine version: 6000.5.6f1 (0e0577a1a2ac)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Projects/vltk-mobile/Assets
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 3050 Laptop GPU
+[D3D12 Device Filter] Driver Version: 30.0.15.1181
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 3991 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 3050 Laptop GPU (ID=0x25a2)
+    Vendor:          NVIDIA
+    VRAM:            3991 MB
+    App VRAM Budget: 3392 MB
+    Driver:          30.0.15.1181
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56272
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.5.6f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 1.000296 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.004 seconds
+Domain Reload Profiling: 6839ms
+	BeginReloadAssembly (779ms)
+		CreateAndSetChildDomain (6ms)
+	RebuildCommonClasses (6ms)
+	RebuildNativeTypeToScriptingClass (467ms)
+	initialDomainReloadingComplete (1563ms)
+	LoadAllAssembliesAndSetupDomain (3017ms)
+		LoadAssemblies (781ms)
+		AnalyzeDomain (2861ms)
+			TypeCache.Refresh (2859ms)
+				TypeCache.ScanAssembly (2333ms)
+	FinalizeReload (1008ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (6ms)
+			BeforeProcessingInitializeOnLoad (132ms)
+			ProcessInitializeOnLoadAttributes (239ms)
+			ProcessInitializeOnLoadMethodAttributes (411ms)
+			EditorAssembliesLoaded (14ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 83 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.2d.pixel-perfect@6.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.2d.pixel-perfect@a860cb24a0cc)
+    com.unity.2d.psdimporter@15.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.2d.psdimporter@3ef8178676f6)
+    com.unity.adaptiveperformance.samsung.android@5.1.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.adaptiveperformance.samsung.android@d07c3e95be8a)
+    com.unity.addressables@3.1.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.addressables@9bffe1a216ce)
+    com.unity.ads@4.19.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.ads@dbd68e7e78e9)
+    com.unity.ai.navigation@2.0.14 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.ai.navigation@134dd6a3b97b)
+    com.unity.analytics@3.8.2 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.analytics@c9d14a6bdec6)
+    com.unity.burst@1.8.29 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.burst@6bb9aca3ef38)
+    com.unity.cinemachine@2.10.7 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.cinemachine@631385387c5a)
+    com.unity.collab-proxy@2.13.3 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.collab-proxy@4f3be89e8675)
+    com.unity.ide.rider@3.0.40 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.ide.rider@e4950c6d131b)
+    com.unity.ide.visualstudio@2.0.27 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.ide.visualstudio@dc1ddd4f09b6)
+    com.unity.inputsystem@1.20.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.inputsystem@7a4e1a2a8194)
+    com.unity.memoryprofiler@1.1.12 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.memoryprofiler@485b5ba42ef5)
+    com.unity.nuget.newtonsoft-json@3.2.2 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64)
+    com.unity.performance.profile-analyzer@1.4.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.performance.profile-analyzer@2bb26871883c)
+    com.unity.profiling.core@1.0.3 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.purchasing@4.15.1 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.purchasing@265595791a69)
+    com.unity.timeline@1.8.12 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.timeline@8cd8509afae5)
+    com.unity.xr.legacyinputhelpers@3.0.1 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.xr.legacyinputhelpers@3f62d634f63b)
+    com.unity.services.core@1.18.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.services.core@3464cb68d709)
+    com.unity.editorcoroutines@1.1.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.editorcoroutines@87a15ed012c2)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+    com.unity.test-framework.performance@3.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.test-framework.performance@8b56083ec0f0)
+    com.unity.services.analytics@6.3.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.services.analytics@cde4e6cf92f9)
+    com.unity.scriptablebuildpipeline@3.1.1 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.scriptablebuildpipeline@ea93f1084040)
+    com.unity.2d.common@15.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.2d.common@b779c433ed47)
+    com.unity.searcher@4.9.4 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.searcher@d45a78918735)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.2d.sprite@053a968eab56)
+    com.unity.2d.tilemap@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.2d.tilemap@b959501fd678)
+    com.unity.adaptiveperformance@6.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.adaptiveperformance@4516fc1e899a)
+    com.unity.adaptiveperformance.google.android@6.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.adaptiveperformance.google.android@70ad6e03494a)
+    com.unity.collections@6.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.collections@a43cabe808ca)
+    com.unity.mathematics@1.4.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.mathematics@981956d94fb6)
+    com.unity.multiplayer.center@1.0.1 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.multiplayer.center@b860850997d0)
+    com.unity.render-pipelines.universal@17.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.render-pipelines.universal@73b4c4ff130e)
+    com.unity.test-framework@1.7.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.test-framework@1405238725ab)
+    com.unity.transport@6.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.transport@0c07c94c2861)
+    com.unity.ugui@2.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.ugui@67707a67a4ab)
+    com.unity.modules.accessibility@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.ui@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ext.nunit@2.1.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.ext.nunit@44f7d31723bd)
+    com.unity.render-pipelines.core@17.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.render-pipelines.core@645717f21c5f)
+    com.unity.shadergraph@17.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.shadergraph@8d7376ec43ee)
+    com.unity.render-pipelines.universal-config@17.5.0 (location: C:\Projects\vltk-mobile\Library\PackageCache\com.unity.render-pipelines.universal-config@fdda01c80fe3)
+  Embedded packages:
+    com.unity.localization@file:C:\Projects\vltk-mobile\Packages\com.unity.localization (location: C:\Projects\vltk-mobile\Packages\com.unity.localization)
+  Git packages:
+    com.antigravity.ide@https://github.com/billythekidz/UnityAntigravityIDE.git (location: C:\Projects\vltk-mobile\Library\PackageCache\com.antigravity.ide@352007508291)
+    com.coplaydev.unity-mcp@https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main (location: C:\Projects\vltk-mobile\Library\PackageCache\com.coplaydev.unity-mcp@8bd91ce7bd3a)
+    com.handzlikchris.fastscriptreload@https://github.com/handzlikchris/FastScriptReload.git?path=Assets#51140b71d9e5df1de231b33ec20ee089b18bebec (location: C:\Projects\vltk-mobile\Library\PackageCache\com.handzlikchris.fastscriptreload@f852ac4f204b)
+[Package Manager] com.unity.adaptiveperformance.samsung.android is deprecated: This package is no longer supported on this editor version. Use com.unity.adaptiveperformance.google.android instead.
+[Package Manager] com.unity.purchasing@4.15.1 is deprecated: Unity IAP 4 is unsupported as of June 8, 2026. IAP 5 is the supported version going forward.
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.03 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Duplicate assembly 'System.Collections.Immutable.FSR.dll' with different versions detected, using 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.FSR.dll, AssemblyName=System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.dll, AssemblyName=System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Projects\vltk-mobile
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping - 200 - application/grpc 46.7606ms
+Starting: C:\Program Files\Unity\Hub\Editor\6000.5.6f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Projects/vltk-mobile
+Duplicate assembly 'System.Collections.Immutable.FSR.dll' with different versions detected, using 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.FSR.dll, AssemblyName=System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.dll, AssemblyName=System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - application/grpc -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.5.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.5.6f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
+warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.5.6f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.5.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Unity.Burst.Cecil, Version=0.11.6.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.burst@6bb9aca3ef38\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      Resolved Mono.Cecil, Version=0.11.5.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e with Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/ConfigurePostProcessors'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/ConfigurePostProcessors - 200 - application/grpc 734.7245ms
+ExitCode: 0 Duration: 2s94ms
+[1549/2069  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra build success (1.99 seconds), 1 items updated, 2069 evaluated
+AssetDatabase: script compilation time: 3.392734s
+Duplicate assembly 'System.Collections.Immutable.FSR.dll' with different versions detected, using 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.FSR.dll, AssemblyName=System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.dll, AssemblyName=System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Begin MonoManager ReloadAssembly
+Duplicate assembly 'System.Collections.Immutable.FSR.dll' with different versions detected, using 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.FSR.dll, AssemblyName=System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.dll, AssemblyName=System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Symbol file LoadedFromMemory is not a mono symbol file
+Refreshing native plugins compatible for Editor in 661.93 ms, found 3 plugins.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 14.33 ms, found 3 plugins.
+[Licensing::Client] Successfully resolved entitlement details
+Duplicate assembly 'System.Collections.Immutable.FSR.dll' with different versions detected, using 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.FSR.dll, AssemblyName=System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' and ignoring 'Packages/com.handzlikchris.fastscriptreload/Plugins/Roslyn/2021+/System.Collections.Immutable.dll, AssemblyName=System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.Failed to find entry-points:
+System.Exception: Error while loading assembly references for FastScriptReload.Editor ---> System.Exception: Error while hashing assembly C:\Projects\vltk-mobile\Library\PackageCache\com.handzlikchris.fastscriptreload@f852ac4f204b\Plugins\Harmony\net48\0Harmony.dll ---> System.AggregateException: One or more errors occurred. (Error while hashing type reference '1000138' in assembly '0Harmony.dll') ---> System.Exception: Error while hashing type reference '1000138' in assembly '0Harmony.dll' ---> System.BadImageFormatException: Read out of bounds.
+  at System.Reflection.Throw.OutOfBounds () [0x00005] in <ab51767de5994109bd81bf3355e724c9>:0 
+  at System.Reflection.Internal.MemoryBlock.PeekHeapReference (System.Int32 offset, System.Boolean smallRefSize) [0x0000b] in <ab51767de5994109bd81bf3355e724c9>:0 
+  at System.Reflection.Metadata.Ecma335.AssemblyRefTableReader.GetName (System.Int32 rowId) [0x0000b] in <ab51767de5994109bd81bf3355e724c9>:0 
+  at System.Reflection.Metadata.AssemblyReference.get_Name () [0x00020] in <ab51767de5994109bd81bf3355e724c9>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.Util.SrmExtensions.GetAssemblyNameReference (System.Reflection.Metadata.AssemblyReference& assemblyReference, System.Reflection.Metadata.MetadataReader metadataReader) [0x00000] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.Util.CachingMetadataReader.GetAssemblyNameReferenceImpl (System.Reflection.Metadata.AssemblyReferenceHandle handle) [0x0000d] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at System.Collections.Concurrent.ConcurrentDictionary`2[TKey,TValue].GetOrAdd (TKey key, System.Func`2[T,TResult] valueFactory) [0x00034] in <816f70bc2a9c4332b0bd119906a8d40e>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.Util.CachingMetadataReader.GetAssemblyNameReference (System.Reflection.Metadata.AssemblyReferenceHandle handle) [0x00000] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.Util.SrmExtensions.WriteAssemblyNameTo (System.Reflection.Metadata.TypeReference& typeReference, Burst.Compiler.IL.Helpers.Hash128Builder builder, Burst.Compiler.IL.Hashing.CacheBuilder.Util.CachingMetadataReader reader, Burst.Compiler.TargetFramework targetFramework) [0x00037] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher.HashTypeReferenceImpl (System.Reflection.Metadata.TypeReferenceHandle typeReferenceHandle) [0x00089] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher.HashTypeReference (System.Reflection.Metadata.TypeReferenceHandle typeReferenceHandle) [0x00000] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+   --- End of inner exception stack trace ---
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher.HashTypeReference (System.Reflection.Metadata.TypeReferenceHandle typeReferenceHandle) [0x00031] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher+<>c__DisplayClass14_0.<HashImpl>b__6 (System.Reflection.Metadata.TypeReferenceHandle typeReferenceHandle, System.Threading.Tasks.ParallelLoopState loopState, System.Int64 i) [0x00000] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher.ForEach[T] (System.Collections.Generic.IEnumerable`1[T] elements, System.Action`3[T1,T2,T3] callback) [0x00018] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher+<>c__DisplayClass14_0.<HashImpl>b__1 () [0x00000] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at System.Threading.Tasks.Task.InnerInvoke () [0x0000f] in <816f70bc2a9c4332b0bd119906a8d40e>:0 
+  at System.Threading.Tasks.Task.Execute () [0x00000] in <816f70bc2a9c4332b0bd119906a8d40e>:0 
+   --- End of inner exception stack trace ---
+  at System.Threading.Tasks.Task.WaitAll (System.Threading.Tasks.Task[] tasks, System.Int32 millisecondsTimeout, System.Threading.CancellationToken cancellationToken) [0x001c8] in <816f70bc2a9c4332b0bd119906a8d40e>:0 
+  at System.Threading.Tasks.Task.WaitAll (System.Threading.Tasks.Task[] tasks, System.Int32 millisecondsTimeout) [0x00000] in <816f70bc2a9c4332b0bd119906a8d40e>:0 
+  at System.Threading.Tasks.Task.WaitAll (System.Threading.Tasks.Task[] tasks) [0x00000] in <816f70bc2a9c4332b0bd119906a8d40e>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher.HashImpl () [0x00243] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher.HashAssembly (System.String filePath, System.Threading.Tasks.TaskFactory taskFactory, Burst.Compiler.TargetFramework targetFramework) [0x00009] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+   --- End of inner exception stack trace ---
+  at Burst.Compiler.IL.Hashing.CacheBuilder.ILHasher.HashAssembly (System.String filePath, System.Threading.Tasks.TaskFactory taskFactory, Burst.Compiler.TargetFramework targetFramework) [0x0002e] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheRuntime.HashCacheLoader.CreateHashingResult (Mono.Cecil.AssemblyNameReference assemblyNameReference, Burst.Compiler.IL.AssemblyLoader assemblyLoader, Burst.Compiler.IL.Helpers.DebugLogWriter debugLogWriter) [0x001b9] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Hashing.CacheRuntime.HashCacheAssemblyStore.GetAssemblyState (System.String assemblyName, Burst.Compiler.IL.AssemblyLoader assemblyLoader) [0x000a0] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.EntryPointMethodFinder.LoadAllAssemblyReferences (Mono.Cecil.AssemblyDefinition asmDef, System.Collections.Generic.Dictionary`2[TKey,TValue] visited, System.Collections.Generic.Dictionary`2[TKey,TValue] jobProducers, Burst.Compiler.IL.Hashing.CacheRuntime.HashCacheAssemblyStore assemblyStore, Burst.Compiler.IL.AssemblyLoader assemblyLoader) [0x00025] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.EntryPointMethodFinder.LoadAllAssemblyReferences (Mono.Cecil.AssemblyDefinition asmDef, System.Collections.Generic.Dictionary`2[TKey,TValue] visited, System.Collections.Generic.Dictionary`2[TKey,TValue] jobProducers, Burst.Compiler.IL.Hashing.CacheRuntime.HashCacheAssemblyStore assemblyStore, Burst.Compiler.IL.AssemblyLoader assemblyLoader) [0x0018a] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.EntryPointMethodFinder.LoadAllAssemblyReferences (Mono.Cecil.AssemblyDefinition asmDef, System.Collections.Generic.Dictionary`2[TKey,TValue] visited, System.Collections.Generic.Dictionary`2[TKey,TValue] jobProducers, Burst.Compiler.IL.Hashing.CacheRuntime.HashCacheAssemblyStore assemblyStore, Burst.Compiler.IL.AssemblyLoader assemblyLoader) [0x0018a] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.EntryPointMethodFinder.FindEntryPoints (System.String[] rootAssemblyNames, Burst.Compiler.IL.Hashing.CacheRuntime.HashCacheAssemblyStore assemblyStore, Burst.Compiler.IL.AssemblyLoader assemblyLoader, Burst.Compiler.IL.NativeCompilerOptions options, Burst.Compiler.IL.Server.ProfileDelegate profileCallback, System.Boolean includeRootAssemblyReferences, System.Boolean splitTargets) [0x00071] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+   --- End of inner exception stack trace ---
+  at Burst.Compiler.IL.Server.EntryPointMethodFinder.FindEntryPoints (System.String[] rootAssemblyNames, Burst.Compiler.IL.Hashing.CacheRuntime.HashCacheAssemblyStore assemblyStore, Burst.Compiler.IL.AssemblyLoader assemblyLoader, Burst.Compiler.IL.NativeCompilerOptions options, Burst.Compiler.IL.Server.ProfileDelegate profileCallback, System.Boolean includeRootAssemblyReferences, System.Boolean splitTargets) [0x00094] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.CompilerServer+<>c__DisplayClass18_1.<FindMethods>b__0 (Burst.Compiler.IL.Server.Caching.CacheManager cacheManager) [0x0005e] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.CompilerServer+<>c__DisplayClass26_0`1[TResult].<RunTask>b__0 () [0x00145] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.CompilerServer.RunTask[TResult] (Burst.Compiler.IL.Server.TargetKey target, System.String taskName, System.String[] assemblyFolders, System.Threading.CancellationToken cancellationToken, System.Func`2[T,TResult] function) [0x00131] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.CompilerServer.FindMethods (Burst.Compiler.IL.Server.CompilerServerOptions options, Burst.Compiler.IL.Aot.AotCompilerOptions aotOptions, Burst.Compiler.IL.AssemblyDefinesDict assemblyDefines, Burst.Compiler.IL.Server.TargetKey target, Burst.Compiler.IL.Server.Caching.CacheManager cacheManager, Burst.Compiler.IL.CompilerStatistics stats, System.Threading.CancellationToken cancellationToken) [0x00299] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.CompilerServer+<>c__DisplayClass26_0`1[TResult].<RunTask>b__0 () [0x00145] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.CompilerServer.RunTask[TResult] (Burst.Compiler.IL.Server.TargetKey target, System.String taskName, System.String[] assemblyFolders, System.Threading.CancellationToken cancellationToken, System.Func`2[T,TResult] function) [0x00131] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+  at Burst.Compiler.IL.Server.CompilerServer.Compile (Burst.Compiler.IL.Server.CompilerServerOptions options, Burst.Compiler.IL.Server.CompilationMessageStreamer streamer, System.Threading.CancellationToken cancellationToken) [0x001ca] in <e55fa4270c8a4cb18b54084f9d890962>:0 
+
+While compiling job:
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in 53.246 seconds
+Domain Reload Profiling: 64080ms
+	BeginReloadAssembly (350ms)
+		DisableScriptedObjects (30ms)
+		CreateAndSetChildDomain (158ms)
+	RebuildCommonClasses (8ms)
+	RebuildNativeTypeToScriptingClass (16ms)
+	initialDomainReloadingComplete (101ms)
+	LoadAllAssembliesAndSetupDomain (10357ms)
+		LoadAssemblies (9444ms)
+		AnalyzeDomain (873ms)
+			TypeCache.Refresh (766ms)
+				TypeCache.ScanAssembly (744ms)
+			BuildScriptInfoCaches (98ms)
+			ResolveRequiredComponents (7ms)
+	FinalizeReload (53247ms)
+		SetupLoadedEditorAssemblies (0ms)
+			BeforeProcessingInitializeOnLoad (94ms)
+			ProcessInitializeOnLoadAttributes (50904ms)
+			ProcessInitializeOnLoadMethodAttributes (312ms)
+			AfterProcessingInitializeOnLoad (4ms)
+		AwakeInstancesAfterBackupRestoration (19ms)
+Importing 'GUID: 140f86d8018a69b438c8413d189626e6 - Path: Assets/Screenshots/ticket48-player-idle.png' with importer (TextureImporter)
+Imported 'GUID: 140f86d8018a69b438c8413d189626e6' -> (Import Result ID: '0451676d409ae7058f664106e72826f3') in 0.075 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3efc71f9840990389741a6ddd03cc8a4 DependenciesID=8239b78fa4472c6db5af37cbf030c818 StaticDependenciesID=250c53cce2a019a713b51114c850cbd3 
+Importing 'GUID: 74381bb552d9c4246aa6bf7f3d08d875 - Path: Assets/Screenshots/ticket48-player-N.png' with importer (TextureImporter)
+Imported 'GUID: 74381bb552d9c4246aa6bf7f3d08d875' -> (Import Result ID: 'e8f89520be7d61d03c749de939c0e380') in 0.036 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b3ffa8993c00871e1a22813aa804d35c DependenciesID=86139bc0a96ba345c97526a4fe65a026 StaticDependenciesID=0fe9da0245a7a4a085c217ff60a6150e 
+Importing 'GUID: 09462379a243f6342b6a7e1909c342d2 - Path: Assets/Screenshots/ticket48-player-NE.png' with importer (TextureImporter)
+Imported 'GUID: 09462379a243f6342b6a7e1909c342d2' -> (Import Result ID: '994fd07b15774dfabe78b4e17188bcb1') in 0.030 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d4cde022b889f84957076feaa30f84e0 DependenciesID=0037b374b0a15a7db147cc1ae200cdf7 StaticDependenciesID=a473ba21c98a96a98a52178e16047601 
+Importing 'GUID: cd10458bd0584344aa1ac6d6bcb9e9d8 - Path: Assets/Screenshots/ticket48-player-E.png' with importer (TextureImporter)
+Imported 'GUID: cd10458bd0584344aa1ac6d6bcb9e9d8' -> (Import Result ID: 'adde832394667a0ef8200bb640f12601') in 0.031 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f879f30ae9349a48989b672bdf8f8eb2 DependenciesID=8da771ef6366e57ea2e30072e4a3a305 StaticDependenciesID=6135edd322bfd80bcc30b910c8d40cd8 
+Importing 'GUID: be5e66746fd83d444b0eb3da69db8590 - Path: Assets/Screenshots/ticket48-monster-chase.png' with importer (TextureImporter)
+Imported 'GUID: be5e66746fd83d444b0eb3da69db8590' -> (Import Result ID: '76ee4987b3dbf66119eb94926e263087') in 0.033 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6da6b943f2b7652e5ed06e9b5668fcb5 DependenciesID=46e456b8c103a0e5fa1733d283fdc152 StaticDependenciesID=14829280910300811d839c55c08e6105 
+Starting new worker id: 0 with log in C:/Projects/vltk-mobile/Logs/AssetImportWorkerHW0.log
+Refreshing native plugins compatible for Editor in 20.46 ms, found 3 plugins.
+
+Asset Pipeline Refresh (id=95185ab59cdb8084f8850bd33c53e5f8): Total: 124.569 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=5 (actual=5, local cache=0, cache server=0)
+		Asset DB Process Time: managed=4 ms, native=108294 ms
+		Asset DB Callback time: managed=1670 ms, native=226 ms
+		Scripting: domain reloads=1, domain reload time=10896 ms, compile time=3394 ms, other=81 ms
+		Project Asset Count: scripts=3126, non-scripts=194587
+		Asset File Changes: new=4, changed=8, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 202.411ms
+	ApplyChangesToAssetFolders: 24.798ms
+	Scan: 12272.037ms
+	Collect global state as custom dependencies: 104.369ms
+	OnSourceAssetsModified: 1.435ms
+	CategorizeScriptCompilationAssets: 6498.101ms
+	ProcessAssetsWithTransientArtifactChanges: 127.162ms
+	CategorizeAssets: 2310.236ms
+	CompileScripts: 3394.424ms
+	ImportOutOfDateAssets: 56288.736ms (54109.673ms without children)
+		ImportManagerImport: 236.674ms (22.022ms without children)
+			UpdateCategorizedAssets: 0.078ms
+		ReloadNativeAssets: 0.068ms
+		UnloadImportedAssets: 2.048ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 36.641ms
+		ImportSchedulerStart: 1903.608ms
+	PostProcessAllAssets: 1671.899ms
+		XRBuildSystem.XRAssetImported 1.343ms
+		VersionControlSettings.HiddenFilePostprocess 0.114ms
+		LocalizationDatabase.AssetDatabasePostprocessCallback 0.074ms
+		PostProcessCallbackCreateDeferredMaterials 0.052ms
+		MonoPostProcessAllAssets: 1668.569ms
+			AssetPostprocessor.OnPostprocessAllAssets 1338.924ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 185.458ms
+			SyncVS.PostprocessSyncProject 44.471ms
+			SpriteSlicePostprocessor.OnPostprocessAllAssets 36.634ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 10.496ms
+			AssetChangedListener.OnPostprocessAllAssets 6.124ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 5.112ms
+			PackageManagerResolver.OnPostprocessAllAssets 2.726ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 2.144ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.914ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 1.838ms
+			VersionHandlerImpl.OnPostprocessAllAssets 1.704ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.478ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 1.382ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 1.359ms
+			AddressablesAssetPostProcessor.OnPostprocessAllAssets 1.328ms
+			LocalizationAssetPostProcessor.OnPostprocessAllAssets 1.160ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 0.819ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.708ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.700ms
+			PlayServicesResolver.OnPostprocessAllAssets 0.632ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.577ms
+			AssetPathToTypes.OnPostprocessAllAssets 0.529ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.474ms
+			AssetProcessor.OnPostprocessAllAssets 0.450ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.396ms
+			CinemachineSettings.OnPostprocessAllAssets 0.373ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.355ms
+			SampleDependencyImporterPostProcessor.OnPostprocessAllAssets 0.350ms
+			IOSResolver.OnPostprocessAllAssets 0.340ms
+			UVCSAssetPostprocessor.OnPostprocessAllAssets 0.338ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.336ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.319ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.283ms
+			AssetEvents.OnPostprocessAllAssets 0.262ms
+			PostProcessor.OnPostprocessAllAssets 0.254ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.190ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.156ms
+			SamplePostprocessor.OnPostprocessAllAssets 0.152ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.147ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.143ms
+			PSDImportPostProcessor.OnPostprocessAllAssets 0.136ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.120ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.118ms
+			PSDImporterAssetPostProcessor.OnPostprocessAllAssets 0.111ms
+			AssetReloadNotifier.OnPostprocessAllAssets 0.104ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.063ms
+	PostAssetChangesProfiler: 24.212ms
+	UnloadStreamsBegin: 3.176ms
+	PersistCurrentRevisions: 10.124ms
+	GenerateScriptTypeHashes: 3.347ms
+	GenerateScriptTypeSerializationHashes: 5.519ms
+	Untracked: 41630.550ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.05 seconds
+Worker ready: AssetImportWorkerHW0 0
+Scanning for USB devices : 4.280ms
+Initializing Unity extensions:
+[Licensing::Client] Successfully resolved entitlement details
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-vltk-mobile
+Unloading 30 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/Scenes/Survivor.unity'
+	Deserialize:            15.726 ms
+	Integration:            266.824 ms
+	Integration of assets:  0.259 ms
+	Thread Wait Time:       1.347 ms
+	Total Operation Time:   284.156 ms
+Unloading 9937 unused Assets / (8.8 MB). Loaded Objects now: 10776.
+Memory consumption went from 1.92 GB to 1.91 GB.
+Total: 49.991100 ms (FindLiveObjects: 27.392500 ms CreateObjectMapping: 4.669600 ms MarkObjects: 12.214800 ms  DeleteObjects: 5.547100 ms)
+
+[LAYOUT] About to load UserSettings\Layouts\default-6000.dwlt, keepMainWindow=False
+[LAYOUT] About to save layout C:\Projects\vltk-mobile\UserSettings\Layouts\default-6000.dwlt
+[LAYOUT] About to save layout C:/Users/zet/AppData/Roaming/Unity/Editor-5.x/Preferences\Layouts\current\default-6000.dwlt
+[MODES] ModeService[default].InitializeCurrentMode
+[MODES] ModeService[default].RaiseModeChanged(default, default)
+This project uses Input Manager, which is marked for deprecation. To manage input in your project, use the <a href="https://docs.unity3d.com/Packages/com.unity.inputsystem@latest">Input System package</a> instead.
+<RI> Initializing input.
+Using Windows.Gaming.Input
+XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
+<RI> Input initialized.
+Curl error 7: Failed to connect to config.uca.cloud.unity3d.com port 443 after 2290 ms: Could not connect to server
+[Project] Loading completed in 183.933 seconds
+	Project init time: 				180.805 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.333 seconds
+		Asset Database init time: 		19.234 seconds
+		Global illumination init time: 	0.037 seconds
+		Assemblies load time: 			27.365 seconds
+		Unity extensions init time: 	0.034 seconds
+		Asset Database refresh time: 	124.570 seconds
+	Scene opening time: 			2.302 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1785894622115,"processId":20272,"projectLoad":183.933121,"projectInit":180.8053107,"templateInit":0.0,"packageManagerInit":0.332642,"assetDatabaseInit":19.2340802,"globalIlluminationInit":0.037238,"assembliesLoad":27.3646671,"unityExtensionsInit":0.034073,"assetDatabaseRefresh":124.5698237,"sceneOpening":2.3020434}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1785894622116,"processId":20272,"editorVersion":"6000.5.6f1 (0e0577a1a2ac)","branch":"6000.5/staging","buildType":"Release","platform":"Windows"}
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2038 ms: Could not connect to server
+Created GICache directory at C:/Users/zet/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.028s, timestamps: [187.618 - 187.645]
+[Unity MCP Watchdog] Session restarted (bridge not running).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTKMobile.Editor.UnityMcpSessionWatchdog/<RestartBridgeAsync>d__28:MoveNext () (at Assets/Editor/UnityMcpSessionWatchdog.cs:260)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<bool>:TrySetResult (bool)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<bool>:SetResult (bool)
+MCPForUnity.Editor.Services.BridgeControlService/<StartAsync>d__13:MoveNext () (at ./Library/PackageCache/com.coplaydev.unity-mcp@8bd91ce7bd3a/Editor/Services/BridgeControlService.cs:115)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<bool>:TrySetResult (bool)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<bool>:SetResult (bool)
+MCPForUnity.Editor.Services.Transport.TransportManager/<StartCoreAsync>d__12:MoveNext () (at ./Library/PackageCache/com.coplaydev.unity-mcp@8bd91ce7bd3a/Editor/Services/Transport/TransportManager.cs:91)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.AwaitTaskContinuation:InvokeAction (object)
+System.Threading.Tasks.AwaitTaskContinuation:RunCallback (System.Threading.ContextCallback,object,System.Threading.Tasks.Task&)
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation:Run (System.Threading.Tasks.Task,bool)
+System.Threading.Tasks.Task:FinishContinuations ()
+System.Threading.Tasks.Task:FinishStageThree ()
+System.Threading.Tasks.Task`1<bool>:TrySetResult (bool)
+System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1<bool>:SetResult (bool)
+MCPForUnity.Editor.Services.Transport.Transports.WebSocketTransportClient/<StartAsync>d__33:MoveNext () (at ./Library/PackageCache/com.coplaydev.unity-mcp@8bd91ce7bd3a/Editor/Services/Transport/Transports/WebSocketTransportClient.cs:130)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:InvokeMoveNext (object)
+System.Threading.ExecutionContext:RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Threading.ExecutionContext:Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool)
+System.Runtime.CompilerServices.AsyncMethodBuilderCore/MoveNextRunner:Run ()
+System.Threading.Tasks.SynchronizationContextAwaitTaskContinuation/<>c:<.cctor>b__7_0 (object)
+UnityEngine.UnitySynchronizationContext/WorkRequest:Invoke ()
+UnityEngine.UnitySynchronizationContext:Exec ()
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+(Filename: Assets/Editor/UnityMcpSessionWatchdog.cs Line: 260)
+
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2068 ms: Could not connect to server
+[Licensing::Client] Successfully resolved entitlement details
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2042 ms: Could not connect to server
+TrimDiskCacheJob: Current cache size 0mb
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2043 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2036 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2025 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2068 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2051 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2042 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2038 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2055 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2053 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2040 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2039 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2027 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2030 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2039 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2049 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2044 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2060 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2049 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2262 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2244 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2277 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2243 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2262 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2274 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2256 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2247 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2249 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2264 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2245 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2250 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2264 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2257 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2267 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2075 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2071 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2047 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2058 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2035 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2056 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2023 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2041 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2038 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2036 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2046 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2037 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2039 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2054 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2066 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2061 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2063 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2049 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2070 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2066 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2030 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2043 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2038 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2038 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2038 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2037 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2060 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2036 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2039 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2059 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2044 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2042 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2046 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 3014 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2275 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2250 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2254 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2228 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2257 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 4177 ms: Could not connect to server
+[Licensing::Client] Successfully resolved entitlement details
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2068 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2048 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2038 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2045 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2028 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2060 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2033 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2043 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2031 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2035 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2033 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2036 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2053 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2046 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2076 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2031 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2035 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2037 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2051 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2054 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2056 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2036 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2036 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2044 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2045 ms: Could not connect to server
+Curl error limit reached: 100 consecutive messages printed
+Scanning for USB devices : 4.738ms
+Scanning for USB devices : 3.982ms
+Scanning for USB devices : 3.737ms
+Scanning for USB devices : 21.314ms
+Scanning for USB devices : 20.909ms
+Scanning for USB devices : 12.773ms
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 5.010ms
+Scanning for USB devices : 3.862ms
+Scanning for USB devices : 3.792ms
+Scanning for USB devices : 3.763ms
+Scanning for USB devices : 3.437ms
+Scanning for USB devices : 4.117ms
+[Licensing::Client] Successfully resolved entitlement details
+<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [StartupConfigRewrite] refreshed 1 client config(s).
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MCPForUnity.Editor.Helpers.McpLog:Info (string,bool) (at ./Library/PackageCache/com.coplaydev.unity-mcp@8bd91ce7bd3a/Editor/Helpers/McpLog.cs:40)
+MCPForUnity.Editor.Services.StartupConfigRewrite:RunOnce () (at ./Library/PackageCache/com.coplaydev.unity-mcp@8bd91ce7bd3a/Editor/Services/StartupConfigRewrite.cs:59)
+UnityEditor.EditorApplication:Internal_CallDelayFunctions ()
+
+(Filename: ./Library/PackageCache/com.coplaydev.unity-mcp@8bd91ce7bd3a/Editor/Helpers/McpLog.cs Line: 40)
+
+Start Indexing on Editor startup
+[Indexing] Starting Initial Indexing for Assets
+Starting new worker id: 1 with log in C:/Projects/vltk-mobile/Logs/AssetImportWorkerHW1.log
+[Worker0] Imported GUID: f513baa1b4dc77040addf83ecb77633a - Path: Assets/Tests/EditMode/Survivor/SurvivorRuntimeWiringTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'f4ead94bd7cc6f96193097d06aa6b91e') in 9.7681008 seconds
+Starting new worker id: 2 with log in C:/Projects/vltk-mobile/Logs/AssetImportWorkerHW2.log
+[Worker0] Imported GUID: b78546521d1508033982399921f66390 - Path: Assets/Scripts/Sandbox/PcNpcVisual.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'e84fc665715987c54516e882dfe9660a') in 0.2187536 seconds
+[Worker0] Imported GUID: 8836208efc8ce6540bc8c83686d39d99 - Path: Assets/Tests/EditMode/Survivor/SurvivorDirectionTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '4ab9b7da003d359b09154f75b7422cf8') in 0.0647025 seconds
+[Worker0] Imported GUID: 74381bb552d9c4246aa6bf7f3d08d875 - Path: Assets/Screenshots/ticket48-player-N.png - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '3e5efff6adafa18ffda2ed42ba4c547a') in 0.4390322 seconds
+[Worker0] Imported GUID: 3d4858a2264b9044fb15b28bd9f0fe5a - Path: Assets/Tests/EditMode/Survivor/SurvivorSkillCastTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '92f863fb98fc5479f01e220cfd845fe8') in 0.0609154 seconds
+[Worker0] Imported GUID: 826448c896ce73d43ba18bdc199a2091 - Path: Assets/Scripts/Survivor/Actor/SurvivorPlayer.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '261febacef401be2c421edb40bc7759c') in 0.070515 seconds
+[Worker0] Imported GUID: 25316db608e8b254bb750ffec9bd09ac - Path: Assets/Scripts/Survivor/Actor/ActorDepth.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '7d8ad8f4d78664704ad936af5f37ee5f') in 0.1214225 seconds
+[Worker0] Imported GUID: cd10458bd0584344aa1ac6d6bcb9e9d8 - Path: Assets/Screenshots/ticket48-player-E.png - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'b9a91b34de80e72c71997b59df247076') in 0.0809052 seconds
+[Worker0] Imported GUID: b33488be9a1aa9e4d83341081ea09e2d - Path: Assets/Screenshots/screenshot-20260804-183857.png - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '517bbeb9fcb491068c8388c5c8b96aac') in 0.0893418 seconds
+[Worker0] Imported GUID: e34eac778279fc546b673b46c4c05d28 - Path: Assets/Scripts/Survivor/Skill/SurvivorSkillCatalogService.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '317490c5835b46f4799dd06ed209cc5a') in 0.0489951 seconds
+[Worker0] Imported GUID: 140f86d8018a69b438c8413d189626e6 - Path: Assets/Screenshots/ticket48-player-idle.png - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'c06f37e9ef25efc04b99fd74002ae1b7') in 0.0729041 seconds
+[Worker0] Imported GUID: 8247b9bc8c13bbe4d8d9976ed4ef7e36 - Path: Assets/Tests/EditMode/Survivor/SurvivorSupplyTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'c8261db00311726b1c290baaf9e389a8') in 0.0617475 seconds
+[Worker0] Imported GUID: f1ade8657dedd404081e556855995e98 - Path: Assets/Tests/EditMode/Survivor/SurvivorYSortTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '05b7254a43228b772fa9c74492f90acc') in 0.0428263 seconds
+[Worker0] Imported GUID: c213fd1f987a74944b82d22a78e13c14 - Path: Assets/Tests/EditMode/Survivor/SurvivorScopeLeakTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'b5d0101fd0e05067a4e27da75d7f09b3') in 0.0625931 seconds
+[Worker0] Imported GUID: 9befbc23dddf22143afc44f6520b7927 - Path: Assets/Tests/EditMode/Survivor/SurvivorP1LogicTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '4cc39afe32c3aba9279dae88c5389400') in 0.0461474 seconds
+[Worker0] Imported GUID: 8add0b577a82eec4f86e12d5ca5d9bf1 - Path: Assets/Scripts/Survivor/UI/OverlayPanel.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '60182aed2089f9a02f61503b81e073b0') in 0.0564487 seconds
+[Worker0] Imported GUID: b291d4d426fdc424ca916bea2cda5b50 - Path: Assets/Scripts/Survivor/Actor/IActorVisual.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'df80797452986dbd52d6294e31f38c22') in 0.026205 seconds
+[Worker0] Imported GUID: 3e207f4303720f341aaf10703f922172 - Path: Assets/Scripts/Survivor/Actor/JxNpcVisual.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '7c325fa7fa95d760a6e21c8f1f5a2e78') in 0.0660555 seconds
+[Worker0] Imported GUID: 09462379a243f6342b6a7e1909c342d2 - Path: Assets/Screenshots/ticket48-player-NE.png - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '35c9411857e61084f42535ebbc10db2d') in 0.0918331 seconds
+[Worker0] Imported GUID: b176dd1ce2f0dfd7faaaaa795fb40faf - Path: Assets/Scripts/Sandbox/MalePlayerVisual.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'f41f4ab3ee048d4842fb10b956afbfc6') in 0.0437535 seconds
+[Worker0] Imported GUID: be5e66746fd83d444b0eb3da69db8590 - Path: Assets/Screenshots/ticket48-monster-chase.png - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '7db9d1d3d4fa2d3ff926279f41402701') in 0.0741081 seconds
+[Worker0] Imported GUID: 163e307a7f71f334494dd6e21accbd11 - Path: Assets/Scripts/Survivor/Actor/SurvivorMonster.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '17d39438f7ac4d4ed732bee8aea9c8ff') in 0.058237 seconds
+[Worker0] Imported GUID: 29c986b6a28714943959e32694c38d7d - Path: Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'e71fb4ca9b8b6818d83960e7a7eaa6d6') in 0.0738058 seconds
+[Worker0] Imported GUID: 04ec7ab281a6caa42bf68b28103d75de - Path: Assets/Scripts/Survivor/Actor/ProxyActorVisual.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '0bc1bd49b1ced553bcf325c23e6ec278') in 0.142159 seconds
+[Worker0] Imported GUID: 78312b7cf439da746b45426b963ad9a9 - Path: Assets/Tests/PlayMode/SurvivorDirectionPlayModeTests.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: '626cad6273d14b1e968290fe87597e1c') in 0.0755558 seconds
+[Worker0] Imported GUID: 6c3d4c5edaffad24c8bd3403b430ba1d - Path: Assets/Scripts/Survivor/SurvivorGameDirector.cs - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'df770c37dad48bdc2f473000391ad702') in 0.0598218 seconds
+[Worker0] Imported GUID: 84dcba0056ad6d5469c25f7df7ad6c14 - Path: Assets/Screenshots/cap_raw.png - Importer: ScriptedImporter/UnityEditor.QuickSearchModule:UnityEditor.Search:ASIAI0B -> (ImportResultId: 'e6e8c779baa3e10b3dbd150e77828a83') in 0.101844 seconds
+Worker ready: AssetImportWorkerHW2 2
+Worker ready: AssetImportWorkerHW1 1
+Scanning for USB devices : 4.060ms
+Scanning for USB devices : 3.320ms
+Scanning for USB devices : 4.161ms
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 4.172ms
+Scanning for USB devices : 5.508ms
+Scanning for USB devices : 4.367ms
+Scanning for USB devices : 4.520ms
+Scanning for USB devices : 5.818ms
+Scanning for USB devices : 5.667ms
+Scanning for USB devices : 4.274ms
+Scanning for USB devices : 3.584ms
+Scanning for USB devices : 4.093ms
+Scanning for USB devices : 5.704ms
+Scanning for USB devices : 4.388ms
+Scanning for USB devices : 4.389ms
+Scanning for USB devices : 4.022ms
+Scanning for USB devices : 5.893ms
+Scanning for USB devices : 3.988ms
+Scanning for USB devices : 4.517ms
+Scanning for USB devices : 4.692ms
+Scanning for USB devices : 3.914ms
+Scanning for USB devices : 4.254ms
+Scanning for USB devices : 3.662ms
+Scanning for USB devices : 3.934ms
+Scanning for USB devices : 3.957ms
+Scanning for USB devices : 4.117ms
+Scanning for USB devices : 3.580ms
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 4.106ms
+Scanning for USB devices : 3.392ms
+Scanning for USB devices : 3.559ms
+Scanning for USB devices : 3.969ms
+Scanning for USB devices : 3.751ms
+Scanning for USB devices : 3.245ms
+Scanning for USB devices : 4.453ms
+Scanning for USB devices : 3.928ms
+Scanning for USB devices : 3.746ms
+Scanning for USB devices : 5.633ms
+Scanning for USB devices : 4.951ms
+Scanning for USB devices : 3.925ms
+Scanning for USB devices : 4.497ms
+Scanning for USB devices : 4.069ms
+Scanning for USB devices : 4.503ms
+Scanning for USB devices : 3.817ms
+Scanning for USB devices : 4.085ms
+Scanning for USB devices : 3.667ms
+Scanning for USB devices : 3.779ms
+Scanning for USB devices : 4.073ms
+Scanning for USB devices : 4.084ms
+Scanning for USB devices : 3.753ms
+Scanning for USB devices : 4.213ms
+Scanning for USB devices : 3.509ms
+Scanning for USB devices : 4.365ms
+Scanning for USB devices : 3.892ms
+Scanning for USB devices : 5.522ms
+Scanning for USB devices : 3.862ms
+Scanning for USB devices : 3.900ms
+Scanning for USB devices : 4.715ms
+Scanning for USB devices : 4.692ms
+Scanning for USB devices : 4.022ms
+Scanning for USB devices : 4.215ms
+Scanning for USB devices : 3.778ms
+Scanning for USB devices : 4.366ms
+Scanning for USB devices : 4.889ms
+Scanning for USB devices : 4.185ms
+Scanning for USB devices : 3.923ms
+Scanning for USB devices : 4.054ms
+Scanning for USB devices : 3.856ms
+Scanning for USB devices : 4.767ms
+Scanning for USB devices : 3.614ms
+Scanning for USB devices : 3.900ms
+Scanning for USB devices : 3.692ms
+Scanning for USB devices : 3.931ms
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 4.640ms
+Scanning for USB devices : 3.190ms
+Scanning for USB devices : 4.127ms
+Scanning for USB devices : 3.563ms
+Scanning for USB devices : 3.622ms
+Scanning for USB devices : 3.748ms
+Scanning for USB devices : 3.747ms
+Scanning for USB devices : 4.295ms
+Scanning for USB devices : 4.101ms
+Scanning for USB devices : 4.680ms
+Scanning for USB devices : 4.309ms
+Scanning for USB devices : 4.385ms
+Scanning for USB devices : 4.729ms
+Scanning for USB devices : 12.396ms
+Scanning for USB devices : 6.098ms
+Scanning for USB devices : 7.804ms
+Scanning for USB devices : 5.211ms
+Scanning for USB devices : 4.717ms
+Scanning for USB devices : 8.666ms
+Scanning for USB devices : 4.141ms
+Scanning for USB devices : 3.978ms
+Scanning for USB devices : 5.946ms
+Scanning for USB devices : 3.994ms
+Scanning for USB devices : 4.051ms
+Scanning for USB devices : 4.281ms
+Scanning for USB devices : 5.136ms
+Scanning for USB devices : 4.421ms
+Scanning for USB devices : 3.714ms
+Scanning for USB devices : 4.459ms
+Scanning for USB devices : 3.921ms
+Entering Playmode with Reload Domain disabled.
+If you experience any issues, please disable "Enter Play Mode Options" in Editor Settings
+Entering Playmode with Reload Scene disabled. If you experience any issues, please disable "Enter Play Mode Options" in Editor Settings
+[MalePlayer] Loaded spr\npcres\man\MA_YY_999_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_BD_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_HD_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_HR_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] SPR file not staged in StreamingAssets/Sprites: spr\npcres\man\MA_SH_019_ST01.spr
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogWarning (object)
+VLTK.Core.SubsystemLog:Warn (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:14)
+VLTK.Sandbox.MalePlayerVisual:LogMissing (string,string) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:634)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:516)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 14)
+
+[MalePlayer] Loaded spr\npcres\man\MA_LH_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_RH_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_LW_000_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_RW_000_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Sandbox.MalePlayerVisual:Awake () (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:133)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Sandbox.MalePlayerVisual> ()
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:29)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_YY_999_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_BD_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_HD_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_HR_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_LH_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_RH_019_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_LW_000_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[MalePlayer] Loaded spr\npcres\man\MA_RW_000_ST01.spr: 120 frames, 8 dirs
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.MalePlayerVisual:LoadClip (string,int) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:595)
+VLTK.Sandbox.MalePlayerVisual:RefreshActionParts (bool) (at Assets/Scripts/Sandbox/MalePlayerVisual.cs:318)
+VLTK.Survivor.JxPlayerVisual:Awake () (at Assets/Scripts/Survivor/Actor/JxPlayerVisual.cs:31)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<VLTK.Survivor.JxPlayerVisual> ()
+VLTK.Survivor.SurvivorGameDirector:SpawnPlayer () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:222)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:130)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[SurvivorAudio] chưa staged (im lặng fail-closed): StreamingAssets/survivor/audio/bgm/battle.ogg
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogWarning (object)
+VLTK.Survivor.SurvivorAudioMgr:WarnMissingOnce (string) (at Assets/Scripts/Survivor/Audio/SurvivorAudioMgr.cs:256)
+VLTK.Survivor.SurvivorAudioMgr/<PlayBgmTrack>d__26:MoveNext () (at Assets/Scripts/Survivor/Audio/SurvivorAudioMgr.cs:130)
+System.Runtime.CompilerServices.AsyncVoidMethodBuilder:Start<VLTK.Survivor.SurvivorAudioMgr/<PlayBgmTrack>d__26> (VLTK.Survivor.SurvivorAudioMgr/<PlayBgmTrack>d__26&)
+VLTK.Survivor.SurvivorAudioMgr:PlayBgmTrack (VLTK.Survivor.SurvivorAudioContext)
+VLTK.Survivor.SurvivorAudioMgr:SetContext (VLTK.Survivor.SurvivorAudioContext) (at Assets/Scripts/Survivor/Audio/SurvivorAudioMgr.cs:124)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:134)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Survivor/Audio/SurvivorAudioMgr.cs Line: 256)
+
+[Survivor] OnInit
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Survivor.SurvivorGameDirector:OnInit () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:138)
+VLTK.Survivor.SurvivorGameDirector:Awake () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:82)
+
+(Filename: Assets/Scripts/Survivor/SurvivorGameDirector.cs Line: 138)
+
+[SurvivorPlatform] portrait=True fps=60 safe=VLTK.Survivor.SafePadding
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Survivor.SurvivorPlatformSettings:RefreshSafeArea (bool) (at Assets/Scripts/Survivor/Platform/SurvivorPlatformSettings.cs:105)
+VLTK.Survivor.SurvivorPlatformSettings:Awake () (at Assets/Scripts/Survivor/Platform/SurvivorPlatformSettings.cs:80)
+
+(Filename: Assets/Scripts/Survivor/Platform/SurvivorPlatformSettings.cs Line: 105)
+
+[Perf] Runtime memory 2197MB vượt budget 200MB
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:LogWarning (object)
+VLTK.Core.SubsystemLog:Warn (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:14)
+VLTK.Sandbox.PerfAuditChecklist:AuditMemory () (at Assets/Scripts/Performance/PerfAuditChecklist.cs:69)
+VLTK.Sandbox.PerfAuditChecklist:AutoAudit () (at Assets/Scripts/Performance/PerfAuditChecklist.cs:31)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 14)
+
+[Perf] Budget mobile: 30fps, <100 draw calls, <500,000 tris, <200MB RAM
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Core.SubsystemLog:Info (string,string) (at Assets/Scripts/Core/SubsystemLog.cs:9)
+VLTK.Sandbox.PerfAuditChecklist:AutoAudit () (at Assets/Scripts/Performance/PerfAuditChecklist.cs:33)
+
+(Filename: Assets/Scripts/Core/SubsystemLog.cs Line: 9)
+
+[Survivor] OnStart
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Survivor.SurvivorGameDirector:OnStart () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:141)
+VLTK.Survivor.SurvivorGameDirector:Start () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:87)
+
+(Filename: Assets/Scripts/Survivor/SurvivorGameDirector.cs Line: 141)
+
+[Survivor] OnGameStart
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Survivor.SurvivorGameDirector:OnGameStart () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:142)
+VLTK.Survivor.SurvivorGameDirector:Start () (at Assets/Scripts/Survivor/SurvivorGameDirector.cs:88)
+
+(Filename: Assets/Scripts/Survivor/SurvivorGameDirector.cs Line: 142)
+
+[PerfBudget] frames=1 avg=7691.6ms min=7691.6ms max=7691.6ms (0.1fps) monsters=0
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Survivor.PerfBudgetMonitor:<Awake>b__9_0 (VLTK.Survivor.PerfBudget/Report) (at Assets/Scripts/Survivor/Platform/PerfBudgetMonitor.cs:32)
+VLTK.Survivor.PerfBudget:Tick (double) (at Assets/Scripts/Survivor/Platform/PerfBudget.cs:67)
+VLTK.Survivor.PerfBudgetMonitor:Update () (at Assets/Scripts/Survivor/Platform/PerfBudgetMonitor.cs:40)
+
+(Filename: Assets/Scripts/Survivor/Platform/PerfBudgetMonitor.cs Line: 32)
+
+[SandboxDefaultSpawn] Play mode entered. Player will spawn at MPS (6665, 6509)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Editor.SandboxDefaultSpawnEditor:OnPlayModeStateChanged (UnityEditor.PlayModeStateChange) (at Assets/Editor/SandboxDefaultSpawnEditor.cs:36)
+UnityEditor.EditorApplication:Internal_PlayModeStateChanged (UnityEditor.PlayModeStateChange)
+
+(Filename: Assets/Editor/SandboxDefaultSpawnEditor.cs Line: 36)
+
+FSR: Neither auto hot reload / on-demand reload / or watch specific is specified, file watchers will not be initialized. Please adjust settings and restart if you want hot reload to work.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+ImmersiveVrToolsCommon.Runtime.Logging.LoggerScoped:LogInternal (UnityEngine.LogType,object)
+ImmersiveVrToolsCommon.Runtime.Logging.LoggerScoped:LogWarning (object)
+FastScriptReload.Editor.FastScriptReloadManager:EnsureInitialized () (at ./Library/PackageCache/com.handzlikchris.fastscriptreload@f852ac4f204b/Scripts/Editor/FastScriptReloadManager.cs:746)
+FastScriptReload.Editor.FastScriptReloadManager:Update () (at ./Library/PackageCache/com.handzlikchris.fastscriptreload@f852ac4f204b/Scripts/Editor/FastScriptReloadManager.cs:486)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+(Filename: ./Library/PackageCache/com.handzlikchris.fastscriptreload@f852ac4f204b/Scripts/Editor/FastScriptReloadManager.cs Line: 746)
+
+[PerfBudget] frames=70 avg=71.4ms min=4.5ms max=3236.7ms (14.0fps) monsters=0
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Survivor.PerfBudgetMonitor:<Awake>b__9_0 (VLTK.Survivor.PerfBudget/Report) (at Assets/Scripts/Survivor/Platform/PerfBudgetMonitor.cs:32)
+VLTK.Survivor.PerfBudget:Tick (double) (at Assets/Scripts/Survivor/Platform/PerfBudget.cs:67)
+VLTK.Survivor.PerfBudgetMonitor:Update () (at Assets/Scripts/Survivor/Platform/PerfBudgetMonitor.cs:40)
+
+(Filename: Assets/Scripts/Survivor/Platform/PerfBudgetMonitor.cs Line: 32)
+
+Unloading 29 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Temp/__Backupscenes/0.backup'
+	Deserialize:            33.633 ms
+	Integration:            435.181 ms
+	Integration of assets:  13.058 ms
+	Thread Wait Time:       -12.916 ms
+	Total Operation Time:   468.956 ms
+Unloading 16 unused Assets / (492.4 KB). Loaded Objects now: 11745.
+Memory consumption went from 2.15 GB to 2.15 GB.
+Total: 774.819500 ms (FindLiveObjects: 4.828400 ms CreateObjectMapping: 14.144900 ms MarkObjects: 751.791300 ms  DeleteObjects: 4.047800 ms)
+
+[Licensing::Client] Successfully resolved entitlement details
+[SandboxDefaultSpawn] Edit mode entered. Player position in editor preserved.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+VLTK.Editor.SandboxDefaultSpawnEditor:OnPlayModeStateChanged (UnityEditor.PlayModeStateChange) (at Assets/Editor/SandboxDefaultSpawnEditor.cs:43)
+UnityEditor.EditorApplication:Internal_PlayModeStateChanged (UnityEditor.PlayModeStateChange)
+
+(Filename: Assets/Editor/SandboxDefaultSpawnEditor.cs Line: 43)
+
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 4.079ms
+Scanning for USB devices : 3.862ms
+Scanning for USB devices : 3.800ms
+Scanning for USB devices : 3.244ms
+Scanning for USB devices : 3.234ms
+Scanning for USB devices : 3.308ms
+Scanning for USB devices : 33.209ms
+Scanning for USB devices : 8.876ms
+Scanning for USB devices : 4.255ms
+Scanning for USB devices : 4.929ms
+Scanning for USB devices : 3.856ms
+Scanning for USB devices : 3.921ms
+Scanning for USB devices : 4.211ms
+Scanning for USB devices : 4.240ms
+Scanning for USB devices : 3.721ms
+Scanning for USB devices : 3.931ms
+Scanning for USB devices : 3.580ms
+Scanning for USB devices : 3.661ms
+Scanning for USB devices : 3.658ms
+Scanning for USB devices : 3.590ms
+Scanning for USB devices : 4.662ms
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 7.158ms
+Scanning for USB devices : 39.159ms
+Scanning for USB devices : 19.689ms
+Scanning for USB devices : 6.234ms
+Scanning for USB devices : 4.136ms
+Scanning for USB devices : 4.039ms
+Scanning for USB devices : 5.275ms
+Scanning for USB devices : 3.468ms
+Scanning for USB devices : 3.542ms
+Scanning for USB devices : 3.428ms
+Scanning for USB devices : 3.513ms
+Scanning for USB devices : 3.531ms
+Scanning for USB devices : 3.703ms
+Scanning for USB devices : 3.972ms
+Scanning for USB devices : 3.718ms
+Scanning for USB devices : 3.692ms
+Scanning for USB devices : 3.966ms
+Scanning for USB devices : 3.573ms
+Scanning for USB devices : 3.845ms
+Scanning for USB devices : 3.708ms
+Scanning for USB devices : 3.647ms
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 5.497ms
+Scanning for USB devices : 4.480ms
+Scanning for USB devices : 4.441ms
+Scanning for USB devices : 7.588ms
+Scanning for USB devices : 6.626ms
+Scanning for USB devices : 5.985ms
+Scanning for USB devices : 6.647ms
+Scanning for USB devices : 6.252ms
+Scanning for USB devices : 6.677ms
+Scanning for USB devices : 7.261ms
+Scanning for USB devices : 6.253ms
+Scanning for USB devices : 6.572ms
+Scanning for USB devices : 6.442ms
+Scanning for USB devices : 6.218ms
+Scanning for USB devices : 6.525ms
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 4.159ms
+Scanning for USB devices : 3.801ms
+Scanning for USB devices : 3.910ms
+Scanning for USB devices : 3.682ms
+Scanning for USB devices : 4.042ms
+Scanning for USB devices : 4.071ms
+[Licensing::Client] Successfully resolved entitlement details
+Scanning for USB devices : 7.986ms
+Scanning for USB devices : 6.719ms
+Scanning for USB devices : 6.827ms
+Scanning for USB devices : 4.817ms
+Scanning for USB devices : 5.857ms
+Scanning for USB devices : 4.216ms
+Scanning for USB devices : 3.838ms
+Scanning for USB devices : 4.149ms
+Scanning for USB devices : 4.210ms
+Scanning for USB devices : 4.263ms
+Scanning for USB devices : 4.327ms
+Scanning for USB devices : 4.668ms
+Scanning for USB devices : 4.205ms
+Scanning for USB devices : 4.452ms
+Scanning for USB devices : 4.128ms
+Scanning for USB devices : 3.643ms
+Scanning for USB devices : 3.971ms
+Scanning for USB devices : 4.812ms
+MonoPathRemapper: Attempts to remap: 254137; Successful remaps: 4058
+Serialized file version minimum: 23, current 23
+[LAYOUT] About to save layout C:\Projects\vltk-mobile\UserSettings\Layouts\default-6000.dwlt
+[LAYOUT] About to save layout C:/Users/zet/AppData/Roaming/Unity/Editor-5.x/Preferences\Layouts\current\default-6000.dwlt
+UnassignedReferenceException: The variable m_AtlasTextures of FontAsset has not been assigned.
+You probably need to assign the m_AtlasTextures variable of the FontAsset script in the inspector.
+  at UnityEngine.Object+MarshalledUnityObject.TryThrowEditorNullExceptionObject (UnityEngine.Object unityObj, System.String parameterName) [0x000b4] in <ad78ec25e30a41adb27f06b0ae6b00c9>:0 
+  at UnityEngine.Bindings.ThrowHelper.ThrowNullReferenceException (System.Object obj) [0x0000a] in <ad78ec25e30a41adb27f06b0ae6b00c9>:0 
+  at UnityEngine.Texture.GetDataWidth () [0x00006] in <ad78ec25e30a41adb27f06b0ae6b00c9>:0 
+  at UnityEngine.Texture.get_width () [0x00000] in <ad78ec25e30a41adb27f06b0ae6b00c9>:0 
+  at UnityEditor.TextCore.Text.EditorEventCallbacks+<>c.<InitializeFontAssetResourceChangeCallBacks>b__0_1 () [0x00046] in <8d24b1435421411fa28b8a4473b42589>:0 
+  at UnityEditor.EditorApplication.Internal_EditorApplicationQuit () [0x00019] in <4d9c15075af7453a81734c9ade18dc48>:0 
+
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+[Licensing::IpcConnector] LicenseClient-zet-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-zet channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+Shut down.
+Cleanup mono
+CodeReloadManager destroyed
+debugger-agent: Unable to listen on 4076
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+[Package Manager] Server process was shutdown
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1785941643195,"processId":20272,"allocatedMemory":338459022,"memoryLabels":[{"Default":237004},{"Permanent":15516},{"NewDelete":66561},{"Thread":4205688},{"Manager":821928},{"VertexData":8},{"Geometry":816},{"Texture":24},{"Shader":866516},{"Material":24},{"GfxDevice":63416},{"GfxThread":1536},{"Animation":952},{"FreeType":8},{"FontEngine":736},{"Physics":2146},{"Physics2D":16},{"Serialization":198576},{"Input":45280},{"JobScheduler":256},{"TextLib":32815},{"Mono":66},{"MonoCode":64},{"ScriptingNativeRuntime":1969356},{"BaseObject":2612289},{"Resource":1208},{"Renderer":3080},{"Transform":4685},{"File":21899},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":9412},{"StaticString":3808},{"Utility":2674104},{"Curl":48},{"PoolAlloc":2408},{"AI":80},{"TypeTree":17165},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":8296},{"CloudService":6920},{"WebRequest":552},{"VR":47114},{"SceneManager":608},{"Video":208},{"LazyScriptCache":32},{"NativeArray":33065468},{"Camera":17},{"Secure":265},{"SerializationCache":1576},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":552},{"Hierarchy":1176},{"UIElements":498088},{"CoreStats":13688},{"Identifiers":6768},{"Gui":229},{"EditorUtility":307769},{"VersionControl":8},{"Undo":931},{"AssetDatabase":290211938},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":31010},{"Upm":1988},{"UpmDiagnostics":8},{"AssetCompliance":64},{"DrivenProperties":72},{"LocalIPC":209},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3476},{"Windowing":456},{"Licensing":1232},{"AssetReference":32},{"IPCStream":32}]}

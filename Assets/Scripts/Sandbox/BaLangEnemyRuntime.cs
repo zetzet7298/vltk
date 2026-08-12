@@ -24,26 +24,41 @@ namespace VLTK.Sandbox
         public string DisplayName { get; private set; }
         public bool HasThreeLayers => nameText != null && hpText != null && barBack != null && barFill != null;
 
+        private int previousLife;
+
         public void Initialize(string displayName, int maxLife)
         {
             DisplayName = string.IsNullOrWhiteSpace(displayName) ? "Vô hệ Kẻ địch" : displayName;
             MaxLife = Mathf.Max(1, maxLife);
-            SetLife(MaxLife);
+            SetLife(MaxLife, showDamage: false);
+            previousLife = MaxLife;
             if (nameText != null) nameText.text = DisplayName;
         }
 
-        public void SetLife(int currentLife)
+        public void SetLife(int currentLife, bool showDamage = false, bool isCrit = false)
         {
+            previousLife = CurrentLife;
             CurrentLife = Mathf.Clamp(currentLife, 0, Mathf.Max(1, MaxLife));
             if (hpText != null)
                 hpText.text = $"{CurrentLife}/{MaxLife}";
             if (barFill != null)
             {
                 float ratio = MaxLife > 0 ? Mathf.Clamp01((float)CurrentLife / MaxLife) : 0f;
-                var s = barFill.transform.localScale;
-                barFill.transform.localScale = new Vector3(ratio, s.y, s.z);
+                Vector3 scale = barFill.transform.localScale;
+                barFill.transform.localScale = new Vector3(ratio, scale.y, scale.z);
+            }
+            if (showDamage && CurrentLife < previousLife)
+            {
+                // Spawn damage number at target position with crit visual
+                var sr = GetComponentInChildren<SpriteRenderer>();
+                Vector3 spawnPos = sr != null && sr.sprite != null
+                    ? new Vector3(transform.position.x, sr.bounds.max.y + 10f, -12f)
+                    : transform.position + new Vector3(0f, 78f, -12f);
+                PcDamageNumber.Spawn(spawnPos, previousLife - CurrentLife, transform.parent, isCrit);
             }
         }
+
+        public bool LastDamageWasCrit { get; private set; }
     }
 
     public sealed class EnemyNameplateAnchor : MonoBehaviour
@@ -75,6 +90,159 @@ namespace VLTK.Sandbox
         }
     }
 
+    public sealed class PcDamageNumber : MonoBehaviour
+    {
+        public const float DefaultLifetimeSeconds = 0.85f;
+
+        public int Damage { get; private set; }
+
+        private TextMesh _text;
+        private Color _color;
+        private Vector3 _startPosition;
+        private float _age;
+
+        public static PcDamageNumber Spawn(Vector3 worldPosition, int damage, Transform parent, bool isCrit = false)
+        {
+            if (damage <= 0) return null;
+
+            var go = new GameObject($"PcDamageNumber_{damage}");
+            if (parent != null)
+                go.transform.SetParent(parent, true);
+            go.transform.position = worldPosition;
+
+            var popup = go.AddComponent<PcDamageNumber>();
+            popup.Initialize(damage, isCrit);
+            return popup;
+        }
+
+        private void Initialize(int damage, bool isCrit)
+        {
+            Damage = damage;
+            _startPosition = transform.position;
+            // [DMG-100PC] PC JX damage number palette (observable):
+            //   Normal = đỏ cờ chói (1.0, 0.24, 0.10), Crit = vàng chói (1.0, 0.85, 0.10).
+            //   Font: NotoSans-Bold (sắc nét, đậm — fallback LegacyRuntime).
+            //   Outline: 4 TextMesh shadow copy offset nhỏ.
+            _color = isCrit ? new Color(1f, 0.85f, 0.10f, 1f) : new Color(1f, 0.24f, 0.10f, 1f);
+            int fontSize = isCrit ? 160 : 80;
+            float charSize = isCrit ? 1.0f : 0.5f;
+
+            _text = gameObject.AddComponent<TextMesh>();
+            _text.text = damage.ToString();
+            _text.fontSize = fontSize;
+            _text.characterSize = charSize;
+            _text.anchor = TextAnchor.MiddleCenter;
+            _text.alignment = TextAlignment.Center;
+            _text.color = _color;
+            _text.fontStyle = FontStyle.Bold;
+
+            var font = LoadDamageFont();
+            if (font != null)
+            {
+                _text.font = font;
+                var mr = gameObject.GetComponent<MeshRenderer>();
+                if (mr != null) mr.sharedMaterial = font.material;
+            }
+
+            var mrComp = gameObject.GetComponent<MeshRenderer>();
+            if (mrComp != null)
+                mrComp.sortingOrder = MapRenderer.PlayerSortingOrder + 3600;
+
+            // [DMG-OUTLINE] 4 shadow copies cho outline đen PC-style.
+            SpawnOutlineShadows(fontSize, charSize);
+        }
+
+        private void SpawnOutlineShadows(int fontSize, float charSize)
+        {
+            float offset = charSize * 0.12f;
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 localOffset = i switch
+                {
+                    0 => new Vector3(-offset, 0f, 0f),
+                    1 => new Vector3(offset, 0f, 0f),
+                    2 => new Vector3(0f, offset, 0f),
+                    _ => new Vector3(0f, -offset, 0f),
+                };
+                var sh = new GameObject("PcDamageNumberShadow", typeof(TextMesh));
+                sh.transform.SetParent(transform, false);
+                sh.transform.localPosition = localOffset;
+                sh.transform.localRotation = Quaternion.identity;
+                sh.transform.localScale = Vector3.one;
+                var shtm = sh.GetComponent<TextMesh>();
+                shtm.text = Damage.ToString();
+                shtm.color = new Color(0f, 0f, 0f, 0.85f);
+                shtm.fontSize = fontSize;
+                shtm.characterSize = charSize;
+                shtm.anchor = TextAnchor.MiddleCenter;
+                shtm.alignment = TextAlignment.Center;
+                shtm.fontStyle = FontStyle.Bold;
+                var font = LoadDamageFont();
+                if (font != null)
+                {
+                    shtm.font = font;
+                    var mr = sh.GetComponent<MeshRenderer>();
+                    if (mr != null)
+                    {
+                        mr.sharedMaterial = font.material;
+                        mr.sortingOrder = MapRenderer.PlayerSortingOrder + 3599;  // behind main
+                    }
+                }
+            }
+        }
+
+        private static Font _cachedDamageFont;
+        private static Font LoadDamageFont()
+        {
+            if (_cachedDamageFont != null) return _cachedDamageFont;
+            _cachedDamageFont = Resources.Load<Font>("UI/Fonts/NotoSans-Bold");
+            if (_cachedDamageFont == null)
+                _cachedDamageFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            return _cachedDamageFont;
+        }
+
+        private void Update()
+        {
+            Tick(Time.deltaTime);
+        }
+
+        public void Tick(float deltaTime)
+        {
+            _age += Mathf.Max(0f, deltaTime);
+            float t = Mathf.Clamp01(_age / DefaultLifetimeSeconds);
+            // [DMG-100PC] Float-up PC JX: 58 world unit/giây, ease-out (^1.3) → dốc lên nhanh đầu.
+            float up = 58f * t * (1f + t * 0.3f);
+            transform.position = _startPosition + new Vector3(0f, up, 0f);
+
+            float alpha = Mathf.Lerp(1f, 0f, Mathf.Clamp01((t - 0.35f) / 0.65f));
+            if (_text != null)
+            {
+                var c = _color;
+                c.a = alpha;
+                _text.color = c;
+            }
+            // [DMG-OUTLINE] Fade alpha outline cùng main text.
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                var sh = transform.GetChild(i).GetComponent<TextMesh>();
+                if (sh != null)
+                {
+                    var c = sh.color;
+                    c.a = alpha * 0.85f;
+                    sh.color = c;
+                }
+            }
+
+            if (_age >= DefaultLifetimeSeconds)
+            {
+                if (Application.isPlaying)
+                    Destroy(gameObject);
+                else
+                    DestroyImmediate(gameObject);
+            }
+        }
+    }
+
     public sealed class BaLangEnemyAi : MonoBehaviour
     {
         public NpcInstance instance;
@@ -102,14 +270,50 @@ namespace VLTK.Sandbox
             CurrentLife = MaxLife;
             _phase = (npc?.instanceId ?? 1) * 0.73f;
             _nextThink = 0.1f + ((npc?.instanceId ?? 1) % 7) * 0.15f;
-            _healthBar?.SetLife(CurrentLife);
+            _healthBar?.SetLife(CurrentLife, showDamage: false, isCrit: false);
         }
 
         public void SetLife(int currentLife)
         {
-            CurrentLife = Mathf.Clamp(currentLife, 0, Mathf.Max(1, MaxLife));
-            _healthBar?.SetLife(CurrentLife);
+            SetLife(currentLife, false, false);
         }
+
+        public void SetLife(int currentLife, bool showDamage)
+        {
+            SetLife(currentLife, showDamage, false);
+        }
+
+        public void SetLife(int currentLife, bool showDamage, bool isCrit)
+        {
+            int previousLife = CurrentLife;
+            CurrentLife = Mathf.Clamp(currentLife, 0, Mathf.Max(1, MaxLife));
+            _healthBar?.SetLife(CurrentLife, showDamage, isCrit);
+
+            // [SECT-ALL] Death state machine (PC source: KNpc::DoDeath @ 0x0809def0).
+            // PC behavior khi chết:
+            //   1. Set m_214 = 0xa (DEATH_STATE) — line 0x0809df84
+            //   2. Call KNpc::ClearProcessAI() (0x08090cf0) — stop AI loop
+            //   3. Swap sprite sang CorpseIdx (no SPR data in available source — TODO)
+            //   4. Play m_DeathFrame animation rồi despawn sau N frame
+            //   5. Sau delay (PC source không có explicit delay — TODO), Revive() tại vị trí gốc
+            // Mobile port MVP (chỉ những gì có PC source):
+            //   ✓ Set IsDead = true
+            //   ✓ nextAttackTime = infinity (tương đương ClearProcessAI: AI tick bỏ qua)
+            //   ✗ Corpse sprite swap — TODO, CorpseIdx field có nhưng SPR mapping không accessible
+            //   ✗ Despawn timing — TODO, m_DeathFrame count không accessible
+            //   ✗ Respawn delay + position — TODO, KNpc::Revive flow tồn tại nhưng delay constant không có
+            if (CurrentLife <= 0 && previousLife > 0)
+            {
+                _isDead = true;
+                // ClearProcessAI equivalent: Tick() sẽ skip AI khi _isDead = true.
+                // (nextAttackTime ở GameplayActor layer, không access được từ visual layer)
+            }
+        }
+
+        // [SECT-ALL] Death state flag (PC source: KNpc m_214 = 0xa / DEATH_STATE).
+        // Public cho Combat layer / GameplayLoop đọc.
+        private bool _isDead;
+        public bool IsDead => _isDead;
 
         private void Update()
         {
@@ -118,6 +322,12 @@ namespace VLTK.Sandbox
 
         public void Tick(float deltaTime, float now)
         {
+            // [SECT-ALL] PC source: ClearProcessAI (0x08090cf0) semantics.
+            // Khi KNpc die, AI loop bị stop. Mobile port tương đương: skip toàn bộ AI logic
+            // khi _isDead = true. KHÔNG hide visual — PC swap sang CorpseIdx sprite (TODO,
+            // CorpseIdx field có trong binary nhưng SPR mapping không accessible trong source tree).
+            if (_isDead) return;
+
             var template = instance?.template;
             if (template == null || template.aiMode <= 0 || template.walkSpeed <= 0)
                 return;
@@ -190,6 +400,8 @@ namespace VLTK.Sandbox
         public int level;    // per-spawn level from Region_S
         public int facing;   // curFrame from Region_S
         public int instanceId;
+        /// <summary>Live scene AI component — set after spawn for runtime position sync.</summary>
+        public BaLangEnemyAi enemyBehaviour;
     }
 
     public sealed class BaLangEnemySpawnRuntime : MonoBehaviour

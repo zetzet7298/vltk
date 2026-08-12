@@ -22,6 +22,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public PartnerTaskService() : this(null) { }
+
         public PartnerTaskService(PcPartnerTaskRegistry registry)
         {
             _registry = registry ?? new PcPartnerTaskRegistry();

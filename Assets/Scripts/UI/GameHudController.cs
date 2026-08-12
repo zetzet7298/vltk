@@ -10,6 +10,13 @@ using UnityEngine.UIElements;
 using UnityEngine.Networking;
 using VLTK.Core;
 using VLTK.UI;
+using VLTK.UI.Popup;
+using VLTK.UI.CharacterInfo;
+using VLTK.UI.Inventory;
+using VLTK.UI.Treasure;
+using VLTK.UI.Team;
+using VLTK.UI.Faction;
+using VLTK.UI.Skill;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -37,7 +44,7 @@ namespace VLTK.UI
         }
 
         public static string ResolvePngPath(string artRoot, string iconName)
-            => CombineStreamingPath(artRoot, iconName + ".png");
+            => CombineStreamingPath(artRoot, string.Concat(iconName, ".png"));
 
         public static string ResolveUserFacingPngPath(string artRoot, string iconName)
             => ResolvePngPath(artRoot, HudUserFacingArtCatalog.ResolveVietnameseArtName(iconName));
@@ -55,7 +62,7 @@ namespace VLTK.UI
                 return path;
 
             var fullPath = System.IO.Path.GetFullPath(path).Replace('\\', '/');
-            return "file://" + (fullPath.StartsWith("/", System.StringComparison.Ordinal) ? fullPath : "/" + fullPath);
+            return string.Concat("file://", fullPath.StartsWith("/", System.StringComparison.Ordinal) ? fullPath : string.Concat("/", fullPath));
         }
 
         private static string NormalizeRelativeFolder(string folder)
@@ -71,10 +78,10 @@ namespace VLTK.UI
                 return root;
 
             if (root.EndsWith("/", System.StringComparison.Ordinal) || root.EndsWith("\\", System.StringComparison.Ordinal))
-                return root + normalizedRelative;
+                return string.Concat(root, normalizedRelative);
 
             return RequiresUnityWebRequest(root)
-                ? root + "/" + normalizedRelative
+                ? string.Concat(root, "/", normalizedRelative)
                 : System.IO.Path.Combine(root, normalizedRelative);
         }
     }
@@ -89,18 +96,16 @@ namespace VLTK.UI
         public string artFolder = "UI/HUD/Art";
 
         private VisualElement _hpFill, _mpFill, _staminaFill, _expFill;
+        private VisualElement _hpFillImage, _mpFillImage, _staminaFillImage, _expFillImage;
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
-        private VisualElement _skillPanel, _skillClose, _skillPageOne, _skillPageTwo;
-        private ScrollView _skillList;
         private Label _hpText, _mpText, _staminaText, _expText;
-        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary;
+        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords;
         private TextField _chatInput;
 
         // New HUD elements
         private VisualElement _buffPanel;
-        private VisualElement _teamPreview;
         private VisualElement _tradeInfoPanel, _tradeInfoClose;
         private Label _tradePartnerName, _tradePartnerLevel, _tradePartnerFaction, _tradePartnerGuild;
         private VisualElement _stallCurrencySelector;
@@ -109,25 +114,48 @@ namespace VLTK.UI
         private ScrollView _facePickerList;
         private Button _faceBtn;
 
+        // Action toggle buttons (run/sit/horse): swap icon between off/on PC SPR frames
+        // and add a light mobile ring around the active right-thumb buttons.
+        // PC source: dc11ac12.ini (工具控制条.ini) defines these as CheckBox=1 toggles:
+        //   [Run]   Up=0 Down=1 -> off=btn_run(f0),   on=btn_run_on(f1, walk active)
+        //   [Sit]   Up=0 Down=1 -> off=btn_sit(f0),   on=btn_sit_on(f1, meditating)
+        //   [Horse] Up=1 Down=0 -> off=btn_horse(f1, on foot), on=btn_horse_on(f0, mounted)
+        // Both clusters (parked BtnXxx + mobile ActionBtnXxx) stay in sync.
+        private VisualElement _btnRunIcon, _btnSitIcon, _btnHorseIcon;
+        private VisualElement _actionBtnRun, _actionBtnSit, _actionBtnHorse;
+        private VisualElement _actionBtnRunIcon, _actionBtnSitIcon, _actionBtnHorseIcon;
+        private bool _runToggleOn, _sitToggleOn, _horseToggleOn;
+        private bool _actionTogglesBound;
+
 
         private HudDataBridge _bridge;
         private MinimapService _minimapService;
         private bool _initialized;
+        private VisualElement _boundRoot;
         private SprRuntimeService _sprService;
         private Texture2D _minimapTexture;
         private Texture2D _previewTexture;
         private int _minimapTextureMapId = -1;
         private int _previewTextureMapId = -1;
-        private int _skillPageIndex;
         private Vector2 _lastMinimapCenter;
         private Vector2? _lastMoveTarget;
 
-        // Button name → SPR icon file mapping (matching PC 按钮条按钮/*.spr)
+        // Button name → SPR icon file mapping. Keys resolve to <key>.png in the HUD
+        // art folder. Each PNG is the decoded REAL PC SPR (主界面按钮, README §2):
+        //   toggles (31px): btn_sit/run/horse/exchange(交易)/rec(摄像机)/pk
+        //   menu (28px):    btn_status(人物F1)/items(背包F2)/itemex/skills(技能F3)/
+        //                   quest(任务F4)/team(队伍F6)/faction(帮会F7)/chatroom
         private static readonly Dictionary<string, string> ButtonIcons = new()
         {
-            { "BtnRun", "btn_run" },      // 跑步 (not extracted, use placeholder name)
+            { "BtnRun", "btn_run" },
             { "BtnSit", "btn_sit" },
             { "BtnHorse", "btn_horse" },
+            // S2 (HUD-004): mobile combat cluster action buttons (fresh names to avoid
+            // collision with parked BtnRun/BtnSit/BtnHorse in PendingRelocation).
+            // Icons reuse the same PC SPRs (btn_run/btn_sit/btn_horse, 31px toggle-row art).
+            { "ActionBtnRun", "btn_run" },
+            { "ActionBtnSit", "btn_sit" },
+            { "ActionBtnHorse", "btn_horse" },
             { "BtnExchange", "btn_exchange" },
             { "BtnStatus", "btn_status" },
             { "BtnItems", "btn_items" },
@@ -135,6 +163,11 @@ namespace VLTK.UI
             { "BtnTeam", "btn_team" },
             { "BtnFaction", "btn_faction" },
             { "BtnPK", "btn_pk" },
+            { "BtnRec", "btn_rec" },
+            { "BtnChatRoom", "btn_chatroom" },
+            { "BtnItemEx", "btn_itemex" },
+            { "BtnQuest", "btn_quest" },
+            { "BtnTreasure", "btn_treasure" },
         };
 
         private void Awake()
@@ -148,6 +181,46 @@ namespace VLTK.UI
             LoadArt();
             SizeRootToScreen();
             InitializeCombatSkillSlots();
+            InitializeHudChatBar();
+            EnsurePcParityOverlayActive();
+        }
+
+        // S1 (HUD-004): the uGUI virtual joystick (MobileJoystick, jade medallion
+        // bottom-left, spawned by SandboxManager at sortingOrder 500) is now kept VISIBLE
+        // and ACTIVE for mobile play. The previous force-hide (HideMobileJoystick) matched
+        // a PC-parity baseline that is no longer the target — the HUD is mobile-native now.
+        // The joystick stays above the UIToolkit HUD so it never gets covered.
+
+        /// <summary>
+        /// The IMGUI <see cref="PcHudVietnameseTextOverlay"/> renders the level number, bar
+        /// values, rank, chat tabs and bottom-menu labels that match the PC client. The
+        /// UIToolkit bar labels are <c>display:none</c> by design (IMGUI draws them so they
+        /// sit above nameplates). Ensure the overlay is enabled so the HUD reflects the PC
+        /// runtime state; a scene may ship it disabled. <see cref="GMPanelController"/> only
+        /// temporarily hides it while a GM panel is open and restores it on close.
+        /// </summary>
+            /// <summary>
+            /// Initializes the PC-parity chat bar controller (HudChatBarController) which
+            /// binds the ChatBar UI Toolkit element tree to ChatService. Called after combat
+            /// slots are wired so the chat bar can query the same root visual element.
+            /// SDD: port-pc-chat-bar-parity, PR 2 (design §5.1).
+            /// </summary>
+            private void InitializeHudChatBar()
+            {
+                var chatBar = GetComponent<HudChatBarController>();
+                if (chatBar == null)
+                    chatBar = gameObject.AddComponent<HudChatBarController>();
+
+                var doc = GetComponent<UIDocument>();
+                var root = doc != null ? doc.rootVisualElement.Q("GameHud") : null;
+                chatBar.Initialize(root, artFolder);
+            }
+
+            private void EnsurePcParityOverlayActive()
+            {
+            var vnOverlay = GetComponent<PcHudVietnameseTextOverlay>();
+            if (vnOverlay != null && !vnOverlay.enabled)
+                vnOverlay.enabled = true;
         }
 
         private void InitializeCombatSkillSlots()
@@ -169,16 +242,96 @@ namespace VLTK.UI
                 gameObject.AddComponent<SkillEffectWorldOverlay>();
         }
 
-        private void Update()
+        private void Update ()
         {
             EnsureRuntimeReady();
             if (!_initialized) return;
             SizeRootToScreen();
             UpdateBarsAndMinimap();
+            RefreshActionToggles();
+            // S1 (HUD-004): joystick force-hide removed — stays active for mobile play.
+        }
+
+        /// <summary>
+        /// Swaps run/sit/horse button icons between their PC off/on SPR frames based on the
+        /// live player state (walk mode, meditation, mount). PC source: dc11ac12.ini marks
+        /// these buttons CheckBox=1 with explicit Up/Down frame indices (see field notes).
+        /// Only reloads the texture when the toggle state actually changes.
+        /// </summary>
+        private void RefreshActionToggles()
+        {
+            var player = SandboxManager.Instance != null ? SandboxManager.Instance.PlayerController : null;
+            if (player == null) return;
+
+            // walk active == not running; sit active == meditating; horse active == mounted.
+            bool runOn = !player.IsRunning;
+            bool sitOn = player.IsMeditating;
+            bool horseOn = player.Mount != null && player.Mount.IsMounted;
+
+            if (runOn != _runToggleOn)
+            {
+                _runToggleOn = runOn;
+                SetActionToggleIcon(_btnRunIcon, "btn_run", runOn);
+                SetActionToggleIcon(_actionBtnRunIcon, "btn_run", runOn);
+            }
+            if (sitOn != _sitToggleOn)
+            {
+                _sitToggleOn = sitOn;
+                SetActionToggleIcon(_btnSitIcon, "btn_sit", sitOn);
+                SetActionToggleIcon(_actionBtnSitIcon, "btn_sit", sitOn);
+            }
+            if (horseOn != _horseToggleOn)
+            {
+                _horseToggleOn = horseOn;
+                SetActionToggleIcon(_btnHorseIcon, "btn_horse", horseOn);
+                SetActionToggleIcon(_actionBtnHorseIcon, "btn_horse", horseOn);
+            }
+
+            // Rings are cheap class toggles, so refresh them every frame to avoid stale
+            // active visuals after UI reloads or late binding. Texture reloads above stay
+            // state-change-only to avoid per-frame IO/coroutine churn.
+            SetActionToggleRing(_actionBtnRun, runOn);
+            SetActionToggleRing(_actionBtnSit, sitOn);
+            SetActionToggleRing(_actionBtnHorse, horseOn);
+        }
+
+        private void SetActionToggleIcon(VisualElement icon, string baseName, bool on)
+        {
+            if (icon == null) return;
+            var name = on ? string.Concat(baseName, "_on") : baseName;
+            LoadIcon(icon, HudArtPathResolver.ResolveArtRoot(artFolder), name);
+        }
+
+        private static void SetActionToggleRing(VisualElement button, bool on)
+        {
+            button?.EnableInClassList("toggle-on", on);
+        }
+
+        private void CacheActionToggleIcons(VisualElement root)
+        {
+            if (root == null || _actionTogglesBound) return;
+            _btnRunIcon = root.Q("BtnRunIcon");
+            _btnSitIcon = root.Q("BtnSitIcon");
+            _btnHorseIcon = root.Q("BtnHorseIcon");
+            _actionBtnRun = root.Q("ActionBtnRun");
+            _actionBtnSit = root.Q("ActionBtnSit");
+            _actionBtnHorse = root.Q("ActionBtnHorse");
+            _actionBtnRunIcon = root.Q("ActionBtnRunIcon");
+            _actionBtnSitIcon = root.Q("ActionBtnSitIcon");
+            _actionBtnHorseIcon = root.Q("ActionBtnHorseIcon");
+            _actionTogglesBound = true;
         }
 
         private void EnsureRuntimeReady()
         {
+            var doc = GetComponent<UIDocument>();
+            var currentRoot = doc?.rootVisualElement?.Q("GameHud");
+            if (_initialized && (_boundRoot == null || currentRoot == null || !ReferenceEquals(_boundRoot, currentRoot)))
+            {
+                _initialized = false;
+                _actionTogglesBound = false;
+            }
+
             if (_initialized)
                 return;
 
@@ -195,6 +348,14 @@ namespace VLTK.UI
             var provider = runtimeStateProvider as IRuntimeStateProvider;
             if (provider == null && runtimeStateProvider != null)
                 provider = runtimeStateProvider.GetComponent<IRuntimeStateProvider>();
+
+            // Robustness: when the serialized reference is unset (e.g. a scene ships without
+            // it wired), fall back to the sibling runtime state — the HUD GameObject carries
+            // SandboxRuntimeState, which implements IRuntimeStateProvider — so the HUD always
+            // binds real player data (level/hp/mp/stamina/exp) when the runtime exists,
+            // matching the PC client instead of defaulting to placeholder values.
+            if (provider == null)
+                provider = GetComponent<IRuntimeStateProvider>();
 
             _bridge = new HudDataBridge(provider, Debug.isDebugBuild);
             _minimapService = new MinimapService(SandboxManager.Instance?.AssetRegistry);
@@ -215,10 +376,22 @@ namespace VLTK.UI
             foreach (var child in root.Children())
                 child.pickingMode = PickingMode.Ignore;
 
+            // HUD-003: bind the reusable popup host. The PopupOverlay element is
+            // the full-screen mount point; PopupManager adds backdrop + window there.
+            var popupHost = root.Q("PopupOverlay");
+            if (popupHost != null)
+            {
+                PopupManager.SetInstance(new PopupManager(popupHost));
+            }
+
             _hpFill = root.Q("HpBarFill");
             _mpFill = root.Q("MpBarFill");
             _staminaFill = root.Q("StaminaBarFill");
             _expFill = root.Q("ExpBarFill");
+            _hpFillImage = root.Q("HpBarFillImage");
+            _mpFillImage = root.Q("MpBarFillImage");
+            _staminaFillImage = root.Q("StaminaBarFillImage");
+            _expFillImage = root.Q("ExpBarFillImage");
 
             _hpText = root.Q<Label>("HpText");
             _mpText = root.Q<Label>("MpText");
@@ -241,16 +414,8 @@ namespace VLTK.UI
             _mapPreviewTitle = root.Q<Label>("MapPreviewTitle");
             _mapPreviewCoords = root.Q<Label>("MapPreviewCoords");
 
-            _skillPanel = root.Q("CaiBangSkillPanel");
-            _skillClose = root.Q("CaiBangSkillClose");
-            _skillList = root.Q<ScrollView>("CaiBangSkillList");
-            _skillPageOne = root.Q("CaiBangSkillPageOne");
-            _skillPageTwo = root.Q("CaiBangSkillPageTwo");
-            _skillSummary = root.Q<Label>("CaiBangSkillSummary");
-
             // Bind new HUD panels
             _buffPanel = root.Q("BuffPanel");
-            _teamPreview = root.Q("TeamPreview");
 
             _tradeInfoPanel = root.Q("TradeInfoPanel");
             _tradeInfoClose = root.Q("TradeInfoClose");
@@ -271,6 +436,12 @@ namespace VLTK.UI
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
+            // SDD port-lightness-and-action-buttons: mobile combat action buttons now
+            // bridge to SandboxPlayerController movement/mount/meditation runtime state.
+            // The parked BtnRun/BtnSit/BtnHorse stay wired but are display:none.
+            RegisterClick(root, "ActionBtnRun", OnRunClick);
+            RegisterClick(root, "ActionBtnSit", OnSitClick);
+            RegisterClick(root, "ActionBtnHorse", OnHorseClick);
             RegisterClick(root, "BtnStatus", OnStatusClick);
             RegisterClick(root, "BtnItems", OnItemsClick);
             RegisterClick(root, "BtnSkills", OnSkillsClick);
@@ -279,6 +450,14 @@ namespace VLTK.UI
             RegisterClick(root, "BtnPK", OnPKClick);
             RegisterClick(root, "BtnExchange", OnExchangeClick);
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
+            // S3 (HUD-004): relocated top-gap buttons and usable-item quick slots.
+            // ItemEx / Quest / ChatRoom remain safe no-op logs until their feature popups land.
+            RegisterClick(root, "BtnItemEx", OnItemExClick);
+            RegisterClick(root, "BtnQuest", OnQuestClick);
+            RegisterClick(root, "BtnChatRoom", OnChatRoomClick);
+            RegisterClick(root, "QuickSlot1", () => OnQuickSlotClick(1));
+            RegisterClick(root, "QuickSlot2", () => OnQuickSlotClick(2));
+            RegisterClick(root, "QuickSlot3", () => OnQuickSlotClick(3));
 
             if (_faceBtn != null)
             {
@@ -333,14 +512,6 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "ToggleMapBtn");
             RegisterPreviewOpen(root, "WorldMapBtn");
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
-            RegisterClick(root, "CaiBangSkillClose", CloseSkillPanel);
-            RegisterClick(root, "CaiBangSkillPageOne", () => SetSkillPage(0));
-            RegisterClick(root, "CaiBangSkillPageTwo", () => SetSkillPage(1));
-
-            if (_skillPanel != null)
-                _skillPanel.pickingMode = PickingMode.Position;
-            if (_skillList != null)
-                _skillList.pickingMode = PickingMode.Position;
 
             if (_mapPreviewOverlay != null)
             {
@@ -362,6 +533,7 @@ namespace VLTK.UI
                 _mapPreviewFrame.RegisterCallback<PointerDownEvent>(OnPreviewMapPointerDown);
             }
 
+            _boundRoot = root;
             _initialized = true;
         }
 
@@ -396,14 +568,14 @@ namespace VLTK.UI
             var artPath = HudArtPathResolver.ResolveArtRoot(artFolder);
             if (HudArtPathResolver.CanCheckDirectory(artPath) && !System.IO.Directory.Exists(artPath))
             {
-                SubsystemLog.Warn("HUD", $"Art folder not found: {artPath}");
+                SubsystemLog.Warn("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Art folder not found: {0}", artPath));
                 return;
             }
 
-            LoadBarArt(_hpFill, artPath, "bar_hp_fill");
-            LoadBarArt(_mpFill, artPath, "bar_mp_fill");
-            LoadBarArt(_staminaFill, artPath, "bar_stamina_fill");
-            LoadBarArt(_expFill, artPath, "bar_exp_fill");
+            LoadBarArt(_hpFillImage, artPath, "bar_hp_fill");
+            LoadBarArt(_mpFillImage, artPath, "bar_mp_fill");
+            LoadBarArt(_staminaFillImage, artPath, "bar_stamina_fill");
+            LoadBarArt(_expFillImage, artPath, "bar_exp_fill");
             LoadPanelArt(artPath);
 
             var doc = GetComponent<UIDocument>();
@@ -414,10 +586,27 @@ namespace VLTK.UI
                 {
                     var btn = root.Q(kv.Key);
                     if (btn == null) continue;
-                    var icon = btn.Q(kv.Key + "Icon");
+                    var icon = btn.Q(string.Concat(kv.Key, "Icon"));
+                    if (icon == null) icon = btn.Q("Icon");
+                    if (icon == null)
+                    {
+                        var children = btn.Children();
+                        foreach (var child in children)
+                        {
+                            if (child is Label) continue;
+                            icon = child;
+                            break;
+                        }
+                    }
                     if (icon == null) continue;
                     LoadIcon(icon, artPath, kv.Value);
                 }
+
+                CacheActionToggleIcons(root);
+
+                var faceBtn = root.Q("FaceBtn");
+                if (faceBtn != null)
+                    LoadIcon(faceBtn, artPath, "btn_chat_face");
 
                 var sendIcon = root.Q("SendBtnIcon");
                 if (sendIcon != null)
@@ -432,7 +621,20 @@ namespace VLTK.UI
 
                 var worldMap = root.Q("WorldMapBtn");
                 if (worldMap != null)
-                    LoadIcon(worldMap, artPath, "btn_worldmap");
+                    LoadIcon(worldMap, artPath, "btn_minimap_world_pc");
+
+                var caveMap = root.Q("CaveMapBtn");
+                if (caveMap != null)
+                    LoadIcon(caveMap, artPath, "btn_minimap_cave_pc");
+
+                var flagMap = root.Q("FlagMapBtn");
+                if (flagMap != null)
+                    LoadIcon(flagMap, artPath, "btn_minimap_local_pc");
+
+                var treasure = root.Q("BtnTreasure");
+                if (treasure != null)
+                    LoadIcon(treasure, artPath, "btn_treasure");
+
             }
         }
 
@@ -443,20 +645,20 @@ namespace VLTK.UI
             LoadTextureIntoElement(this, png, name, tex =>
             {
                 fill.style.backgroundImage = new StyleBackground(tex);
-                fill.style.backgroundSize = new BackgroundSize(104, 9);
+                fill.style.backgroundSize = new BackgroundSize(130, 14);
             });
         }
 
         private void LoadIcon(VisualElement el, string artPath, string name)
         {
-            LoadIcon(this, el, artPath, name);
+            LoadIcon(this, el, artPath, name, null);
         }
 
-        private static void LoadIcon(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name)
+        private static void LoadIcon(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name, System.Func<bool> shouldApply)
         {
             if (el == null)
             {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: element for {name} is null");
+                UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: element for {0} is null", name));
                 return;
             }
 
@@ -465,29 +667,42 @@ namespace VLTK.UI
             {
                 LoadTextureIntoElement(coroutineHost, png, name, tex =>
                 {
+                    if (!ShouldApplyIconRequest(shouldApply)) return;
                     el.style.backgroundImage = new StyleBackground(tex);
-                    UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
+                    UnityEngine.Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: successfully loaded {0} ({1}x{2}) onto {3}", name, tex.width, tex.height, el.name));
                 });
                 return;
             }
 
             LoadTextureIntoElement(null, png, name, tex =>
             {
+                if (!ShouldApplyIconRequest(shouldApply)) return;
                 el.style.backgroundImage = new StyleBackground(tex);
-                UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
+                UnityEngine.Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: successfully loaded {0} ({1}x{2}) onto {3}", name, tex.width, tex.height, el.name));
             });
         }
 
         /// <summary>Static version for use by CombatSkillSlotController.</summary>
         public static void LoadIconStatic(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name)
         {
-            LoadIcon(coroutineHost, el, artPath, name);
+            LoadIcon(coroutineHost, el, artPath, name, null);
         }
+
+        public static void LoadIconStatic(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name, System.Func<bool> shouldApply)
+        {
+            LoadIcon(coroutineHost, el, artPath, name, shouldApply);
+        }
+
+        public static bool ShouldApplyIconRequest(uint requestGeneration, uint currentGeneration)
+            => requestGeneration == currentGeneration;
+
+        public static bool ShouldApplyIconRequest(System.Func<bool> shouldApply)
+            => shouldApply?.Invoke() != false;
 
         /// <summary>Legacy synchronous entry point. Prefer passing a MonoBehaviour for StreamingAssets/mobile paths.</summary>
         public static void LoadIconStatic(VisualElement el, string artPath, string name)
         {
-            LoadIcon(null, el, artPath, name);
+            LoadIcon(null, el, artPath, name, null);
         }
 
         private void LoadPanelArt(string artPath)
@@ -508,7 +723,7 @@ namespace VLTK.UI
             {
                 if (coroutineHost == null)
                 {
-                    UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: {name} requires UnityWebRequest but no coroutine host was provided: {path}");
+                    UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadTexture: {0} requires UnityWebRequest but no coroutine host was provided: {1}", name, path));
                     return;
                 }
 
@@ -527,7 +742,7 @@ namespace VLTK.UI
             yield return request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: failed to load {name} from {path}: {request.error}");
+                UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadTexture: failed to load {0} from {1}: {2}", name, path, request.error));
                 yield break;
             }
 
@@ -543,7 +758,7 @@ namespace VLTK.UI
         {
             if (!System.IO.File.Exists(path))
             {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: file not found {path}");
+                UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadTexture: file not found {0}", path));
                 return null;
             }
 
@@ -558,24 +773,21 @@ namespace VLTK.UI
         {
             var doc = GetComponent<UIDocument>();
             if (doc == null) return;
-            var hud = doc.rootVisualElement.Q("GameHud");
+            var root = doc.rootVisualElement;
+            if (root == null) return;
+            var hud = root.Q("GameHud");
             if (hud == null) return;
             var panel = doc.panelSettings;
             float w = panel != null && panel.referenceResolution.x > 0 ? panel.referenceResolution.x : Screen.width;
             float h = panel != null && panel.referenceResolution.y > 0 ? panel.referenceResolution.y : Screen.height;
             hud.style.width = w;
             hud.style.height = h;
-            doc.rootVisualElement.style.width = w;
-            doc.rootVisualElement.style.height = h;
+            root.style.width = w;
+            root.style.height = h;
             if (_mapPreviewOverlay != null)
             {
                 _mapPreviewOverlay.style.width = w;
                 _mapPreviewOverlay.style.height = h;
-            }
-            if (_skillPanel != null)
-            {
-                _skillPanel.style.left = Mathf.Clamp(338f, 0f, Mathf.Max(0f, w - 205f));
-                _skillPanel.style.top = Mathf.Clamp(110f, 0f, Mathf.Max(0f, h - 376f));
             }
         }
 
@@ -597,19 +809,29 @@ namespace VLTK.UI
                 return;
             }
 
+            // Player stats always bind from the runtime (PC parity): HUD renders
+            // level/hp/mp/stamina/exp even when no map is active.
             SetLevel(snap.level);
             SetBar(_hpFill, _hpText, snap.currentLife, snap.maxLife);
-            SetBar(_mpFill, _mpText, 50, 50);
-            SetBar(_staminaFill, _staminaText, 100, 100);
-            SetBar(_expFill, _expText, 0, 100, true);
+            SetBar(_mpFill, _mpText, snap.currentMana, snap.maxMana);
+            SetBar(_staminaFill, _staminaText, snap.currentStamina, snap.maxStamina);
+            SetBar(_expFill, _expText, (int)snap.currentExp, (int)snap.maxExp, true);
 
-            var viMapName = ToVietnameseMapName(snap.mapName);
-            if (_sceneName != null) _sceneName.text = viMapName;
-            if (_scenePos != null) _scenePos.text = FormatPcScenePos(snap.playerPosition);
-            if (_mapPreviewTitle != null) _mapPreviewTitle.text = viMapName;
+            if (snap.hasActiveMap)
+            {
+                var viMapName = ToVietnameseMapName(snap.mapName);
+                if (_sceneName != null) _sceneName.text = viMapName;
+                if (_scenePos != null) _scenePos.text = FormatPcScenePos(snap.playerPosition);
+                if (_mapPreviewTitle != null) _mapPreviewTitle.text = viMapName;
 
-            EnsureMinimapTexture(snap);
-            UpdateMinimapDots(snap);
+                EnsureMinimapTexture(snap);
+                UpdateMinimapDots(snap);
+            }
+            else
+            {
+                if (_sceneName != null) _sceneName.text = string.Empty;
+                if (_scenePos != null) _scenePos.text = string.Empty;
+            }
             UpdateBuffs();
         }
 
@@ -784,7 +1006,7 @@ namespace VLTK.UI
         }
 
         private static string FormatPcScenePos(Vector2 world)
-            => $"{Mathf.FloorToInt(world.x / 8f)}/{Mathf.FloorToInt(-world.y / 8f)}";
+            => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/{1}", Mathf.FloorToInt(world.x / 8f), Mathf.FloorToInt(-world.y / 8f));
 
         private static string ToVietnameseMapName(string raw)
         {
@@ -814,11 +1036,11 @@ namespace VLTK.UI
                 if (isExp)
                 {
                     float pct = max > 0 ? ((float)cur / max) * 100f : 0f;
-                    text.text = $"{Mathf.RoundToInt(pct)}%";
+                    text.text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}%", Mathf.RoundToInt(pct));
                 }
                 else
                 {
-                    text.text = $"{cur}/{max}";
+                    text.text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/{1}", cur, max);
                 }
             }
         }
@@ -829,7 +1051,7 @@ namespace VLTK.UI
             _mapPreviewOverlay.RemoveFromClassList("hidden");
             if (_mapPreviewCoords != null)
                 _mapPreviewCoords.text = _lastMoveTarget.HasValue
-                    ? $"Mục tiêu: {FormatPcScenePos(_lastMoveTarget.Value)}"
+                    ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "Mục tiêu: {0}", FormatPcScenePos(_lastMoveTarget.Value))
                     : "Chọn điểm đến";
         }
 
@@ -856,7 +1078,7 @@ namespace VLTK.UI
             _lastMoveTarget = target;
 
             if (_mapPreviewCoords != null)
-                _mapPreviewCoords.text = $"Đến: {FormatPcScenePos(target)}";
+                _mapPreviewCoords.text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "Đến: {0}", FormatPcScenePos(target));
             UpdateMinimapDots(snap);
             CloseMapPreview();
             evt.StopPropagation();
@@ -864,24 +1086,16 @@ namespace VLTK.UI
 
         private void MovePlayerTo(Vector2 worldTarget)
         {
-            var player = SandboxManager.Instance != null ? SandboxManager.Instance.PlayerController : FindObjectOfType<SandboxPlayerController>();
+            var player = SandboxManager.Instance != null ? SandboxManager.Instance.PlayerController : Object.FindFirstObjectByType<SandboxPlayerController>();
             if (player == null)
             {
-                SubsystemLog.Warn("HUD", $"Map preview target {worldTarget} ignored: no player");
+                SubsystemLog.Warn("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Map preview target {0} ignored: no player", worldTarget));
                 return;
             }
 
             player.MoveTo(worldTarget);
-            SubsystemLog.Info("HUD", $"Map preview move target {worldTarget} ({FormatPcScenePos(worldTarget)})");
+            SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Map preview move target {0} ({1})", worldTarget, FormatPcScenePos(worldTarget)));
         }
-
-        public bool IsSkillPanelVisible => _skillPanel != null && !_skillPanel.ClassListContains("hidden");
-
-        public int PcSkillPanelRowCount => _skillList?.childCount ?? 0;
-
-        public PcSkillPanelSnapshot CurrentSkillSnapshot { get; private set; }
-
-        public int CurrentSelectedSkillId { get; private set; }
 
         private string GetFactionNameVi(CombatFaction faction)
         {
@@ -901,196 +1115,169 @@ namespace VLTK.UI
             };
         }
 
-        public void OpenSkillPanel()
+        private void OnRunClick()
         {
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null
-                ? manager.CombatSkillCatalog
-                : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
-            CombatFaction faction = progression.faction != CombatFaction.None ? progression.faction : CombatFaction.CaiBang;
-            if (manager != null)
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player == null)
             {
-                manager.GrantFactionSkillPanelProgression(faction);
-                progression = manager.PlayerProgression;
+                SubsystemLog.Warn("HUD", "Toggle Run/Walk ignored: player controller not ready");
+                return;
             }
-            else
-            {
-                progression.GrantFactionSkillPanelProgression(catalog, faction);
-            }
+            player.ToggleWalkRun();
+        }
 
-            var snap = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-            CurrentSkillSnapshot = snap;
-            PopulateSkillPanel(snap);
-            _skillPanel?.RemoveFromClassList("hidden");
+        private void OnSitClick()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player == null)
+            {
+                SubsystemLog.Warn("HUD", "Toggle Sit ignored: player controller not ready");
+                return;
+            }
+            player.ToggleMeditation();
+        }
+
+        private void OnHorseClick()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player == null)
+            {
+                SubsystemLog.Warn("HUD", "Toggle Horse ignored: player controller not ready");
+                return;
+            }
+            player.ToggleMount();
+        }
+        private void OnItemExClick() => SubsystemLog.Info("HUD", "Open ItemEx (pending popup)");
+        private void OnQuestClick() => SubsystemLog.Info("HUD", "Open Quest (pending popup)");
+        private void OnChatRoomClick() => SubsystemLog.Info("HUD", "Open ChatRoom (pending popup)");
+        private void OnQuickSlotClick(int slotIndex) => SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Quick slot {0}: consume intent (backend effect pending)", slotIndex));
+        private void OnStatusClick()
+        {
+            // HUD-003: open the PC Character sheet via PopupManager (mirrors OnSkillsClick).
+            // Null-safe: degrade gracefully when PopupManager is not initialised, and
+            // close any open map preview first (handled in OnSkillsClick too).
+            var manager = PopupManager.Instance;
+            if (manager == null)
+            {
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
+            }
+            var sandbox = SandboxManager.Instance;
+            var bridge = _bridge;
+            var loop = sandbox != null ? sandbox.GameplayLoop : null;
+            var equipment = sandbox != null ? sandbox.EquipmentService : null;
+            var inventory = sandbox != null ? sandbox.InventoryService : null;
+            var titles = sandbox != null ? sandbox.TitleService : null;
+            var meridians = sandbox != null ? sandbox.MeridianService : null;
+            System.Func<bool> isFemale = () =>
+            {
+                var pc = sandbox != null ? sandbox.PlayerController : null;
+                return pc != null && pc.isFemale;
+            };
+            System.Action openInventory = () => OnItemsClick();
+            var state = CharacterInfoRuntimeAdapter.Build(
+                bridge, loop, equipment, inventory, titles, meridians, isFemale, openInventory);
+            manager.Show(new CharacterInfoContent(state));
+            SubsystemLog.Info("HUD", "Open Thông Tin Nhân Vật (PC sheet)");
             CloseMapPreview();
-            SubsystemLog.Info("HUD", $"Open {GetFactionNameVi(faction)} Skills page {_skillPageIndex + 1} (level={snap.playerLevel}, points={snap.skillPoints}, skills={snap.rows.Count})");
         }
-
-        public int CurrentSkillPageIndex => _skillPageIndex;
-
-        public void SetSkillPage(int pageIndex)
+        private void OnItemsClick()
         {
-            pageIndex = Mathf.Clamp(pageIndex, 0, PcSkillPanelService.PcFightSkillPageCount - 1);
-            if (_skillPageIndex == pageIndex && CurrentSkillSnapshot != null)
+            var manager = PopupManager.Instance;
+            var sandbox = SandboxManager.Instance;
+            var inventory = sandbox != null ? sandbox.InventoryService : null;
+            manager.Show(new InventoryContent(inventory));
+            SubsystemLog.Info("HUD", "Open Inventory");
+        }
+        private void OnSkillsClick()
+        {
+            // HUD-003: open the Skill popup via PopupManager (mirrors OnFactionClick /
+            // OnStatusClick). SkillContent owns the 30-cell grid, skill-point summary,
+            // tap-to-select detail, and "+" upgrade that spends a live fight-skill point.
+            var manager = PopupManager.Instance;
+            if (manager == null)
+            {
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
                 return;
-            _skillPageIndex = pageIndex;
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
-            CombatFaction faction = progression.faction != CombatFaction.None ? progression.faction : CombatFaction.CaiBang;
-            if (manager != null)
-            {
-                manager.GrantFactionSkillPanelProgression(faction);
-                progression = manager.PlayerProgression;
             }
-            else
-            {
-                progression.GrantFactionSkillPanelProgression(catalog, faction);
-            }
-            CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-            PopulateSkillPanel(CurrentSkillSnapshot);
-            SubsystemLog.Info("HUD", $"Switch {GetFactionNameVi(faction)} Skills to page {_skillPageIndex + 1}");
+
+            var sandbox = SandboxManager.Instance;
+            SkillCatalog catalog = sandbox != null
+                ? sandbox.CombatSkillCatalog
+                : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            // LIVE progression ref (gameplay-critical, reviewer hand-off): SkillContent.OnShow
+            // runs the grant callback BEFORE BuildPage/Refresh. At runtime the callback is
+            // SandboxManager.GrantFactionSkillPanelProgression, which mutates
+            // manager.PlayerProgression IN PLACE (verified in SandboxManager.cs:
+            //   PlayerProgression ??= new PlayerProgressionState();
+            //   PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, targetFaction);
+            // ), i.e. the SAME instance this 'progression' ref points to. So the popup body reads
+            // the granted fight-skill points without a post-grant re-fetch (the prior inline
+            // OpenSkillPanel re-fetched manager.PlayerProgression defensively; the in-place
+            // mutation makes that unnecessary — same live ref). When the sandbox is null
+            // (EditMode), grantProgression is null and SkillContent.OnShow falls back to
+            // progression.GrantFactionSkillPanelProgression(catalog, faction), still on this ref.
+            PlayerProgressionState progression = sandbox != null ? sandbox.PlayerProgression : new PlayerProgressionState();
+            CombatFaction faction = progression != null && progression.faction != CombatFaction.None
+                ? progression.faction
+                : CombatFaction.CaiBang;
+            manager.Show(new SkillContent(catalog, progression, faction, GetFactionNameVi(faction), artFolder,
+                grantProgression: sandbox != null ? sandbox.GrantFactionSkillPanelProgression : null,
+                  assignToActiveDeckSlot: (skillId, slot) =>
+                  {
+                      var hotbar = UnityEngine.Object.FindAnyObjectByType<CombatSkillSlotController>();
+                      return hotbar != null && hotbar.TryAssignLearnedActiveSkill(slot, skillId);
+                  },
+                  activeDeckName: () =>
+                  {
+                      var hotbar = UnityEngine.Object.FindAnyObjectByType<CombatSkillSlotController>();
+                      return hotbar == null ? string.Empty : (hotbar.ActiveDeckIndex == 0 ? "A" : "B");
+                  },
+                  activeDeckSlotSkill: slot =>
+                  {
+                      var hotbar = UnityEngine.Object.FindAnyObjectByType<CombatSkillSlotController>();
+                      return hotbar == null ? 0 : hotbar.GetAssignedSkill(slot);
+                  }));
+            SubsystemLog.Info("HUD", "Open Kỹ năng võ công");
+            CloseMapPreview();
         }
-
-        public void CloseSkillPanel()
-        {
-            _skillPanel?.AddToClassList("hidden");
-        }
-
-        private void PopulateSkillPanel(PcSkillPanelSnapshot snap)
-        {
-            if (_skillSummary != null)
-                _skillSummary.text = snap.skillPoints.ToString();
-            if (_skillList == null)
-                return;
-            _skillList.Clear();
-            _skillPageOne?.EnableInClassList("hud-cb-page-tab-active", _skillPageIndex == 0);
-            _skillPageTwo?.EnableInClassList("hud-cb-page-tab-active", _skillPageIndex == 1);
-            _skillList.contentContainer.style.flexDirection = FlexDirection.Row;
-            _skillList.contentContainer.style.flexWrap = Wrap.Wrap;
-            _skillList.contentContainer.style.alignContent = Align.FlexStart;
-            for (int slotIndex = 0; slotIndex < PcSkillPanelService.PcFightSkillSlotsPerPage; slotIndex++)
-            {
-                var item = new VisualElement();
-                item.AddToClassList("hud-cb-grid-cell");
-                item.pickingMode = PickingMode.Position;
-
-                var slot = new VisualElement();
-                slot.AddToClassList("hud-cb-grid-slot");
-                item.Add(slot);
-
-                if (slotIndex < snap.rows.Count)
-                {
-                    var row = snap.rows[slotIndex];
-                    if (row.canUpgrade)
-                        item.AddToClassList("hud-cb-grid-cell-upgradable");
-                    LoadIcon(slot, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{row.skillId}");
-
-                    var levelText = row.learnedLevel > 0 ? row.learnedLevel.ToString() : string.Empty;
-                    var level = new Label(levelText);
-                    level.AddToClassList("hud-cb-grid-level");
-                    item.Add(level);
-
-                    var add = new VisualElement();
-                    add.AddToClassList("hud-cb-add-point");
-                    item.Add(add);
-
-                    var name = new Label(row.displayName);
-                    name.AddToClassList("hud-cb-grid-name");
-                    item.Add(name);
-
-                    int skillId = row.skillId;
-                    item.RegisterCallback<PointerDownEvent>(evt =>
-                    {
-                        SelectSkill(skillId);
-                        evt.StopPropagation();
-                    });
-                }
-                else
-                {
-                    item.AddToClassList("hud-cb-grid-cell-empty");
-                    slot.AddToClassList("hud-cb-grid-slot-empty");
-                }
-
-                _skillList.Add(item);
-            }
-        }
-
-        public void SelectSkill(int skillId)
-        {
-            CurrentSelectedSkillId = CurrentSelectedSkillId == skillId ? 0 : skillId;
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : null;
-            if (progression == null)
-                return;
-
-            CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-            PopulateSkillPanel(CurrentSkillSnapshot);
-            CombatFaction faction = progression.faction;
-            SubsystemLog.Info("HUD", CurrentSelectedSkillId != 0 ? $"Select {GetFactionNameVi(faction)} skill {skillId}" : $"Hide {GetFactionNameVi(faction)} skill detail {skillId}");
-        }
-
-        public bool TryUpgradeSelectedSkill()
-        {
-            return CurrentSelectedSkillId != 0 && TryUpgradeSkill(CurrentSelectedSkillId);
-        }
-
-        public bool TryUpgradeSkill(int skillId)
-        {
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : null;
-            if (progression == null)
-                return false;
-
-            bool upgraded = PcSkillPanelService.TryUpgrade(progression, catalog, skillId);
-            if (upgraded)
-            {
-                CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-                PopulateSkillPanel(CurrentSkillSnapshot);
-            }
-            CombatFaction faction = progression.faction;
-            SubsystemLog.Info("HUD", upgraded ? $"Upgrade {GetFactionNameVi(faction)} skill {skillId}" : $"Cannot upgrade {GetFactionNameVi(faction)} skill {skillId}");
-            return upgraded;
-        }
-
-        private void OnRunClick() => SubsystemLog.Info("HUD", "Toggle Run/Walk");
-        private void OnSitClick() => SubsystemLog.Info("HUD", "Toggle Sit");
-        private void OnHorseClick() => SubsystemLog.Info("HUD", "Toggle Horse");
-        private void OnStatusClick() => SubsystemLog.Info("HUD", "Open Character Status");
-        private void OnItemsClick() => SubsystemLog.Info("HUD", "Open Inventory");
-        private void OnSkillsClick() => OpenSkillPanel();
 
         private void OnTeamClick()
         {
-            if (_teamPreview != null)
+            var manager = PopupManager.Instance;
+            if (manager == null)
             {
-                bool hide = !_teamPreview.ClassListContains("hidden");
-                if (hide)
-                    _teamPreview.AddToClassList("hidden");
-                else
-                {
-                    _teamPreview.RemoveFromClassList("hidden");
-                    PopulateTeamPreview();
-                }
-                SubsystemLog.Info("HUD", hide ? "Close Team" : "Open Team");
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
             }
+
+            var sandbox = SandboxManager.Instance;
+            var party = sandbox != null ? sandbox.PartyService : null;
+            manager.Show(new TeamContent(party));
+            SubsystemLog.Info("HUD", "Open Tổ đội / Đội");
         }
 
         private void OnFactionClick()
         {
-            // Toggle StallCurrencySelector
-            if (_stallCurrencySelector != null)
+            var manager = PopupManager.Instance;
+            if (manager == null)
             {
-                bool hide = !_stallCurrencySelector.ClassListContains("hidden");
-                if (hide)
-                    _stallCurrencySelector.AddToClassList("hidden");
-                else
-                    _stallCurrencySelector.RemoveFromClassList("hidden");
-                SubsystemLog.Info("HUD", hide ? "Close Stall Currency" : "Open Stall Currency");
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
             }
+
+            var sandbox = SandboxManager.Instance;
+            var bonus = sandbox != null ? sandbox.FactionBonusService : null;
+            CombatFaction faction = sandbox != null && sandbox.PlayerProgression != null
+                ? sandbox.PlayerProgression.faction
+                : CombatFaction.None;
+            if (faction == CombatFaction.None)
+                faction = CombatFaction.CaiBang;
+            int level = sandbox != null && sandbox.PlayerProgression != null
+                ? sandbox.PlayerProgression.level
+                : 1;
+            manager.Show(new FactionContent(bonus, (int)faction, GetFactionNameVi(faction), level));
+            SubsystemLog.Info("HUD", "Open Bonus Môn Phái");
         }
 
         private void OnPKClick() => SubsystemLog.Info("HUD", "Toggle PK");
@@ -1111,7 +1298,21 @@ namespace VLTK.UI
             }
         }
 
-        private void OnTreasureClick() => SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+        private void OnTreasureClick()
+        {
+            var manager = PopupManager.Instance;
+            if (manager == null)
+            {
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
+            }
+
+            var sandbox = SandboxManager.Instance;
+            var mall = sandbox != null ? sandbox.MallService : null;
+            var treasureHunt = sandbox != null ? sandbox.TreasureHuntService : null;
+            manager.Show(new TreasureContent(mall, treasureHunt));
+            SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+        }
 
         // ── New HUD logic ──────────────────────────────────────────────────
 
@@ -1170,14 +1371,14 @@ namespace VLTK.UI
                 icon.AddToClassList("hud-buff-icon");
                 icon.AddToClassList(b.isDebuff ? "hud-buff-border-orange" : "hud-buff-border-green");
                 
-                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{b.skillId}");
+                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), string.Format(System.Globalization.CultureInfo.InvariantCulture, "cai_bang_skill_{0}", b.skillId));
                 cell.Add(icon);
                 
                 var timer = new Label(FormatTimer(b.durationRemaining));
                 timer.AddToClassList(b.isDebuff ? "hud-debuff-timer" : "hud-buff-timer");
                 cell.Add(timer);
                 
-                cell.tooltip = $"{b.nameVi}\nCòn lại: {FormatTimer(b.durationRemaining)}s";
+                cell.tooltip = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}\nCòn lại: {1}s", b.nameVi, FormatTimer(b.durationRemaining));
                 
                 _buffPanel.Add(cell);
             }
@@ -1224,70 +1425,9 @@ namespace VLTK.UI
             {
                 int min = Mathf.FloorToInt(seconds / 60f);
                 int sec = Mathf.FloorToInt(seconds % 60f);
-                return $"{min}m{sec}s";
+                return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}m{1}s", min, sec);
             }
             return seconds.ToString("F1");
-        }
-
-        private void PopulateTeamPreview()
-        {
-            if (_teamPreview == null) return;
-            _teamPreview.Clear();
-            
-            var members = new[]
-            {
-                new { name = "Đường Môn Đệ Tử", faction = "tm", hp = 80, maxHp = 100, mp = 40, maxMp = 50, isLeader = true },
-                new { name = "Nga Mi Đệ Tử", faction = "em", hp = 100, maxHp = 100, mp = 50, maxMp = 50, isLeader = false },
-                new { name = "Cái Bang Đệ Tử", faction = "gb", hp = 50, maxHp = 120, mp = 20, maxMp = 100, isLeader = false }
-            };
-            
-            foreach (var m in members)
-            {
-                var item = new VisualElement();
-                item.AddToClassList("hud-team-member");
-                
-                if (m.isLeader)
-                {
-                    var flag = new VisualElement();
-                    flag.AddToClassList("hud-team-leader-flag");
-                    item.Add(flag);
-                }
-                
-                var icon = new VisualElement();
-                icon.AddToClassList("hud-team-faction-icon");
-                
-                var fact = HudDataService.Instance.GetFaction(m.faction);
-                int placeholderSkillId = fact != null ? fact.placeholderSkillId : 124;
-
-                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{placeholderSkillId}");
-                item.Add(icon);
-                
-                var info = new VisualElement();
-                info.AddToClassList("hud-team-member-info");
-                
-                var nameLabel = new Label(m.name);
-                nameLabel.AddToClassList("hud-team-member-name");
-                info.Add(nameLabel);
-                
-                var hpTrack = new VisualElement();
-                hpTrack.AddToClassList("hud-team-bar-track");
-                var hpFill = new VisualElement();
-                hpFill.AddToClassList("hud-team-bar-fill-hp");
-                hpFill.style.width = Length.Percent(((float)m.hp / m.maxHp) * 100f);
-                hpTrack.Add(hpFill);
-                info.Add(hpTrack);
-                
-                var mpTrack = new VisualElement();
-                mpTrack.AddToClassList("hud-team-bar-track");
-                var mpFill = new VisualElement();
-                mpFill.AddToClassList("hud-team-bar-fill-mp");
-                mpFill.style.width = Length.Percent(((float)m.mp / m.maxMp) * 100f);
-                mpTrack.Add(mpFill);
-                info.Add(mpTrack);
-                
-                item.Add(info);
-                _teamPreview.Add(item);
-            }
         }
 
         private void PopulateTradeInfo()
@@ -1305,7 +1445,7 @@ namespace VLTK.UI
 
         private void SelectStallCurrency(string name)
         {
-            SubsystemLog.Info("Stall", $"Đã chọn tiền tệ thanh toán: {name}");
+            SubsystemLog.Info("Stall", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Đã chọn tiền tệ thanh toán: {0}", name));
             _stallCurrencySelector?.AddToClassList("hidden");
         }
 
@@ -1347,7 +1487,7 @@ namespace VLTK.UI
                 {
                     if (_chatInput != null)
                     {
-                        _chatInput.value += symbol;
+                        _chatInput.value = string.Concat(_chatInput.value, symbol);
                     }
                     CloseFacePicker();
                     evt.StopPropagation();

@@ -50,6 +50,9 @@ namespace VLTK.Sandbox
         public int aiMode;
         public int[] aiParams;
         public float deltaTime;
+        public NpcSkillService npcSkillService;
+        public int[] npcSkillIds;
+        public int currentTime;
     }
 
     /// <summary>
@@ -61,6 +64,11 @@ namespace VLTK.Sandbox
         public Vector2 moveTarget;
         public bool shouldAttack;
         public float moveSpeed;
+        public int skillId;
+        public int childSkillId;
+        public int childSkillNum;
+        public int attackRange;
+        public int cooldownTicks;
     }
 
     /// <summary>
@@ -121,6 +129,8 @@ namespace VLTK.Sandbox
             {
                 if (ctx.distanceToPlayer <= attackRange)
                 {
+                    var skillDecision = TryNpcSkillAttack(ctx);
+                    if (skillDecision.shouldAttack) return skillDecision;
                     return new AiDecision
                     {
                         state = AiState.Attack,
@@ -271,6 +281,32 @@ namespace VLTK.Sandbox
         }
 
         // ── Helpers ────────────────────────────────────────────────────────
+
+        private static AiDecision TryNpcSkillAttack(AiContext ctx)
+        {
+            if (ctx.npcSkillService == null || ctx.npcSkillIds == null) return default;
+            foreach (var skillId in ctx.npcSkillIds)
+            {
+                var plan = ctx.npcSkillService.BuildCastPlan(skillId);
+                if (!plan.canCast || plan.missingScriptGuard) continue;
+                if (!plan.targetEnemy || plan.targetAlly || plan.targetSelf) continue;
+                if (plan.cooldownTicks > 0 && ctx.currentTime < plan.cooldownTicks) continue;
+                if (plan.attackRadius > 0 && ctx.distanceToPlayer > plan.attackRadius) continue;
+                return new AiDecision
+                {
+                    state = AiState.Attack,
+                    moveTarget = ctx.position,
+                    shouldAttack = true,
+                    moveSpeed = 0f,
+                    skillId = plan.skillId,
+                    childSkillId = plan.childSkillId,
+                    childSkillNum = plan.childSkillNum,
+                    attackRange = plan.attackRadius,
+                    cooldownTicks = plan.cooldownTicks,
+                };
+            }
+            return default;
+        }
 
         private static float GetParam(AiContext ctx, int index, float defaultVal)
         {

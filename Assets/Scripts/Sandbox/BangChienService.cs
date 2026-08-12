@@ -18,6 +18,7 @@ namespace VLTK.Sandbox
         public const string DefaultStreamingDir = "Reference/PcCity";
 
         private PcBangChienRegistry _registry;
+        private IBangChienHost _host;
         private int _challengerBangId;
         private int _defenderBangId;
         private int _challengerScore;
@@ -30,8 +31,15 @@ namespace VLTK.Sandbox
         public int Count => _registry != null ? _registry.Count : 0;
         public bool IsActive => _isActive;
 
-        public BangChienService() { }
-        public BangChienService(PcBangChienRegistry registry) { AttachRegistry(registry); }
+        public BangChienService() : this(null, null) { }
+        public BangChienService(PcBangChienRegistry registry) : this(registry, null) { }
+        public BangChienService(PcBangChienRegistry registry, IBangChienHost host)
+        {
+            _host = host;
+            AttachRegistry(registry);
+        }
+
+        public void AttachHost(IBangChienHost host) { _host = host; }
 
         public void AttachRegistry(PcBangChienRegistry registry)
         {
@@ -58,6 +66,11 @@ namespace VLTK.Sandbox
             _defenderScore = 0;
             _isActive = true;
             SubsystemLog.Info(LogTag, $"Bang Chiến bắt đầu: Bang {challengerBangId} vs Bang {defenderBangId}");
+            if (_host != null)
+            {
+                _host.OnBangChienStarting(challengerBangId, defenderBangId);
+                _host.LogBangChienEvent($"Bang Chiến bắt đầu: Bang {challengerBangId} vs Bang {defenderBangId}");
+            }
         }
 
         public void RecordKill(bool isChallengerKill)
@@ -65,6 +78,10 @@ namespace VLTK.Sandbox
             if (!_isActive) return;
             if (isChallengerKill) _challengerScore++;
             else _defenderScore++;
+            if (_host != null)
+            {
+                _host.OnBangChienKill(isChallengerKill, _challengerScore, _defenderScore);
+            }
         }
 
         public int EndBangChien()
@@ -73,6 +90,13 @@ namespace VLTK.Sandbox
             int winner = _challengerScore > _defenderScore ? _challengerBangId :
                          _defenderScore > _challengerScore ? _defenderBangId : 0;
             OnBangChienEnded?.Invoke(winner, _challengerScore, _defenderScore);
+            if (_host != null)
+            {
+                _host.GrantBangChienReward(_challengerBangId, winner == _challengerBangId, _challengerScore, 0);
+                _host.GrantBangChienReward(_defenderBangId, winner == _defenderBangId, _defenderScore, 0);
+                _host.OnBangChienEnded(winner, _challengerScore, _defenderScore);
+                _host.LogBangChienEvent($"Bang Chiến kết thúc: {_challengerScore}-{_defenderScore}. Winner: Bang {winner}");
+            }
             SubsystemLog.Info(LogTag, $"Bang Chiến kết thúc: {_challengerScore}-{_defenderScore}. Winner: Bang {winner}");
             return winner;
         }
@@ -92,7 +116,9 @@ namespace VLTK.Sandbox
         {
             var c = GetCity(cityId);
             if (c == null) return 0L;
-            return (long)c.income * Math.Max(0, hours);
+            long total = (long)c.income * Math.Max(0, hours);
+            if (total > 0 && _host != null) _host.GrantCityIncome(c.ownerTongId, cityId, total);
+            return total;
         }
 
         public static BangChienService LoadFromStreamingAssets(string subdir = null)

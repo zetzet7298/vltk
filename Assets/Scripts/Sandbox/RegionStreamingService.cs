@@ -57,6 +57,10 @@ namespace VLTK.Sandbox
         private readonly Dictionary<RegionCoord, RegionStreamState> _states = new();
         private RegionCoord _active;
         private bool _hasActive;
+        private IRegionStreamingHost _host;
+        private int _playerId = 0;
+
+        public event Action<RegionStreamPlan> OnStreamingPlan;
 
         /// <param name="ringRadius">Neighbor ring radius (1 = 3x3 around active).</param>
         /// <param name="maxLoaded">Mobile memory budget: max simultaneously loaded regions.</param>
@@ -65,7 +69,15 @@ namespace VLTK.Sandbox
             float regionWidth, float regionHeight,
             Vector2 worldOrigin,
             int ringRadius = 1,
-            int maxLoaded = 9)
+            int maxLoaded = 9) : this(countX, countY, regionWidth, regionHeight, worldOrigin, ringRadius, maxLoaded, null) { }
+
+        public RegionStreamingService(
+            int countX, int countY,
+            float regionWidth, float regionHeight,
+            Vector2 worldOrigin,
+            int ringRadius,
+            int maxLoaded,
+            IRegionStreamingHost host)
         {
             _countX = Mathf.Max(0, countX);
             _countY = Mathf.Max(0, countY);
@@ -74,12 +86,16 @@ namespace VLTK.Sandbox
             _worldOrigin = worldOrigin;
             _ringRadius = Mathf.Max(0, ringRadius);
             _maxLoaded = Mathf.Max(1, maxLoaded);
+            _host = host;
         }
+
+        public void AttachHost(IRegionStreamingHost host) { _host = host; }
 
         public IReadOnlyDictionary<RegionCoord, RegionStreamState> States => _states;
         public RegionCoord ActiveRegion => _active;
         public bool HasActive => _hasActive;
         public int MaxLoaded => _maxLoaded;
+        public int PlayerId { get => _playerId; set => _playerId = value; }
 
         public bool InBounds(RegionCoord c)
             => c.x >= 0 && c.x < _countX && c.y >= 0 && c.y < _countY;
@@ -139,7 +155,7 @@ namespace VLTK.Sandbox
 
             if (!plan.activeInBounds)
             {
-                // Player left the map: keep current state, no churn (AC#4 continue).
+                OnStreamingPlan?.Invoke(plan);
                 return plan;
             }
 
@@ -162,6 +178,11 @@ namespace VLTK.Sandbox
                 {
                     _states.Remove(c);
                     plan.toUnload.Add(c);
+                    if (_host != null)
+                    {
+                        _host.OnRegionUnloaded(c, active.x, active.y);
+                        _host.LogRegionEvent(c, $"Unload region {c} (active={active})");
+                    }
                 }
             }
 
@@ -172,9 +193,20 @@ namespace VLTK.Sandbox
                 {
                     _states[c] = RegionStreamState.Loading;
                     plan.toLoad.Add(c);
+                    if (_host != null)
+                    {
+                        _host.OnRegionLoadStarted(c, active.x, active.y);
+                        _host.LogRegionEvent(c, $"Load region {c} (active={active})");
+                    }
                 }
             }
 
+            OnStreamingPlan?.Invoke(plan);
+            if (_host != null)
+            {
+                _host.UpdateRegionOverlay(active, LoadedCount, _maxLoaded);
+                _host.SaveRegionState(active, GetState(active), LoadedCount);
+            }
             return plan;
         }
 
@@ -182,6 +214,12 @@ namespace VLTK.Sandbox
         public void MarkLoaded(RegionCoord c)
         {
             if (_states.ContainsKey(c)) _states[c] = RegionStreamState.Loaded;
+            if (_host != null)
+            {
+                _host.OnRegionLoaded(c, 0);
+                _host.PlayRegionLoadSFX(c);
+                _host.LogRegionEvent(c, $"Region {c} load complete");
+            }
         }
 
         /// <summary>AC#4 — caller reports a region failed to load; runtime continues.</summary>
@@ -189,6 +227,9 @@ namespace VLTK.Sandbox
         {
             _states[c] = RegionStreamState.Failed;
             SubsystemLog.Error("RegionStreaming", $"Region {c} failed to load");
+            _host?.OnRegionLoadFailed(c, "Region failed to load");
+            _host?.LogRegionEvent(c, $"Region {c} failed to load");
+            _host?.SaveRegionState(c, RegionStreamState.Failed, LoadedCount);
         }
 
         public RegionStreamState GetState(RegionCoord c)

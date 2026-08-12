@@ -20,6 +20,50 @@ namespace VLTK.Model
         KunLun = 10,
     }
 
+    /// <summary>
+    /// PC ngũ hành (OBJ_ATTRIBYTE_TYPE in GameDataDef.h).
+    /// Numeric values mirror PC source so parity with KNpc.cpp/mobile combat pipeline is
+    /// traceable: Metal=0..Earth=4 are the 5 hành; Nil=5 = no series assigned;
+    /// Minus=6 forces damage to 1 (PC KNpc.cpp:2454 `if (m_Series == series_minus) nDamage = 1;`).
+    /// </summary>
+    [Serializable]
+    public enum Series
+    {
+        Metal = 0,   // PC: series_metal (Kim)
+        Wood = 1,    // PC: series_wood (Mộc)
+        Water = 2,   // PC: series_water (Thủy)
+        Fire = 3,    // PC: series_fire (Hỏa)
+        Earth = 4,   // PC: series_earth (Thổ)
+        Nil = 5,     // PC: series_nil — sentinel "no series"
+        Minus = 6,   // PC: series_minus — damage cap to 1
+    }
+
+    /// <summary>
+    /// Default ngũ hành cho mỗi môn phái (PC: per-character SetSeries via Lua, default
+    /// theo thiết kế gốc VLTK). Dùng khi skill không khai báo Series (Nil) thì combat
+    /// pipeline dùng hành mặc định của môn phái thay vì skip ApplyFiveElements.
+    /// </summary>
+    public static class CombatFactionSeriesExtensions
+    {
+        public static Series GetFactionSeries(this CombatFaction faction)
+        {
+            switch (faction)
+            {
+                case CombatFaction.Shaolin:   return Series.Metal;
+                case CombatFaction.TianWang:  return Series.Earth;
+                case CombatFaction.TangMen:   return Series.Water;
+                case CombatFaction.CaiBang:   return Series.Metal;
+                case CombatFaction.WuDu:      return Series.Fire;
+                case CombatFaction.TianRen:   return Series.Wood;
+                case CombatFaction.EMei:      return Series.Water;
+                case CombatFaction.CuiYan:    return Series.Wood;
+                case CombatFaction.WuDang:    return Series.Metal;
+                case CombatFaction.KunLun:    return Series.Metal;
+                default:                       return Series.Nil;
+            }
+        }
+    }
+
     /// <summary>PC skill style (SkillStyle column): missile/melee/initiative/passive/etc.</summary>
     [Serializable]
     public enum PcSkillStyle
@@ -29,6 +73,22 @@ namespace VLTK.Model
         InitiativeNpcState = 2,
         PassivityNpcState = 3,
         Summon = 4,
+    }
+
+    /// <summary>
+    /// PC melee subtype (KNpc::CastMeleeSkill switch line 1834-1891).
+    /// Phân biệt các nhánh dash/jump/run trong melee skill. Mặc định = AttackWithBlur.
+    /// Áp dụng khi skillStyle=Melee; bỏ qua nếu Missiles.
+    /// </summary>
+    [Serializable]
+    public enum PcMeleeType
+    {
+        None = 0,              // Không melee (Missiles / Initiative / Passive)
+        AttackWithBlur = 1,    // PC: Melee_AttackWithBlur — instant swing, no jump (mặc định cho melee)
+        Jump = 2,              // PC: Melee_Jump — chỉ nhảy tới target
+        JumpAndAttack = 3,     // PC: Melee_JumpAndAttack — nhảy + chém cùng lúc (Phi Long 357, Kháng Long 128)
+        RunAndAttack = 4,      // PC: Melee_RunAndAttack — chạy tới + chém
+        ManyAttack = 5,        // PC: Melee_ManyAttack — nhiều hit không cần jump
     }
 
     /// <summary>PC magic attribute names used by novice + Cái Bang scripts.</summary>
@@ -72,13 +132,40 @@ namespace VLTK.Model
         AddPoisonDamageV,
         AddColdDamageV,
         AddFireDamageV,
+        // [CaiBang-FirePool 2026-07-17] PC KNpcAttribModify keeps two separate fire accumulators:
+        //   addfiredamage_v -> m_CurrentFireDamage (consumed in the bIsPhysical branch)
+        //   addfiremagic_v  -> m_CurrentFireMagic  (consumed in the !bIsPhysical branch)
+        // Source: jx-pc extracted_full.tar:10142-10153 (AddFireDamageV/AddFireMagicV) + :3183-3192 (damage branch).
+        // Do not conflate the two; runtime selects the pool by the source skill's isPhysical.
+        AddFireMagicV,
         AddLightingDamageV,
         StealLifeP,
         LifeReplenishV,
         StealStaminaP,
         LifeMaxP,
+        LifeMaxYanP, // [SECT-QUICKWIN] Gap baocao-all-sect-skills.md: Yan (smoke) variant for life max buff (TianRen 36, 150, 1075, 1076)
         FireEnhanceP,
         FastWalkRunP,
+        // [CaiBang-PC-Parity 2026-06-30] PC gaibang120zuzhou debuff attrs (skill 720):
+        // physicsresmax_p / fireresmax_p reduce the MAX resistance cap, distinct from *_res_p percent.
+        PhysicsResMaxP,
+        FireResMaxP,
+        // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua new attribute kinds (KMagicDesc.cpp).
+        // Yang (阳) resistance variants — separate PC state slot, same damage-reduction math as base res.
+        PhysicsResYanP,
+        FireResYanP,
+        AllResYanP,
+        // returnres_p: tăng kháng phản đòn (KMagicDesc.cpp:186).
+        ReturnResP,
+        // anti_do_hurt_p: giảm % sát thương chịu (KMagicDesc.cpp:223).
+        AntiDoHurtP,
+        // fatallystrike_p: tỷ lệ chí mạng chí mạng (KMagicDesc.cpp:72).
+        FatallyStrikeP,
+        // me2metaldamage_p / metal2medamage_p: hệ Kim vào ra (KMagicDesc.cpp:249/253).
+        Me2MetalDamageP,
+        Metal2MeDamageP,
+        // anti_block_rate: tỷ lệ chống đỡ (KMagicDesc.cpp:270).
+        AntiBlockRate,
     }
 
     [Serializable]

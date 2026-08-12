@@ -40,6 +40,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public BossMissionService() : this(null) { }
+
         public BossMissionService(PcBossMissionRegistry registry)
         {
             _registry = registry ?? new PcBossMissionRegistry();

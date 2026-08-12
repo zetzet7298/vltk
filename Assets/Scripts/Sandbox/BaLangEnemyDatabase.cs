@@ -23,7 +23,7 @@ namespace VLTK.Sandbox
         /// <summary>Enemy template IDs (kind=0 animals that wander outside town).</summary>
         public static readonly int[] EnemyTemplateIds = { 31, 42, 43 };
 
-        /// <summary>All supported visual template IDs. Training dummies stay excluded until real SPRs are staged.</summary>
+        /// <summary>All non-trainer template IDs used by Ba Lăng enemy runtime. Training dummies (311/413/414/415) are spawned separately via TrainingNpcSpawner / MapEnemySpawnRuntime.</summary>
         public static readonly int[] AllTemplateIds = { 31, 42, 43 };
 
         public static IEnumerable<NpcTemplate> CreateTemplates()
@@ -128,7 +128,9 @@ public static void WorldToMps(float worldX, float worldY, out int mpsX, out int 
         public static string BuildNpcSprPath(string resType, string action)
         {
             if (string.IsNullOrWhiteSpace(resType)) return null;
-            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase) ? "animal" : "enemy";
+            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase)
+                ? "animal"
+                : resType.StartsWith("boss", System.StringComparison.OrdinalIgnoreCase) ? "boss" : "enemy";
             return $@"spr\npcres\{folder}\{resType}\{resType}_{action}.spr";
         }
 

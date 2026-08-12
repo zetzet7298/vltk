@@ -23,9 +23,29 @@ namespace VLTK.Tests.Sandbox
         {
             var svc = QuestItemService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
-            int id = QuestItemService.EncodeItemId(99, 99, 99);
+            Assert.IsTrue(svc.TryEncodePcQuestKeyDetailId(99, out int id));
             svc.AddQuestItem(id, 1);
             Assert.AreEqual(1, svc.GetQuestItemCount(id));
+        }
+
+        [Test]
+        public void PcQuestKeyDetailLookup_UsesPcQuestkeyColumns()
+        {
+            var reg = PcQuestItemParser.BuildRegistry(
+                Path.Combine(Directory.GetCurrentDirectory(), "Assets/StreamingAssets/Reference/PcItemFull"));
+
+            var key2 = reg.GetByDetailType(99);
+            var key3 = reg.GetByDetailType(100);
+            var thunder = reg.GetByDetailType(381);
+            var cloud = reg.GetByDetailType(382);
+
+            Assert.IsNotNull(key2);
+            Assert.AreEqual(4, key2.itemGenre);
+            Assert.AreEqual(99, key2.detailType);
+            Assert.AreEqual(0, key2.particularType);
+            Assert.IsNotNull(key3);
+            Assert.IsNotNull(thunder);
+            Assert.IsNotNull(cloud);
         }
 
         [Test]
@@ -62,6 +82,21 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(svc.HasQuestItem(id, 1));
             Assert.IsTrue(svc.HasQuestItem(id, 5));
             Assert.IsFalse(svc.HasQuestItem(id, 6));
+        }
+
+        [Test]
+        public void PcQuestKeyDetailMethods_BackHaveItemDelItemWithoutByteCollision()
+        {
+            var svc = MakeService();
+
+            Assert.IsTrue(svc.AddEventItem(381));
+            Assert.IsTrue(svc.HaveItem(381));
+            Assert.AreEqual(1, svc.GetPcQuestKeyDetailCount(381));
+            Assert.AreEqual(0, svc.GetPcQuestKeyDetailCount(125));
+
+            Assert.IsTrue(svc.DelItem(381));
+            Assert.IsFalse(svc.HaveItem(381));
+            Assert.AreEqual(0, svc.GetPcQuestKeyDetailCount(381));
         }
     }
 

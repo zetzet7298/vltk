@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcRecoinRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public RecoinService() : this(null) { }
+
         public RecoinService(PcRecoinRegistry reg) { _reg = reg ?? new PcRecoinRegistry(); }
 
         public static RecoinService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

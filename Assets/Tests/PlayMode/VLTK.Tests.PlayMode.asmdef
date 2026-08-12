@@ -6,9 +6,13 @@
         "UnityEditor.TestRunner",
         "VLTK.Core",
         "VLTK.Model",
-        "VLTK.Sandbox",
+        "VLTK.Gameplay.Domain",
+        "VLTK.Sandbox.Runtime",
+        "VLTK.UI",
         "VLTK.Resources",
-        "VLTK.Sprites"
+        "VLTK.Sprites",
+        "VLTK.Backend",
+        "VLTK.Survivor.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
